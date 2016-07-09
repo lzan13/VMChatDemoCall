@@ -10,10 +10,11 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMMessage;
-import com.easemob.exceptions.EaseMobException;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.exceptions.HyphenateException;
+
 
 /**
  * 音视频项目主类
@@ -114,7 +115,8 @@ public class MLMainActivity extends AppCompatActivity {
         }
         final EMMessage message = EMMessage.createTxtSendMessage("test text message", "lz1");
 //        message.setReceipt(username);
-        EMChatManager.getInstance().sendMessage(message, new EMCallBack() {
+        EMClient.getInstance().chatManager().sendMessage(message);
+        message.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
                 Log.i(TAG, "message send success " + message.getMsgId());
@@ -148,7 +150,7 @@ public class MLMainActivity extends AppCompatActivity {
      * 退出登录
      */
     private void signoutEasemob() {
-        EMChatManager.getInstance().logout(true, new EMCallBack() {
+        EMClient.getInstance().logout(true, new EMCallBack() {
             @Override
             public void onSuccess() {
                 Log.i(TAG, "logout easemob success");
@@ -181,8 +183,8 @@ public class MLMainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    EMChatManager.getInstance().createAccountOnServer(username, password);
-                } catch (EaseMobException e) {
+                    EMClient.getInstance().createAccount(username, password);
+                } catch (HyphenateException e) {
                     e.printStackTrace();
                     Log.d(TAG, "signup error " + e.getErrorCode() + "; " + e.getMessage());
                 }
@@ -201,7 +203,7 @@ public class MLMainActivity extends AppCompatActivity {
             Toast.makeText(MLMainActivity.this, "username or password not null", Toast.LENGTH_LONG).show();
             return;
         }
-        EMChatManager.getInstance().login(username, password, new EMCallBack() {
+        EMClient.getInstance().login(username, password, new EMCallBack() {
             @Override
             public void onSuccess() {
                 Log.i(TAG, "login easemob success");

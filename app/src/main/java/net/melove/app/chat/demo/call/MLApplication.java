@@ -4,8 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
+
 
 /**
  * Created by lzan13 on 2016/5/25.
@@ -28,17 +29,21 @@ public class MLApplication extends Application {
      * 初始化环信sdk，并做一些注册监听的操作
      */
     private void initEasemobSDK() {
-        // 良禽择木而栖
-        EMChat.getInstance().setAppkey("easemob-demo#chatdemoui");
+
+        // 初始化sdk的一些配置
+        EMOptions options = new EMOptions();
+        options.setAutoLogin(true);
+        options.setAppKey("lzan13#hxsdkdemo");
 
         // 初始化环信SDK,一定要先调用init()
-        EMChat.getInstance().init(context);
+        EMClient.getInstance().init(context, options);
 
         // 开启 debug 模式
-        EMChat.getInstance().setDebugMode(true);
+        EMClient.getInstance().setDebugMode(true);
 
 
-        IntentFilter callFilter = new IntentFilter(EMChatManager.getInstance().getIncomingCallBroadcastAction());
+        // 设置通话广播监听器
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (callReceiver == null) {
             callReceiver = new CallReceiver();
         }

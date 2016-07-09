@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-    <SurfaceView
+    <com.hyphenate.media.EMOppositeSurfaceView
         android:id="@+id/ml_surface_opposite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -13,9 +13,60 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <SurfaceView
-            android:id="@+id/ml_surface_self"
+        <com.hyphenate.media.EMLocalSurfaceView
+            android:id="@+id/ml_surface_local"
             android:layout_width="200dp"
-            android:layout_height="300dp"/>
+            android:layout_height="300dp"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ml_btn_mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mute"/>
+
+            <Button
+                android:id="@+id/ml_btn_change_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Camera"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ml_btn_answer_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Answer"/>
+
+
+            <Button
+                android:id="@+id/ml_btn_reject_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reject"/>
+
+            <Button
+                android:id="@+id/ml_btn_end_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End"/>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

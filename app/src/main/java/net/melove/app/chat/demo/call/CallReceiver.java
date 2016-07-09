@@ -17,15 +17,15 @@ package net.melove.app.chat.demo.call;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-import com.easemob.chat.EMChat;
-import com.easemob.util.EMLog;
+import com.hyphenate.chat.EMClient;
 
 public class CallReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!EMChat.getInstance().isLoggedIn()) {
+        if (!EMClient.getInstance().isLoggedInBefore()) {
             return;
         }
         //拨打方username
@@ -41,7 +41,7 @@ public class CallReceiver extends BroadcastReceiver {
                     putExtra("username", from).putExtra("isComingCall", true).
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
-        EMLog.d("CallReceiver", "app received a incoming call");
+        Log.d("CallReceiver", "app received a incoming call");
     }
 
 }

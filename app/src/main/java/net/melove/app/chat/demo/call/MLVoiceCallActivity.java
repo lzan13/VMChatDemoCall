@@ -6,16 +6,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.easemob.chat.EMCallStateChangeListener;
-import com.easemob.chat.EMChatManager;
-import com.easemob.exceptions.EMServiceNotReadyException;
+import com.hyphenate.chat.EMCallStateChangeListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.EMNoActiveCallException;
+import com.hyphenate.exceptions.HyphenateException;
 
 
 public class MLVoiceCallActivity extends AppCompatActivity {
 
 
+    // 呼叫方名字
     private String username;
+    // 是否是拨打进来的电话
     private boolean isInComingCall;
+    // 通话状态监听器
     private EMCallStateChangeListener callStateListener;
 
     @Override
@@ -37,8 +41,8 @@ public class MLVoiceCallActivity extends AppCompatActivity {
         if (!isInComingCall) {// 拨打电话
             try {
                 // 拨打语音电话
-                EMChatManager.getInstance().makeVoiceCall(username);
-            } catch (EMServiceNotReadyException e) {
+                EMClient.getInstance().callManager().makeVoiceCall(username);
+            } catch (HyphenateException e) {
                 e.printStackTrace();
                 final String st2 = "尚未连接至服务器";
                 runOnUiThread(new Runnable() {
@@ -52,7 +56,9 @@ public class MLVoiceCallActivity extends AppCompatActivity {
 
         }
         findViewById(R.id.ml_btn_answer_call).setOnClickListener(viewListener);
-        findViewById(R.id.ml_btn_refuse_call).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_reject_call).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_end_call).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_mute).setOnClickListener(viewListener);
     }
 
     /**
@@ -99,18 +105,18 @@ public class MLVoiceCallActivity extends AppCompatActivity {
 
             }
         };
-        EMChatManager.getInstance().addCallStateChangeListener(callStateListener);
+        EMClient.getInstance().callManager().addCallStateChangeListener(callStateListener);
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-
-            case R.id.ml_btn_answer_call: // 接听电话
+            case R.id.ml_btn_answer_call:
+                // 接听对方的呼叫
                 try {
                     Log.i("lzna13", "正在接听...");
-                    EMChatManager.getInstance().answerCall();
+                    EMClient.getInstance().callManager().answerCall();
                     Log.i("lzna13", "接听成功");
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
@@ -120,17 +126,27 @@ public class MLVoiceCallActivity extends AppCompatActivity {
                     return;
                 }
                 break;
-
-            case R.id.ml_btn_refuse_call: // 挂断电话
+            case R.id.ml_btn_reject_call:
+                // 拒绝接听对方的呼叫
                 try {
-                    Log.i("lzan13", "开始挂断电话");
-                    EMChatManager.getInstance().endCall();
-                    Log.i("lzan13", "挂断电话成功");
+                    EMClient.getInstance().callManager().rejectCall();
+                    Log.i("lzan13", "拒绝接听呼叫");
                     finish();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Log.i("lzan13", "拒绝接听失败");
+                    finish();
+                }
+                break;
+            case R.id.ml_btn_end_call:
+                // 挂断通话
+                try {
+                    EMClient.getInstance().callManager().endCall();
+                    Log.i("lzan13", "挂断电话");
+                } catch (EMNoActiveCallException e) {
                     Log.i("lzan13", "挂断电话失败");
                     finish();
+                    e.printStackTrace();
                 }
                 break;
             default:
@@ -146,7 +162,11 @@ public class MLVoiceCallActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        EMChatManager.getInstance().endCall();
+        try {
+            EMClient.getInstance().callManager().endCall();
+        } catch (EMNoActiveCallException e) {
+            e.printStackTrace();
+        }
         finish();
     }
 }
