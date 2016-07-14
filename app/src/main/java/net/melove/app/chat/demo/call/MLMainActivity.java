@@ -12,15 +12,18 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.exceptions.EaseMobException;
+
+import java.util.List;
 
 /**
  * 音视频项目主类
  */
 public class MLMainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MLMainActivity";
+    private static final String TAG = "lzan13";
 
     private EditText mUsernameView;
     private EditText mPasswordView;
@@ -45,6 +48,12 @@ public class MLMainActivity extends AppCompatActivity {
         findViewById(R.id.ml_btn_send).setOnClickListener(viewListener);
         findViewById(R.id.ml_btn_call_voice).setOnClickListener(viewListener);
         findViewById(R.id.ml_btn_call_video).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_add_contact).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_add_contact_agree).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_add_contact_refuse).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_delete_contact).setOnClickListener(viewListener);
+        findViewById(R.id.ml_btn_get_contact).setOnClickListener(viewListener);
+
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
@@ -69,9 +78,130 @@ public class MLMainActivity extends AppCompatActivity {
             case R.id.ml_btn_call_video:
                 callVideo();
                 break;
+            case R.id.ml_btn_add_contact:
+                // 发送好友申请
+                addContact();
+                break;
+            case R.id.ml_btn_add_contact_agree:
+                // 同意好友申请
+                agreeContactInvite();
+                break;
+            case R.id.ml_btn_add_contact_refuse:
+                // 拒绝好友申请
+                refuseContactInvite();
+                break;
+            case R.id.ml_btn_delete_contact:
+                deleteContact();
+                break;
+            case R.id.ml_btn_get_contact:
+                getContact();
+                break;
             }
         }
     };
+
+    /**
+     * 从服务器获取联系人并输出
+     */
+    private void getContact() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<String> contacts = EMContactManager.getInstance().getContactUserNames();
+                    if (contacts.size() == 0) {
+                        Log.i(TAG, "contacts is null");
+                    }
+                    for (String username : contacts) {
+                        Log.i(TAG, "my contact " + username);
+                    }
+                } catch (EaseMobException e) {
+                    Log.i(TAG, "get contacts exception");
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
+
+    /**
+     * 删除好友
+     */
+    private void deleteContact() {
+        constactUser = mContactsView.getText().toString().trim();
+        if (constactUser.isEmpty()) {
+            Toast.makeText(MLMainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            EMContactManager.getInstance().deleteContact(constactUser);
+            Toast.makeText(MLMainActivity.this, "deleteContact success", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "deleteContact success");
+        } catch (EaseMobException e) {
+            Toast.makeText(MLMainActivity.this, "deleteContact failed", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "deleteContact failed");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 拒绝好友申请
+     */
+    private void refuseContactInvite() {
+        constactUser = mContactsView.getText().toString().trim();
+        if (constactUser.isEmpty()) {
+            Toast.makeText(MLMainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            EMChatManager.getInstance().refuseInvitation(constactUser);
+            Toast.makeText(MLMainActivity.this, "refuseInvitation success", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "refuseInvitation success");
+        } catch (EaseMobException e) {
+            Toast.makeText(MLMainActivity.this, "refuseInvitation failed", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "refuseInvitation failed");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 同意好友申请
+     */
+    private void agreeContactInvite() {
+        constactUser = mContactsView.getText().toString().trim();
+        if (constactUser.isEmpty()) {
+            Toast.makeText(MLMainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            EMChatManager.getInstance().acceptInvitation(constactUser);
+            Toast.makeText(MLMainActivity.this, "acceptInvitation success", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "acceptInvitation success");
+        } catch (EaseMobException e) {
+            Toast.makeText(MLMainActivity.this, "acceptInvitation failed", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "acceptInvitation failed");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 发送好友申请
+     */
+    private void addContact() {
+        constactUser = mContactsView.getText().toString().trim();
+        if (constactUser.isEmpty()) {
+            Toast.makeText(MLMainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            // 调用环信添加好友方法
+            EMContactManager.getInstance().addContact(constactUser, "hi!");
+            Toast.makeText(MLMainActivity.this, "addContact success", Toast.LENGTH_SHORT).show();
+        } catch (EaseMobException e) {
+            Toast.makeText(MLMainActivity.this, "addContact failed", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 视频呼叫
@@ -112,8 +242,8 @@ public class MLMainActivity extends AppCompatActivity {
             Toast.makeText(MLMainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
             return;
         }
-        final EMMessage message = EMMessage.createTxtSendMessage("test text message", "lz1");
-//        message.setReceipt(username);
+        final EMMessage message = EMMessage.createTxtSendMessage("test text message", constactUser);
+        //        message.setReceipt(username);
         EMChatManager.getInstance().sendMessage(message, new EMCallBack() {
             @Override
             public void onSuccess() {
