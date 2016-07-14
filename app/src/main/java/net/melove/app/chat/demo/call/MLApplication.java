@@ -50,5 +50,12 @@ public class MLApplication extends Application {
 
         //注册通话广播接收者
         context.registerReceiver(callReceiver, callFilter);
+
+        // 注册监听
+        registerContactListener();
+    }
+
+    public void registerContactListener() {
+
     }
 }
