@@ -25,23 +25,29 @@
             android:layout_height="wrap_content"
             android:hint="username"/>
 
-        <Button
-            android:id="@+id/ml_btn_signin"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign in"/>
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/ml_btn_signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign up"/>
+            <Button
+                android:id="@+id/ml_btn_signin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign in"/>
 
-        <Button
-            android:id="@+id/ml_btn_signout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign out"/>
+            <Button
+                android:id="@+id/ml_btn_signup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign up"/>
+
+            <Button
+                android:id="@+id/ml_btn_signout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign out"/>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/ml_edit_contacts_username"
@@ -49,22 +55,70 @@
             android:layout_height="wrap_content"
             android:hint="contact user"/>
 
-        <Button
-            android:id="@+id/ml_btn_send"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send Message"/>
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/ml_btn_call_voice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Voice Call"/>
+            <Button
+                android:id="@+id/ml_btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send Message"/>
 
-        <Button
-            android:id="@+id/ml_btn_call_video"
+            <Button
+                android:id="@+id/ml_btn_call_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voice Call"/>
+
+            <Button
+                android:id="@+id/ml_btn_call_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video Call"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Video Call"/>
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ml_btn_add_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Contact"/>
+
+            <Button
+                android:id="@+id/ml_btn_add_contact_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agree Contact"/>
+
+            <Button
+                android:id="@+id/ml_btn_add_contact_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Refuse Contact"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ml_btn_delete_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete Contact"/>
+
+            <Button
+                android:id="@+id/ml_btn_get_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Contact"/>
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
