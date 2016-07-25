@@ -81,7 +81,7 @@ public class MLVoiceCallActivity extends AppCompatActivity {
                 case ACCEPTED: // 电话接通成功
                     Log.i("lzna13", "电话接通成功");
                     break;
-                case DISCONNNECTED: // 电话断了
+                case DISCONNECTED: // 电话断了
                     Log.i("lzna13", "电话断了" + error);
                     finish();
                     break;

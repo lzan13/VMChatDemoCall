@@ -8,69 +8,74 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/ml_edit_login_username"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="username"/>
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/ml_edit_login_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="username"/>
+            <EditText
+                android:id="@+id/ml_edit_login_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="username"/>
 
-        <Button
-            android:id="@+id/ml_btn_signin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign in"/>
+            <EditText
+                android:id="@+id/ml_edit_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="username"/>
 
-        <Button
-            android:id="@+id/ml_btn_signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign up"/>
+            <Button
+                android:id="@+id/ml_btn_signin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign in"/>
 
-        <Button
-            android:id="@+id/ml_btn_signout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign out"/>
+            <Button
+                android:id="@+id/ml_btn_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign up"/>
 
-        <EditText
-            android:id="@+id/ml_edit_contacts_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="contact user"/>
+            <Button
+                android:id="@+id/ml_btn_signout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign out"/>
 
-        <Button
-            android:id="@+id/ml_btn_send"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send Message"/>
+            <EditText
+                android:id="@+id/ml_edit_contacts_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="contact user"/>
 
-        <Button
-            android:id="@+id/ml_btn_call_voice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Voice Call"/>
+            <Button
+                android:id="@+id/ml_btn_send"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send Message"/>
 
-        <Button
-            android:id="@+id/ml_btn_call_video"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Video Call"/>
+            <Button
+                android:id="@+id/ml_btn_call_voice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Voice Call"/>
 
-        <Button
-            android:id="@+id/ml_btn_add_contact"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Contact"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/ml_btn_call_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Video Call"/>
+
+            <Button
+                android:id="@+id/ml_btn_add_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Contact"/>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

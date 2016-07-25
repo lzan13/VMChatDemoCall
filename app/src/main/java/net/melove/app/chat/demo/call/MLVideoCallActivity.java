@@ -65,6 +65,11 @@ public class MLVideoCallActivity extends AppCompatActivity {
 
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
 
+        // 设置视频通话分辨率 默认是320，240
+        mVideoCallHelper.setResolution(640, 480);
+        // 设置比特率 默认是150
+        mVideoCallHelper.setVideoBitrate(300);
+
 
         username = getIntent().getStringExtra("username");
         // 语音电话是否为接收的
@@ -114,7 +119,7 @@ public class MLVideoCallActivity extends AppCompatActivity {
                 case ACCEPTED: // 电话接通成功
                     Log.i("lzna13", "电话接通成功");
                     break;
-                case DISCONNNECTED: // 电话断了
+                case DISCONNECTED: // 电话断了
                     Log.i("lzna13", "电话断了" + error);
                     finish();
                     break;

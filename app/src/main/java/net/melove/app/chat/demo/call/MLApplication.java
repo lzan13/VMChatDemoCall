@@ -33,14 +33,13 @@ public class MLApplication extends Application {
         // 初始化sdk的一些配置
         EMOptions options = new EMOptions();
         options.setAutoLogin(true);
-        options.setAppKey("lzan13#hxsdkdemo");
+        options.setAppKey("dato1033#yunkey");
 
         // 初始化环信SDK,一定要先调用init()
         EMClient.getInstance().init(context, options);
 
         // 开启 debug 模式
         EMClient.getInstance().setDebugMode(true);
-
 
         // 设置通话广播监听器
         IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
