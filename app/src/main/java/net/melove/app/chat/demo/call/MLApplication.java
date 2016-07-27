@@ -33,7 +33,8 @@ public class MLApplication extends Application {
         // 初始化sdk的一些配置
         EMOptions options = new EMOptions();
         options.setAutoLogin(true);
-        options.setAppKey("dato1033#yunkey");
+        // 动态设置appkey
+        options.setAppKey("easemob-demo#chatdemoui");
 
         // 初始化环信SDK,一定要先调用init()
         EMClient.getInstance().init(context, options);
