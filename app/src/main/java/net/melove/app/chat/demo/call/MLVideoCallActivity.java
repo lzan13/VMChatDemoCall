@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMCallManager;
@@ -34,6 +35,9 @@ public class MLVideoCallActivity extends AppCompatActivity {
     // 显示自己方画面控件
     private EMLocalSurfaceView localSurfaceView;
 
+    private boolean isDebug = true;
+    private TextView mTestView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,8 @@ public class MLVideoCallActivity extends AppCompatActivity {
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         setContentView(R.layout.activity_video_call);
+
+        mTestView = (TextView) findViewById(R.id.ml_text_test);
 
         findViewById(R.id.ml_btn_answer_call).setOnClickListener(viewListener);
         findViewById(R.id.ml_btn_reject_call).setOnClickListener(viewListener);
@@ -118,6 +124,7 @@ public class MLVideoCallActivity extends AppCompatActivity {
                     break;
                 case ACCEPTED: // 电话接通成功
                     Log.i("lzna13", "电话接通成功");
+                    startMonitor();
                     break;
                 case DISCONNECTED: // 电话断了
                     Log.i("lzna13", "电话断了" + error);
@@ -197,10 +204,37 @@ public class MLVideoCallActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * for debug & testing, you can remove this when releasekak
+     */
+    void startMonitor() {
+        new Thread(new Runnable() {
+            public void run() {
+                while (isDebug) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            mTestView.setText("WidthxHeight：" + mVideoCallHelper.getVideoWidth() + "x" + mVideoCallHelper.getVideoHeight()
+                                    + "\nDelay：" + mVideoCallHelper.getVideoTimeDelay()
+                                    + "\nFramerate：" + mVideoCallHelper.getVideoFrameRate()
+                                    + "\nLost：" + mVideoCallHelper.getVideoLostRateInPercent()
+                                    + "\nLocalBitrate：" + mVideoCallHelper.getLocalBitrate()
+                                    + "\nRemoteBitrate：" + mVideoCallHelper.getRemoteBitrate());
+
+                        }
+                    });
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        }).start();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isDebug = false;
     }
 
     @Override

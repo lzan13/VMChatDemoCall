@@ -34,7 +34,7 @@ public class MLApplication extends Application {
         EMOptions options = new EMOptions();
         options.setAutoLogin(true);
         // 动态设置appkey
-        options.setAppKey("easemob-demo#chatdemoui");
+        options.setAppKey("lzan13#hxsdkdemo");
 
         // 初始化环信SDK,一定要先调用init()
         EMClient.getInstance().init(context, options);
