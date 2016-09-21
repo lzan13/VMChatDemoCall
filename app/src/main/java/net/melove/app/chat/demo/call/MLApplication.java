@@ -41,12 +41,6 @@ public class MLApplication extends Application {
      */
     private void initEasemobSDK() {
 
-
-        String[] imAddress = {"im1.ssy.im.laolai.net"};
-        String[] restAddress = {"a1.ssy.im.laolai.net"};
-        EMChat.getInstance().setServerAddress(imAddress, restAddress);
-        EMChat.getInstance().setAppkey("laolai#chat");
-
         EMChatOptions options = EMChatManager.getInstance().getChatOptions();
         options.setAcceptInvitationAlways(false);
 
