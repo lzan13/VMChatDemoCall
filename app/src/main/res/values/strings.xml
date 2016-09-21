@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">MLEaseChatCall</string>
+    <string name="ml_app_name">MLEaseChatCall</string>
     <string name="action_settings">Settings</string>
 </resources>

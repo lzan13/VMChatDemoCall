@@ -1,21 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/ml_theme_background"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false">
 
+    <!--界面背景-->
+    <ImageView
+        android:id="@+id/ml_img_call_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/bg_chat"/>
+
+    <!--显示对方画面控件-->
     <SurfaceView
-        android:id="@+id/ml_surface_opposite"
+        android:id="@+id/ml_surface_view_opposite"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
 
+    <!--控制按钮层布局-->
     <RelativeLayout
+        android:id="@+id/ml_layout_call_control"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
+        <!--显示本地画面控件-->
         <SurfaceView
-            android:id="@+id/ml_surface_self"
-            android:layout_width="200dp"
-            android:layout_height="300dp"/>
+            android:id="@+id/ml_surface_view_local"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/ml_dimen_96"/>
+
+        <!--头部状态以及最小化操作-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ml_dimen_24">
+            <!--切换摄像头-->
+            <ImageButton
+                android:id="@+id/ml_btn_change_camera_switch"
+                android:layout_width="@dimen/ml_dimen_48"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/ml_dimen_16"
+                android:background="@drawable/ml_click_rectangle_white"
+                android:src="@drawable/ml_checkbox_change_camera"/>
+            <!--通话状态-->
+            <TextView
+                android:id="@+id/ml_text_call_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_white_87"/>
+            <!--界面最小化按钮-->
+            <ImageButton
+                android:id="@+id/ml_btn_exit_full_screen"
+                android:layout_width="@dimen/ml_dimen_48"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/ml_dimen_16"
+                android:background="@drawable/ml_click_rectangle_white"
+                android:src="@mipmap/ic_fullscreen_exit_white_24dp"/>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ml_layout_calling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/ml_black_38"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ml_dimen_8"
+                android:orientation="horizontal">
+
+                <!--麦克风开关-->
+                <ImageButton
+                    android:id="@+id/ml_btn_mic_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_mic"/>
+
+                <!--摄像头开关-->
+                <ImageButton
+                    android:id="@+id/ml_btn_camera_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_camera"/>
+
+                <!--扬声器开关-->
+                <ImageButton
+                    android:id="@+id/ml_btn_speaker_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_speaker"/>
+
+                <!--录制开关-->
+                <ImageButton
+                    android:id="@+id/ml_btn_record_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_record"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <!--拒绝接听-->
+                <Button
+                    android:id="@+id/ml_btn_reject_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/ml_dimen_24"
+                    android:text="reject"/>
+
+                <!--结束通话-->
+                <Button
+                    android:id="@+id/ml_btn_end_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/ml_dimen_24"
+                    android:text="end"
+                    android:visibility="visible"/>
+
+                <!--接听通话-->
+                <Button
+                    android:id="@+id/ml_btn_answer_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/ml_dimen_24"
+                    android:text="answer"/>
+
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

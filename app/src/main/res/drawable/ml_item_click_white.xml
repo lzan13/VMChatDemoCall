@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false">
+        <shape android:dither="true">
+            <solid android:color="@color/ml_white_54"/>
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape android:dither="true">
+            <solid android:color="@color/ml_gray_38"/>
+        </shape>
+    </item>
+</selector>

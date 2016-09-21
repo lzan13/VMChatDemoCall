@@ -29,12 +29,12 @@
         android:name="net.melove.app.chat.demo.call.MLApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/ml_app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name="net.melove.app.chat.demo.call.MLMainActivity"
-            android:label="@string/app_name"
+            android:label="@string/ml_app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -65,7 +65,7 @@
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="dousers#vip6" />
+            android:value="lzan13#hxsdkdemo" />
         <!-- 声明sdk所需的service -->
         <service android:name="com.easemob.chat.EMChatService"
                  android:exported="true"

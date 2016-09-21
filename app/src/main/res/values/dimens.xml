@@ -1,6 +1,61 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- 默认 Activity 边距，参考Android设计指南. -->
+    <dimen name="activity_default_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- 参考设计指南，导航抽屉宽度应该定义在 240dp-320dp 之间:
+         https://developer.android.com/design/patterns/navigation-drawer.html -->
+    <dimen name="navigation_drawer_width">320dp</dimen>
+    <dimen name="navigation_header_height">192dp</dimen>
+    <dimen name="navigation_header_vertical_spacing">16dp</dimen>
+
+    <!--默认公用的尺寸 自己定义-->
+    <dimen name="ml_dimen_px_1">1px</dimen>
+    <dimen name="ml_dimen_0">0dp</dimen>
+    <dimen name="ml_dimen_0_5">0.5dp</dimen>
+    <dimen name="ml_dimen_1">1dp</dimen>
+    <dimen name="ml_dimen_2">2dp</dimen>
+    <dimen name="ml_dimen_4">4dp</dimen>
+    <dimen name="ml_dimen_8">8dp</dimen>
+    <dimen name="ml_dimen_12">12dp</dimen>
+    <dimen name="ml_dimen_16">16dp</dimen>
+    <dimen name="ml_dimen_20">20dp</dimen>
+    <dimen name="ml_dimen_24">24dp</dimen>
+    <dimen name="ml_dimen_32">32dp</dimen>
+    <dimen name="ml_dimen_36">36dp</dimen>
+    <dimen name="ml_dimen_40">40dp</dimen>
+    <dimen name="ml_dimen_48">48dp</dimen>
+    <dimen name="ml_dimen_52">52dp</dimen>
+    <dimen name="ml_dimen_56">56dp</dimen>
+    <dimen name="ml_dimen_72">72dp</dimen>
+    <dimen name="ml_dimen_96">96dp</dimen>
+    <dimen name="ml_dimen_128">128dp</dimen>
+    <dimen name="ml_dimen_144">144dp</dimen>
+    <dimen name="ml_dimen_192">192dp</dimen>
+    <dimen name="ml_dimen_224">224dp</dimen>
+    <dimen name="ml_dimen_256">256dp</dimen>
+    <dimen name="ml_dimen_384">384dp</dimen>
+    <dimen name="ml_dimen_512">512dp</dimen>
+
+
+    <!--定义字体尺寸-->
+    <dimen name="ml_size_6">6sp</dimen>
+    <dimen name="ml_size_7">7sp</dimen>
+    <dimen name="ml_size_8">8sp</dimen>
+    <dimen name="ml_size_9">9sp</dimen>
+    <dimen name="ml_size_10">10sp</dimen>
+    <dimen name="ml_size_11">11sp</dimen>
+    <dimen name="ml_size_12">12sp</dimen>
+    <dimen name="ml_size_14">14sp</dimen>
+    <dimen name="ml_size_16">16sp</dimen>
+    <dimen name="ml_size_18">18sp</dimen>
+    <dimen name="ml_size_20">20sp</dimen>
+    <dimen name="ml_size_22">22sp</dimen>
+    <dimen name="ml_size_24">24sp</dimen>
+    <dimen name="ml_size_28">28sp</dimen>
+
+
     <dimen name="fab_margin">16dp</dimen>
+
 </resources>

@@ -23,7 +23,7 @@ public class MLApplication extends Application {
 
     private static String TAG = "lzan13";
 
-    private Context context;
+    public static Context context;
     private CallReceiver callReceiver;
 
     @Override
@@ -75,12 +75,6 @@ public class MLApplication extends Application {
 
         // 注册联系人变化监听
         registerContactListener();
-//        try {
-//            Thread.sleep(1000);
-//            Log.i(TAG, "sleep 1 s");
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
 //        registerContactListener();
         EMChat.getInstance().setAppInited();

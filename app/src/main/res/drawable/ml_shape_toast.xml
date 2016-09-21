@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--背景色-->
+    <item>
+        <shape android:dither="true" android:shape="rectangle">
+            <corners android:radius="@dimen/ml_dimen_48"/>
+
+            <solid android:color="@color/ml_white_87"/>
+            <!--<stroke android:width="@dimen/ml_dimen_px_1" android:color="@color/ml_border_red" />-->
+            <!--<padding android:bottom="@dimen/ml_dimen_4" android:left="@dimen/ml_dimen_8" android:right="@dimen/ml_dimen_8" android:top="@dimen/ml_dimen_4" />-->
+        </shape>
+    </item>
+</selector>

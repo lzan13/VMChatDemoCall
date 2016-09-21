@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+
+    <!--透明颜色-->
+    <!--Application 基色-->
+    <color name="ml_transparent">#00000000</color>
+    <color name="ml_translucent">#89000000</color>
+    <color name="ml_white">#ffffffff</color>
+    <color name="ml_black">#ff000000</color>
+
+    <!--Application 主题基色-->
+    <color name="ml_theme_primary_transparent">#89e62f17</color>
+    <color name="ml_theme_primary">#ffe62f17</color>
+    <!--<color name="ml_theme_primary_dark">#ffd22a14</color>-->
+    <color name="ml_theme_primary_dark">#ffd22a14</color>
+    <color name="ml_theme_primary_light">#ffff364a</color>
+    <color name="ml_theme_accent">#ffff5252</color>
+    <color name="ml_theme_background">#fff8f2f2</color>
+
+    <!--白色-->
+    <color name="ml_white_100">#ffffffff</color>
+    <color name="ml_white_87">#ddffffff</color>
+    <color name="ml_white_54">#89ffffff</color>
+    <color name="ml_white_38">#61ffffff</color>
+    <color name="ml_white_12">#1effffff</color>
+
+    <!--黑色 Primary-->
+    <color name="ml_black_100">#ff212121</color>
+    <color name="ml_black_87">#dd212121</color>
+    <color name="ml_black_54">#89212121</color>
+    <color name="ml_black_38">#61212121</color>
+
+    <!--灰色-->
+    <color name="ml_gray_100">#ff727272</color>
+    <color name="ml_gray_87">#dd727272</color>
+    <color name="ml_gray_54">#89727272</color>
+    <color name="ml_gray_38">#61727272</color>
+    <color name="ml_gray_12">#1e727272</color>
+
+    <!--主题定义的红色-->
+    <color name="ml_red_100">#ffe62f17</color>
+    <color name="ml_red_87">#dde62f17</color>
+    <color name="ml_red_54">#89e62f17</color>
+    <color name="ml_red_38">#42e62f17</color>
+
+    <color name="ml_red_dark_100">#ffd22a14</color>
+    <color name="ml_red_dark_87">#ddd22a14</color>
+    <color name="ml_red_dark_54">#89d22a14</color>
+    <color name="ml_red_dark_38">#61d22a14</color>
+    <color name="ml_red_dark_12">#1ed22a14</color>
+
+    <!--主题定义的粉色-->
+    <color name="ml_orange_100">#ffff5722</color>
+    <color name="ml_orange_87">#ddff5722</color>
+    <color name="ml_orange_54">#89ff5722</color>
+    <color name="ml_orange_38">#61ff5722</color>
+    <color name="ml_orange_12">#1eff5722</color>
+
+    <!--蓝色-->
+    <color name="ml_blue_100">#ff2384fe</color>
+    <color name="ml_blue_87">#dd2384fe</color>
+    <color name="ml_blue_54">#892384fe</color>
+    <color name="ml_blue_38">#612384fe</color>
+    <color name="ml_blue_12">#1e2384fe</color>
+
+    <!--蓝色-->
+    <color name="ml_green_100">#ff039e00</color>
+    <color name="ml_green_87">#dd039e00</color>
+    <color name="ml_green_54">#89039e00</color>
+    <color name="ml_green_38">#61039e00</color>
+    <color name="ml_green_12">#1e039e00</color>
+
+    <!--TabLayout 颜色-->
+    <color name="ml_tab_indicator">#dde62f17</color>
+    <color name="ml_tab_background">#ffffffff</color>
+    <color name="ml_tab_normal">#79e62f17</color>
+    <color name="ml_tab_selected">#dde62f17</color>
+
 </resources>
