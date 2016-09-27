@@ -56,7 +56,7 @@
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="dato1033#yunkey"/>
+            android:value="lzan13#hxsdkdemo"/>
         <!-- 声明sdk所需的 Service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"

@@ -60,6 +60,12 @@
                 android:text="Send Message"/>
 
             <Button
+                android:id="@+id/ml_btn_send_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send Image"/>
+
+            <Button
                 android:id="@+id/ml_btn_call_voice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

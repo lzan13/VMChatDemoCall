@@ -3,7 +3,9 @@ package net.melove.app.chat.demo.call;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.util.Log;
 
+import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
@@ -53,9 +55,70 @@ public class MLApplication extends Application {
 
         // 注册监听
         registerContactListener();
+
+        // 设置群组监听
+        setGroupListener();
     }
 
     public void registerContactListener() {
 
+    }
+
+    public void setGroupListener(){
+        EMGroupChangeListener groupChangeListener = new EMGroupChangeListener() {
+            @Override
+            public void onInvitationReceived(String s, String s1, String s2, String s3) {
+                Log.i("lzan13", "onInvitationReceived");
+            }
+
+            @Override
+            public void onApplicationReceived(String s, String s1, String s2, String s3) {
+                Log.i("lzan13", "onApplicationReceived");
+
+            }
+
+            @Override
+            public void onApplicationAccept(String s, String s1, String s2) {
+                Log.i("lzan13", "onApplicationAccept");
+
+            }
+
+            @Override
+            public void onApplicationDeclined(String s, String s1, String s2, String s3) {
+                Log.i("lzan13", "onApplicationDeclined");
+
+            }
+
+            @Override
+            public void onInvitationAccpted(String s, String s1, String s2) {
+                Log.i("lzan13", "onInvitationAccpted");
+
+            }
+
+            @Override
+            public void onInvitationDeclined(String s, String s1, String s2) {
+                Log.i("lzan13", "onInvitationDeclined");
+
+            }
+
+            @Override
+            public void onUserRemoved(String s, String s1) {
+                Log.i("lzan13", "onUserRemoved");
+
+            }
+
+            @Override
+            public void onGroupDestroy(String s, String s1) {
+                Log.i("lzan13", "onGroupDestroy");
+
+            }
+
+            @Override
+            public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+                Log.i("lzan13", "onAutoAcceptInvitationFromGroup");
+
+            }
+        };
+        EMClient.getInstance().groupManager().addGroupChangeListener(groupChangeListener);
     }
 }
