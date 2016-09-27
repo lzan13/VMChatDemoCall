@@ -90,10 +90,10 @@ public class MLApplication extends Application {
             }
 
             @Override
-            public void onInvitationAccpted(String s, String s1, String s2) {
-                Log.i("lzan13", "onInvitationAccpted");
-
+            public void onInvitationAccepted(String s, String s1, String s2) {
+                Log.i("lzan13", "onInvitationAccepted");
             }
+
 
             @Override
             public void onInvitationDeclined(String s, String s1, String s2) {
@@ -108,10 +108,10 @@ public class MLApplication extends Application {
             }
 
             @Override
-            public void onGroupDestroy(String s, String s1) {
-                Log.i("lzan13", "onGroupDestroy");
-
+            public void onGroupDestroyed(String s, String s1) {
+                Log.i("lzan13", "onGroupDestroyed");
             }
+
 
             @Override
             public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {

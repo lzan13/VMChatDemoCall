@@ -27,6 +27,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/hyphenatechat_3.1.4.jar')
+    compile files('libs/hyphenatechat_3.1.5.jar')
     compile 'com.android.support:appcompat-v7:24.2.1'
 }

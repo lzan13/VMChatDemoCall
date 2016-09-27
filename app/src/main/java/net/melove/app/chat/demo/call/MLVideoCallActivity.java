@@ -43,10 +43,7 @@ public class MLVideoCallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         setContentView(R.layout.activity_video_call);
 
@@ -116,36 +113,36 @@ public class MLVideoCallActivity extends AppCompatActivity {
                 // Message msg = handler.obtainMessage();
                 switch (callState) {
 
-                case CONNECTING: // 正在连接对方
-                    Log.i("lzna13", "正在连接对方");
-                    break;
-                case CONNECTED: // 双方已经建立连接
-                    Log.i("lzna13", "双方已经建立连接");
-                    break;
-                case ACCEPTED: // 电话接通成功
-                    Log.i("lzna13", "电话接通成功");
-                    startMonitor();
-                    break;
-                case DISCONNECTED: // 电话断了
-                    Log.i("lzna13", "电话断了" + error);
-                    finish();
-                    break;
-                case NETWORK_UNSTABLE:
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            if (error == CallError.ERROR_NO_DATA) {
-                                Log.i("lzna13", "没有通话数据" + error);
-                            } else {
-                                Log.i("lzna13", "网络不稳定" + error);
+                    case CONNECTING: // 正在连接对方
+                        Log.i("lzna13", "正在连接对方");
+                        break;
+                    case CONNECTED: // 双方已经建立连接
+                        Log.i("lzna13", "双方已经建立连接");
+                        break;
+                    case ACCEPTED: // 电话接通成功
+                        Log.i("lzna13", "电话接通成功");
+                        startMonitor();
+                        break;
+                    case DISCONNNECTED: // 电话断了
+                        Log.i("lzna13", "电话断了" + error);
+                        finish();
+                        break;
+                    case NETWORK_UNSTABLE:
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                if (error == CallError.ERROR_NO_DATA) {
+                                    Log.i("lzna13", "没有通话数据" + error);
+                                } else {
+                                    Log.i("lzna13", "网络不稳定" + error);
+                                }
                             }
-                        }
-                    });
-                    break;
-                case NETWORK_NORMAL:
-                    Log.i("lzna13", "网络正常");
-                    break;
-                default:
-                    break;
+                        });
+                        break;
+                    case NETWORK_NORMAL:
+                        Log.i("lzna13", "网络正常");
+                        break;
+                    default:
+                        break;
                 }
 
             }
@@ -157,49 +154,49 @@ public class MLVideoCallActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-            case R.id.ml_btn_answer_call:
-                // 接听对方的呼叫
-                try {
-                    Log.i("lzna13", "正在接听...");
-                    EMClient.getInstance().callManager().answerCall();
-                    Log.i("lzna13", "接听成功");
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    Log.i("lzna13", "接听失败");
-                    finish();
-                    return;
-                }
-                break;
-            case R.id.ml_btn_reject_call:
-                // 拒绝接听对方的呼叫
-                try {
-                    EMClient.getInstance().callManager().rejectCall();
-                    Log.i("lzan13", "拒绝接听呼叫");
-                    finish();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.i("lzan13", "拒绝接听失败");
-                    finish();
-                }
-                break;
-            case R.id.ml_btn_end_call:
-                // 挂断通话
-                try {
-                    EMClient.getInstance().callManager().endCall();
-                    Log.i("lzan13", "挂断电话");
-                } catch (EMNoActiveCallException e) {
-                    Log.i("lzan13", "挂断电话失败");
-                    finish();
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.ml_btn_change_camera:
-                // 切换摄像头
-                EMClient.getInstance().callManager().switchCamera();
-                break;
-            default:
-                break;
+                case R.id.ml_btn_answer_call:
+                    // 接听对方的呼叫
+                    try {
+                        Log.i("lzna13", "正在接听...");
+                        EMClient.getInstance().callManager().answerCall();
+                        Log.i("lzna13", "接听成功");
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Log.i("lzna13", "接听失败");
+                        finish();
+                        return;
+                    }
+                    break;
+                case R.id.ml_btn_reject_call:
+                    // 拒绝接听对方的呼叫
+                    try {
+                        EMClient.getInstance().callManager().rejectCall();
+                        Log.i("lzan13", "拒绝接听呼叫");
+                        finish();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i("lzan13", "拒绝接听失败");
+                        finish();
+                    }
+                    break;
+                case R.id.ml_btn_end_call:
+                    // 挂断通话
+                    try {
+                        EMClient.getInstance().callManager().endCall();
+                        Log.i("lzan13", "挂断电话");
+                    } catch (EMNoActiveCallException e) {
+                        Log.i("lzan13", "挂断电话失败");
+                        finish();
+                        e.printStackTrace();
+                    }
+                    break;
+                case R.id.ml_btn_change_camera:
+                    // 切换摄像头
+                    EMClient.getInstance().callManager().switchCamera();
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -213,10 +210,11 @@ public class MLVideoCallActivity extends AppCompatActivity {
                 while (isDebug) {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            mTestView.setText("WidthxHeight：" + mVideoCallHelper.getVideoWidth() + "x" + mVideoCallHelper.getVideoHeight()
-                                    + "\nDelay：" + mVideoCallHelper.getVideoTimeDelay()
+                            mTestView.setText("WidthxHeight：" + mVideoCallHelper.getVideoWidth()
+                                    + "x" + mVideoCallHelper.getVideoHeight()
+                                    + "\nDelay：" + mVideoCallHelper.getVideoLatency()
                                     + "\nFramerate：" + mVideoCallHelper.getVideoFrameRate()
-                                    + "\nLost：" + mVideoCallHelper.getVideoLostRateInPercent()
+                                    + "\nLost：" + mVideoCallHelper.getVideoLostRate()
                                     + "\nLocalBitrate：" + mVideoCallHelper.getLocalBitrate()
                                     + "\nRemoteBitrate：" + mVideoCallHelper.getRemoteBitrate());
 
