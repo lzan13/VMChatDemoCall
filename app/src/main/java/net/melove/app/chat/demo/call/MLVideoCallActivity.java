@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -304,6 +305,7 @@ public class MLVideoCallActivity extends MLCallActivity {
             recordSwitch.setActivated(false);
             String path = videoCallHelper.stopVideoRecord();
             MLLog.d("录制视频完成 " + path);
+            Toast.makeText(activity, "录制完成" + path, Toast.LENGTH_LONG).show();
         } else {
             // 设置按钮状态
             recordSwitch.setActivated(true);
@@ -315,6 +317,7 @@ public class MLVideoCallActivity extends MLCallActivity {
             }
             videoCallHelper.startVideoRecord(dirPath);
             MLLog.d("开始录制视频");
+            Toast.makeText(activity, "开始录制", Toast.LENGTH_LONG).show();
         }
     }
 
