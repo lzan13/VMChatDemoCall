@@ -3,4 +3,35 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <!--默认公用的尺寸 自己定义-->
+    <dimen name="ml_dimen_px_1">1px</dimen>
+    <dimen name="ml_dimen_0">0dp</dimen>
+    <dimen name="ml_dimen_0_5">0.5dp</dimen>
+    <dimen name="ml_dimen_1">1dp</dimen>
+    <dimen name="ml_dimen_2">2dp</dimen>
+    <dimen name="ml_dimen_4">4dp</dimen>
+    <dimen name="ml_dimen_8">8dp</dimen>
+    <dimen name="ml_dimen_12">12dp</dimen>
+    <dimen name="ml_dimen_16">16dp</dimen>
+    <dimen name="ml_dimen_20">20dp</dimen>
+    <dimen name="ml_dimen_24">24dp</dimen>
+    <dimen name="ml_dimen_32">32dp</dimen>
+    <dimen name="ml_dimen_36">36dp</dimen>
+    <dimen name="ml_dimen_40">40dp</dimen>
+    <dimen name="ml_dimen_48">48dp</dimen>
+    <dimen name="ml_dimen_52">52dp</dimen>
+    <dimen name="ml_dimen_56">56dp</dimen>
+    <dimen name="ml_dimen_72">72dp</dimen>
+    <dimen name="ml_dimen_96">96dp</dimen>
+    <dimen name="ml_dimen_128">128dp</dimen>
+    <dimen name="ml_dimen_144">144dp</dimen>
+    <dimen name="ml_dimen_192">192dp</dimen>
+    <dimen name="ml_dimen_224">224dp</dimen>
+    <dimen name="ml_dimen_256">256dp</dimen>
+    <dimen name="ml_dimen_320">320dp</dimen>
+    <dimen name="ml_dimen_360">360dp</dimen>
+    <dimen name="ml_dimen_384">384dp</dimen>
+    <dimen name="ml_dimen_512">512dp</dimen>
 </resources>

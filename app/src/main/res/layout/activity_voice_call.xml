@@ -1,59 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:animateLayoutChanges="true"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
+    >
 
-    <LinearLayout
+    <!--通话界面背景-->
+    <ImageView
+        android:id="@+id/img_call_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            >
+            <!--通话状态-->
+            <TextView
+                android:id="@+id/text_call_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/app_name"
+                android:textColor="@color/ml_white_87"
+                />
+            <!--通话界面最小化-->
+            <ImageButton
+                android:id="@+id/btn_exit_full_screen"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/ml_click_circle_transparent"
+                android:src="@mipmap/ic_fullscreen_exit_white_24dp"
+                />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/ml_btn_mute"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="96dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <!--当前通话的头像-->
+            <ImageView
+                android:id="@+id/img_call_avatar"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@mipmap/ic_launcher"
+                />
+            <!--当前通话的账户名-->
+            <TextView
+                android:id="@+id/text_call_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mute"/>
-
-            <Button
-                android:id="@+id/ml_btn_speaker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Speaker"/>
+                android:layout_margin="8dp"
+                android:text="@string/app_name"
+                android:textColor="@color/ml_white_87"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_calling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true"
+            android:background="@color/ml_black_38"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
 
-            <Button
-                android:id="@+id/ml_btn_answer_call"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Answer"/>
+                android:orientation="horizontal"
+                >
 
-            <Button
-                android:id="@+id/ml_btn_reject_call"
+                <!--麦克风开关-->
+                <ImageButton
+                    android:id="@+id/btn_mic_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/ml_click_circle_transparent"
+                    android:src="@mipmap/ic_mic_off_white_24dp"
+                    />
+
+                <!--扬声器开关-->
+                <ImageButton
+                    android:id="@+id/btn_speaker_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/ml_click_circle_transparent"
+                    android:src="@mipmap/ic_volume_up_white_24dp"
+                    />
+
+                <!--录制开关-->
+                <ImageButton
+                    android:id="@+id/btn_record_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/ml_click_circle_transparent"
+                    android:src="@mipmap/ic_record_white_24dp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reject"/>
+                android:orientation="horizontal"
+                >
+                <!--拒绝接听-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_reject_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="24dp"
+                    android:src="@mipmap/ic_call_end_white_24dp"
+                    app:fabSize="normal"
+                    />
 
-            <Button
-                android:id="@+id/ml_btn_end_call"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="End"/>
+                <!--结束通话-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_end_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="24dp"
+                    android:src="@mipmap/ic_call_end_white_24dp"
+                    android:visibility="gone"
+                    app:fabSize="normal"
+                    />
+
+                <!--接听通话-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_answer_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="24dp"
+                    android:src="@mipmap/ic_call_white_24dp"
+                    app:backgroundTint="@color/ml_green_87"
+                    app:fabSize="normal"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

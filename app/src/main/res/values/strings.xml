@@ -1,4 +1,34 @@
 <resources>
     <string name="app_name">MLChatDemoCall</string>
     <string name="action_settings">Settings</string>
+
+    <!--通话方面的提示信息-->
+    <string name="ml_call_accepted">通话已接通</string>
+    <string name="ml_call_busy">对方正忙</string>
+    <string name="ml_call_cancel">已取消</string>
+    <string name="ml_call_cancel_is_incoming">对方已取消</string>
+    <string name="ml_call_connecting">正在呼叫对方</string>
+    <string name="ml_call_connected">正在等待对方接受呼叫申请</string>
+    <string name="ml_call_connected_is_incoming">对方申请与你进行通话</string>
+    <string name="ml_call_connection_fail">建立连接失败</string>
+    <string name="ml_call_disconnected">通话已结束</string>
+    <string name="ml_call_duration_time">通话时长</string>
+    <string name="ml_call_no_data">没有通话数据</string>
+    <string name="ml_call_not_answer">对方未接听</string>
+    <string name="ml_call_no_response">对方可能在忙，建议稍后拨打</string>
+    <string name="ml_call_offline">对方不在线</string>
+    <string name="ml_call_network_unstable">网络状态不佳</string>
+    <string name="ml_call_network_normal">网络状态良好</string>
+    <string name="ml_call_reject">对方已拒绝</string>
+    <string name="ml_call_reject_is_incoming">已拒绝</string>
+    <string name="ml_call_local_version_smaller">本地版本过低，无法通讯</string>
+    <string name="ml_call_opposite_version_smaller">对方版本过低，无法通讯</string>
+    <string name="ml_call_version_different">双方通讯协议不同，无法通讯</string>
+    <string name="ml_call_video_pause">视频传输已暂停</string>
+    <string name="ml_call_video_resume">视频传输已恢复</string>
+    <string name="ml_call_video_calling">视频通话进行中</string>
+    <string name="ml_call_voice_pause">语音传输已暂停</string>
+    <string name="ml_call_voice_resume">语音传输已恢复</string>
+    <string name="ml_call_voice_calling">语音通话进行中</string>
+
 </resources>

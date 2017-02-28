@@ -20,7 +20,6 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.File;
 
-
 /**
  * 音视频项目主类
  */
@@ -36,8 +35,7 @@ public class MLMainActivity extends AppCompatActivity {
     private String password;
     private String constactUser;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,14 +47,12 @@ public class MLMainActivity extends AppCompatActivity {
         findViewById(R.id.ml_btn_signup).setOnClickListener(viewListener);
         findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
         findViewById(R.id.ml_btn_send).setOnClickListener(viewListener);
-        findViewById(R.id.ml_btn_send_image).setOnClickListener(viewListener);
         findViewById(R.id.ml_btn_call_voice).setOnClickListener(viewListener);
         findViewById(R.id.ml_btn_call_video).setOnClickListener(viewListener);
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        @Override public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_signin:
                     signinEasemob();
@@ -69,9 +65,6 @@ public class MLMainActivity extends AppCompatActivity {
                     break;
                 case R.id.ml_btn_send:
                     sendTextMessage();
-                    break;
-                case R.id.ml_btn_send_image:
-                    openCamera();
                     break;
                 case R.id.ml_btn_call_voice:
                     callVoice();
@@ -93,8 +86,9 @@ public class MLMainActivity extends AppCompatActivity {
             return;
         }
         Intent intent = new Intent(MLMainActivity.this, MLVideoCallActivity.class);
-        intent.putExtra("username", constactUser);
-        intent.putExtra("isComingCall", false);
+        MLCallManager.getInstance().setChatId(constactUser);
+        MLCallManager.getInstance().setInComingCall(false);
+        MLCallManager.getInstance().setCallType(MLCallManager.CallType.VIDEO);
         startActivity(intent);
     }
 
@@ -108,8 +102,9 @@ public class MLMainActivity extends AppCompatActivity {
             return;
         }
         Intent intent = new Intent(MLMainActivity.this, MLVoiceCallActivity.class);
-        intent.putExtra("username", constactUser);
-        intent.putExtra("isComingCall", false);
+        MLCallManager.getInstance().setChatId(constactUser);
+        MLCallManager.getInstance().setInComingCall(false);
+        MLCallManager.getInstance().setCallType(MLCallManager.CallType.VOICE);
         startActivity(intent);
     }
 
@@ -127,28 +122,6 @@ public class MLMainActivity extends AppCompatActivity {
     }
 
     /**
-     * 发送图片消息
-     *
-     * @param path 要发送的图片的路径
-     */
-    private void sendImageMessage(String path) {
-        constactUser = mContactsView.getText().toString().trim();
-        if (constactUser.isEmpty()) {
-            Toast.makeText(MLMainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
-            return;
-        }
-        /**
-         * 根据图片路径创建一条图片消息，需要三个参数，
-         * path     图片路径
-         * isOrigin 是否发送原图
-         * mChatId  接收者
-         */
-        EMMessage imgMessage = EMMessage.createImageSendMessage(path, true, constactUser);
-        sendMessage(imgMessage);
-    }
-
-
-    /**
      * 最终调用发送信息方法
      *
      * @param message 需要发送的消息
@@ -160,92 +133,42 @@ public class MLMainActivity extends AppCompatActivity {
          *  所以这里在发送之前先设置消息的状态回调
          */
         message.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                Log.i("lzan13", String.format("消息发送成功 msgId %s, content %s", message.getMsgId(), message.getBody()));
+            @Override public void onSuccess() {
+                Log.i("lzan13", String.format("消息发送成功 msgId %s, content %s", message.getMsgId(),
+                        message.getBody()));
             }
 
-            @Override
-            public void onError(final int i, final String s) {
+            @Override public void onError(final int i, final String s) {
                 Log.i("lzan13", String.format("消息发送失败 code: %d, error: %s", i, s));
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
                 // TODO 消息发送进度，这里不处理，留给消息Item自己去更新
                 Log.i("lzan13", String.format("消息发送中 progress: %d, %s", i, s));
             }
         });
         // 发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
-
     }
-
-    Uri mCameraImageUri = null;
-    /**
-     * 打开相机去拍摄图片发送
-     */
-    private void openCamera() {
-        // 定义拍照后图片保存的路径以及文件名
-        String imagePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/" + "IMG" + System.currentTimeMillis() + ".jpg";
-        // 激活相机
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // 判断存储卡是否可以用，可用进行存储
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            // 根据文件路径解析成Uri
-            mCameraImageUri = Uri.fromFile(new File(imagePath));
-            // 将Uri设置为媒体输出的目标，目的就是为了等下拍照保存在自己设定的路径
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
-        }
-        // 根据 Intent 启动一个带有返回值的 Activity，这里启动的就是相机，返回选择图片的地址
-        startActivityForResult(intent, 0);
-    }
-    /**
-     * 处理Activity的返回值得方法
-     *
-     * @param requestCode 请求码
-     * @param resultCode  返回码
-     * @param data        返回的数据
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-        switch (requestCode) {
-            case 0:
-                // 相机拍摄的图片
-                sendImageMessage(mCameraImageUri.getPath());
-                break;
-            default:
-                break;
-        }
-    }
-
 
     /**
      * 退出登录
      */
     private void signoutEasemob() {
         EMClient.getInstance().logout(true, new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 Log.i(TAG, "logout easemob success");
             }
 
-            @Override
-            public void onError(int i, String s) {
+            @Override public void onError(int i, String s) {
                 Log.i(TAG, "logout easemob error: " + i + "; " + s);
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
 
             }
         });
     }
-
 
     /**
      * 注册账户
@@ -254,12 +177,12 @@ public class MLMainActivity extends AppCompatActivity {
         username = mUsernameView.getText().toString().trim();
         password = mPasswordView.getText().toString().trim();
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(MLMainActivity.this, "username or password not null", Toast.LENGTH_LONG).show();
+            Toast.makeText(MLMainActivity.this, "username or password not null", Toast.LENGTH_LONG)
+                    .show();
             return;
         }
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 try {
                     EMClient.getInstance().createAccount(username, password);
                 } catch (HyphenateException e) {
@@ -268,7 +191,6 @@ public class MLMainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
     }
 
     /**
@@ -278,47 +200,43 @@ public class MLMainActivity extends AppCompatActivity {
         username = mUsernameView.getText().toString().trim();
         password = mPasswordView.getText().toString().trim();
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(MLMainActivity.this, "username or password not null", Toast.LENGTH_LONG).show();
+            Toast.makeText(MLMainActivity.this, "username or password not null", Toast.LENGTH_LONG)
+                    .show();
             return;
         }
         EMClient.getInstance().login(username, password, new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 Log.i(TAG, "login easemob success");
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MLMainActivity.this, "login easemob success", Toast.LENGTH_SHORT).show();
+                    @Override public void run() {
+                        Toast.makeText(MLMainActivity.this, "login easemob success",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
-            @Override
-            public void onError(final int i, final String s) {
+            @Override public void onError(final int i, final String s) {
                 Log.i(TAG, "login easemob error: " + i + "; " + s);
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MLMainActivity.this, "login easemob error: " + i + "; " + s, Toast.LENGTH_SHORT).show();
+                    @Override public void run() {
+                        Toast.makeText(MLMainActivity.this, "login easemob error: " + i + "; " + s,
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
 
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

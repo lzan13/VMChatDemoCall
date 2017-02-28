@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--透明颜色-->
+    <!--Application 基色-->
+    <color name="ml_transparent">#00000000</color>
+    <color name="ml_translucent">#89000000</color>
+    <color name="ml_white">#ffffffff</color>
+    <color name="ml_black">#ff000000</color>
+
+    <!--主题基色-->
+    <color name="ml_theme_primary_transparent">#89e62f17</color>
+    <color name="ml_theme_primary">#ffe62f17</color>
+    <color name="ml_theme_primary_dark">#ffd22a14</color>
+    <color name="ml_theme_primary_light">#ffff364a</color>
+    <color name="ml_theme_accent">#ffff5252</color>
+    <color name="ml_theme_background">#fff8f2f2</color>
+
+    <!--白色-->
+    <color name="ml_white_100">#ffffffff</color>
+    <color name="ml_white_87">#ddffffff</color>
+    <color name="ml_white_54">#89ffffff</color>
+    <color name="ml_white_38">#61ffffff</color>
+    <color name="ml_white_12">#1effffff</color>
+
+    <!--黑色 Primary-->
+    <color name="ml_black_100">#ff212121</color>
+    <color name="ml_black_87">#dd212121</color>
+    <color name="ml_black_54">#89212121</color>
+    <color name="ml_black_38">#61212121</color>
+    <color name="ml_black_12">#1e212121</color>
+
+    <!--红色-->
+    <color name="ml_red_100">#ffd22a14</color>
+    <color name="ml_red_87">#ddd22a14</color>
+    <color name="ml_red_54">#89d22a14</color>
+    <color name="ml_red_38">#61d22a14</color>
+    <color name="ml_red_12">#1ed22a14</color>
+
+    <!--绿色-->
+    <color name="ml_green_100">#ff039e00</color>
+    <color name="ml_green_87">#dd039e00</color>
+    <color name="ml_green_54">#89039e00</color>
+    <color name="ml_green_38">#61039e00</color>
+    <color name="ml_green_12">#1e039e00</color>
+
+
 </resources>
