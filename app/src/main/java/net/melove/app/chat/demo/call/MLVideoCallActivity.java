@@ -102,6 +102,9 @@ public class MLVideoCallActivity extends MLCallActivity {
         cameraDataProcessor = new MLCameraDataProcessor();
         // 设置视频通话数据处理类
         EMClient.getInstance().callManager().setCameraDataProcessor(cameraDataProcessor);
+        if (MLCallManager.getInstance().getCallStatus() != MLCallManager.CallStatus.CONNECTING) {
+            changeSurfaceViewSize();
+        }
     }
 
     /**

@@ -30,7 +30,6 @@ public class MLCallStateListener implements EMCallStateChangeListener {
             case DISCONNECTED: // 通话已中断
                 MLLog.i("通话已结束" + callError);
                 // 通话结束，重置通话状态
-                MLCallManager.getInstance().reset();
                 if (callError == CallError.ERROR_UNAVAILABLE) {
                     MLLog.i("对方不在线" + callError);
                     MLCallManager.getInstance().setEndType(MLCallManager.EndType.OFFLINE);

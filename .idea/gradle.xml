@@ -8,7 +8,6 @@
         <option name="gradleHome" value="D:\develop\android\android-studio\gradle\gradle-2.10" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/../EMChatSDK/hyphenatechatsdk" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>

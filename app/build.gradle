@@ -20,7 +20,7 @@ android {
     sourceSets {
         main {
             // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
-//            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ['libs']
         }
     }
 }
@@ -33,6 +33,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
-//    compile files('libs/hyphenatechat_3.2.3.jar')
-    compile project(':hyphenatechatsdk')
+    compile files('libs/hyphenatechat_3.3.0.jar')
+//    compile project(':hyphenatechatsdk')
 }

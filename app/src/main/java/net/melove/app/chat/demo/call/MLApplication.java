@@ -32,7 +32,7 @@ public class MLApplication extends Application {
         EMOptions options = new EMOptions();
         options.setAutoLogin(true);
         // 动态设置appkey，如果清单配置文件设置了 appkey，这里可以不用设置
-        //options.setAppKey("lzan13#hxsdkdemo");
+        //options.setAppKey("ziroom#ziroom");
 
         options.setSortMessageByServerTime(false);
 
