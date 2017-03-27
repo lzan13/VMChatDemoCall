@@ -5,7 +5,7 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId "net.melove.app.chat.demo.call"
+        applicationId "com.vmloft.develop.app.demo.call"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
@@ -13,6 +13,10 @@ android {
     }
     buildTypes {
         release {
+            // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
+            ndk {
+                abiFilters = ["armeabi-v7a"]
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -26,13 +30,16 @@ android {
 }
 
 dependencies {
-//    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:25.1.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:design:25.3.0'
 
     // ButterKnife 库
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    compile files('libs/hyphenatechat_3.3.0.jar')
-//    compile project(':hyphenatechatsdk')
+    // 注解方式实现的
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+    // 引用自己封装的工具类库，github：https://github.com/lzan13/VMLibraryManager
+    compile project(':vmtools')
 }

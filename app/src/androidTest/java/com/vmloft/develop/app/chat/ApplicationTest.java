@@ -1,4 +1,4 @@
-package net.melove.app.chat;
+package com.vmloft.develop.app.chat;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

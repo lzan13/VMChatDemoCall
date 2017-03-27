@@ -2,39 +2,21 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/ml_theme_background"
+    android:background="@color/vm_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
     >
 
-    <!--界面背景-->
-    <ImageView
-        android:id="@+id/img_call_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        />
-
     <RelativeLayout
+        android:id="@+id/layout_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         >
-        <!--显示本地画面控件-->
-        <com.hyphenate.media.EMLocalSurfaceView
-            android:id="@+id/surface_view_local"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            />
-        <!--显示对方画面控件-->
-        <com.hyphenate.media.EMOppositeSurfaceView
-            android:id="@+id/surface_view_opposite"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
     </RelativeLayout>
 
     <!--控制按钮层布局-->
@@ -58,29 +40,50 @@
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
-                android:background="@drawable/ml_click_circle_transparent"
-                android:src="@mipmap/ic_fullscreen_exit_white_24dp"
+                android:background="@drawable/click_circle_transparent"
+                android:src="@drawable/ic_fullscreen_exit_white_24dp"
                 />
-
-            <!--通话状态-->
-            <TextView
-                android:id="@+id/text_call_status"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/app_name"
-                android:textColor="@color/ml_white_87"
-                />
+                android:gravity="center"
+                android:orientation="vertical"
+                >
 
-            <!--通话信息-->
+                <!--通话状态-->
+                <TextView
+                    android:id="@+id/text_call_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:shadowColor="@color/vm_black_54"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:text="@string/app_name"
+                    android:textColor="@color/vm_white_54"
+                    />
+                <!--通话时间-->
+                <TextView
+                    android:id="@+id/text_call_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:shadowColor="@color/vm_black_54"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:text="@string/app_name"
+                    android:textColor="@color/vm_white_54"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
+            <!--切换摄像头-->
             <ImageButton
-                android:id="@+id/btn_call_info"
-                android:layout_width="@dimen/ml_dimen_48"
-                android:layout_height="@dimen/ml_dimen_48"
+                android:id="@+id/btn_change_camera_switch"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/ml_dimen_16"
-                android:background="@drawable/ml_click_circle_transparent"
-                android:src="@mipmap/ic_info_outline_white_24dp"
+                android:layout_marginRight="@dimen/vm_dimen_16"
+                android:background="@drawable/click_circle_transparent"
+                android:src="@drawable/ic_camera_front_white_24dp"
                 />
         </RelativeLayout>
 
@@ -90,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/ml_black_38"
+            android:background="@color/vm_black_38"
             android:gravity="center"
             android:orientation="vertical"
             >
@@ -108,18 +111,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/ml_click_circle_transparent"
-                    android:src="@mipmap/ic_mic_off_white_24dp"
-                    />
-
-                <!--摄像头开关-->
-                <ImageButton
-                    android:id="@+id/btn_camera_switch"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/ml_click_circle_transparent"
-                    android:src="@mipmap/ic_videocam_off_white_24dp"
+                    android:background="@drawable/click_circle_transparent"
+                    android:src="@drawable/ic_mic_off_white_24dp"
                     />
 
                 <!--扬声器开关-->
@@ -128,8 +121,18 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/ml_click_circle_transparent"
-                    android:src="@mipmap/ic_volume_up_white_24dp"
+                    android:background="@drawable/click_circle_transparent"
+                    android:src="@drawable/ic_volume_up_white_24dp"
+                    />
+
+                <!--摄像头开关-->
+                <ImageButton
+                    android:id="@+id/btn_camera_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/click_circle_transparent"
+                    android:src="@drawable/ic_videocam_off_white_24dp"
                     />
 
                 <!--录制开关-->
@@ -138,8 +141,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/ml_click_circle_transparent"
-                    android:src="@mipmap/ic_record_white_24dp"
+                    android:background="@drawable/click_circle_transparent"
+                    android:src="@drawable/ic_record_white_24dp"
                     />
 
                 <!--截图-->
@@ -148,27 +151,18 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/ml_click_circle_transparent"
-                    android:src="@mipmap/ic_camera_white_24dp"
+                    android:background="@drawable/click_circle_transparent"
+                    android:src="@drawable/ic_camera_white_24dp"
                     />
-
-                <!--切换摄像头-->
-                <ImageButton
-                    android:id="@+id/btn_change_camera_switch"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/ml_click_circle_transparent"
-                    android:src="@mipmap/ic_camera_front_white_24dp"
-                    />
-
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
                 >
+
                 <!--拒绝接听-->
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_reject_call"
@@ -176,7 +170,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="24dp"
-                    android:src="@mipmap/ic_call_end_white_24dp"
+                    android:src="@drawable/ic_call_end_white_24dp"
+                    app:backgroundTint="@color/vm_red_87"
                     app:fabSize="normal"
                     />
 
@@ -187,8 +182,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="24dp"
-                    android:src="@mipmap/ic_call_end_white_24dp"
+                    android:src="@drawable/ic_call_end_white_24dp"
                     android:visibility="gone"
+                    app:backgroundTint="@color/vm_red_87"
                     app:fabSize="normal"
                     />
 
@@ -199,8 +195,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="24dp"
-                    android:src="@mipmap/ic_call_white_24dp"
-                    app:backgroundTint="@color/ml_green_87"
+                    android:src="@drawable/ic_call_white_24dp"
+                    app:backgroundTint="@color/vm_green_87"
                     app:fabSize="normal"
                     />
 

@@ -1,5 +1,5 @@
 include ':app'
 
-// release时需要把下面的include相关的两行注释掉
-//include ':hyphenatechatsdk'
-//project(':hyphenatechatsdk').projectDir = new File('../EMChatSDK/hyphenatechatsdk')
+// 引用其他项目下的 library，这里引用我自己的 VMLibraryManager 下的工具
+include ':vmtools'
+project(':vmtools').projectDir = new File('../VMLibraryManager/vmtools')

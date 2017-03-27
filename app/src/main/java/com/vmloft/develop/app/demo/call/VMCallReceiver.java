@@ -1,4 +1,4 @@
-package net.melove.app.chat.demo.call;
+package com.vmloft.develop.app.demo.call;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,11 +8,9 @@ import com.hyphenate.chat.EMClient;
 /**
  * 通话呼叫监听广播实现，用来监听其他账户对自己的呼叫
  */
-public class MLCallReceiver extends BroadcastReceiver {
-    private String TYPE_VIDEO = "video";
-    private String TYPE_VOICE = "voice";
+public class VMCallReceiver extends BroadcastReceiver {
 
-    public MLCallReceiver() {
+    public VMCallReceiver() {
     }
 
     @Override public void onReceive(Context context, Intent intent) {
@@ -32,18 +30,18 @@ public class MLCallReceiver extends BroadcastReceiver {
         if (callTo.equals(EMClient.getInstance().getCurrentUser())) {
             Intent callIntent = new Intent();
             // 根据通话类型跳转到语音通话或视频通话界面
-            if (callType.equals(TYPE_VIDEO)) {
+            if (callType.equals("video")) {
                 // 设置当前通话类型为视频通话
-                MLCallManager.getInstance().setCallType(MLCallManager.CallType.VIDEO);
-                callIntent.setClass(context, MLVideoCallActivity.class);
-            } else if (callType.equals(TYPE_VOICE)) {
+                VMCallManager.getInstance().setCallType(VMCallManager.CallType.VIDEO);
+                callIntent.setClass(context, VMVideoCallActivity.class);
+            } else if (callType.equals("voice")) {
                 // 设置当前通话类型为语音通话
-                MLCallManager.getInstance().setCallType(MLCallManager.CallType.VOICE);
-                callIntent.setClass(context, MLVoiceCallActivity.class);
+                VMCallManager.getInstance().setCallType(VMCallManager.CallType.VOICE);
+                callIntent.setClass(context, VMVoiceCallActivity.class);
             }
             // 初始化通化管理类的一些属性
-            MLCallManager.getInstance().setChatId(callFrom);
-            MLCallManager.getInstance().setInComingCall(true);
+            VMCallManager.getInstance().setChatId(callFrom);
+            VMCallManager.getInstance().setInComingCall(true);
 
             // 设置 activity 启动方式
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

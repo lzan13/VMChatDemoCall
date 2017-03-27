@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MLChatDemoCall.iml" filepath="$PROJECT_DIR$/MLChatDemoCall.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VMChatDemoCall.iml" filepath="$PROJECT_DIR$/VMChatDemoCall.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../VMLibraryManager/vmtools/vmtools.iml" filepath="$PROJECT_DIR$/../VMLibraryManager/vmtools/vmtools.iml" />
     </modules>
   </component>
 </project>

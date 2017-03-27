@@ -5,19 +5,19 @@
     <item android:state_pressed="true">
         <shape android:dither="true"
             android:shape="oval">
-            <solid android:color="@color/ml_black_12"/>
+            <solid android:color="@color/vm_black_12"/>
         </shape>
     </item>
     <item android:state_activated="true">
         <shape android:dither="true"
             android:shape="oval">
-            <solid android:color="@color/ml_green_87"/>
+            <solid android:color="@color/vm_green_87"/>
         </shape>
     </item>
     <item>
         <shape android:dither="true"
             android:shape="oval">
-            <solid android:color="@color/ml_transparent"/>
+            <solid android:color="@color/vm_transparent"/>
         </shape>
     </item>
 </selector>

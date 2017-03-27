@@ -1,4 +1,4 @@
-package net.melove.app.chat.demo.call;
+package com.vmloft.develop.app.demo.call;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,25 +8,26 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
 /**
+ * 程序入口，做一些必要的初始化操作
  * Created by lzan13 on 2016/5/25.
  */
-public class MLApplication extends Application {
+public class VMApplication extends Application {
 
     private static Context context;
-    private MLCallReceiver callReceiver;
+    private VMCallReceiver callReceiver;
 
     @Override public void onCreate() {
         super.onCreate();
         context = this;
 
         // 初始化环信sdk
-        initSDK();
+        initHyphenate();
     }
 
     /**
      * 初始化环信sdk，并做一些注册监听的操作
      */
-    private void initSDK() {
+    private void initHyphenate() {
 
         // 初始化sdk的一些配置
         EMOptions options = new EMOptions();
@@ -46,13 +47,13 @@ public class MLApplication extends Application {
         IntentFilter callFilter = new IntentFilter(
                 EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (callReceiver == null) {
-            callReceiver = new MLCallReceiver();
+            callReceiver = new VMCallReceiver();
         }
         //注册通话广播接收者
         context.registerReceiver(callReceiver, callFilter);
 
         // 通话管理类的初始化
-        MLCallManager.getInstance().init(context);
+        VMCallManager.getInstance().init(context);
     }
 
     public static Context getContext() {

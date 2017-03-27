@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -20,64 +21,102 @@
             android:orientation="vertical"
             >
 
-            <EditText
-                android:id="@+id/ml_edit_login_username"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="username"
-                />
+                android:layout_marginTop="@dimen/vm_dimen_16"
+                android:textColor="@color/vm_black_87"
+                android:textColorHint="@color/vm_black_38"
+                >
+                <EditText
+                    android:id="@+id/edit_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="账户名"
+                    android:inputType="textImeMultiLine"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
+                    android:textSize="@dimen/vm_size_body"
+                    />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vm_dimen_16"
+                android:textColor="@color/vm_black_87"
+                android:textColorHint="@color/vm_black_38"
+                >
 
-            <EditText
-                android:id="@+id/ml_edit_login_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="password"
-                />
+                <EditText
+                    android:id="@+id/edit_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="密码"
+                    android:inputType="textImeMultiLine"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
+                    android:textSize="@dimen/vm_size_body"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/ml_btn_signin"
+                android:id="@+id/btn_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign in"
                 />
 
             <Button
-                android:id="@+id/ml_btn_signup"
+                android:id="@+id/btn_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign up"
                 />
 
             <Button
-                android:id="@+id/ml_btn_signout"
+                android:id="@+id/btn_sign_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign out"
                 />
 
-            <EditText
-                android:id="@+id/ml_edit_contacts_username"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="contact user"
-                />
+                android:layout_marginTop="@dimen/vm_dimen_16"
+                android:textColor="@color/vm_black_87"
+                android:textColorHint="@color/vm_black_38"
+                >
+
+                <EditText
+                    android:id="@+id/edit_contacts_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="对方名字"
+                    android:inputType="textImeMultiLine"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
+                    android:textSize="@dimen/vm_size_body"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
 
             <Button
-                android:id="@+id/ml_btn_send"
+                android:id="@+id/btn_send"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Send Message"
                 />
 
             <Button
-                android:id="@+id/ml_btn_call_voice"
+                android:id="@+id/btn_call_voice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Voice Call"
                 />
 
             <Button
-                android:id="@+id/ml_btn_call_video"
+                android:id="@+id/btn_call_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Video Call"

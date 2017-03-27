@@ -1,18 +1,18 @@
-package net.melove.app.chat.demo.call;
+package com.vmloft.develop.app.demo.call;
 
 import android.hardware.Camera;
 import com.hyphenate.chat.EMCallManager;
-import net.melove.app.chat.demo.call.utils.MLLog;
+import com.vmloft.develop.library.tools.utils.VMLog;
 
 /**
  * Created by lzan13 on 2016/8/9.
  */
-public class MLCameraDataProcessor implements EMCallManager.EMCameraDataProcessor {
+public class VMCameraDataProcessor implements EMCallManager.EMCameraDataProcessor {
 
     byte yDelta = 0;
 
     synchronized void setYDelta(byte yDelta) {
-        MLLog.d("brigntness uDelta:" + yDelta);
+        VMLog.d("brigntness uDelta:" + yDelta);
         this.yDelta = yDelta;
     }
 

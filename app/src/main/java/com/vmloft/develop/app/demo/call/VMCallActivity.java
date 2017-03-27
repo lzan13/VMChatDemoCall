@@ -1,4 +1,4 @@
-package net.melove.app.chat.demo.call;
+package com.vmloft.develop.app.demo.call;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,21 +8,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.NotificationCompat;
-import android.view.KeyEvent;
 import android.view.WindowManager;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
+import com.vmloft.develop.library.tools.VMBaseActivity;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by lzan13 on 2016/8/8.
  * 通话界面的父类，做一些音视频通话的通用操作
  */
-public class MLCallActivity extends MLBaseActivity {
+public class VMCallActivity extends VMBaseActivity {
 
     // 呼叫方名字
-    protected String mChatId;
-    // 是否是拨打进来的电话
-    protected boolean isInComingCall;
+    protected String chatId;
 
     // 通知栏提醒管理类
     protected NotificationManager notificationManager;
@@ -49,17 +48,18 @@ public class MLCallActivity extends MLBaseActivity {
         // 初始化振动器
         vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
 
-        if (MLCallManager.getInstance().getCallStatus() == MLCallManager.CallStatus.DISCONNECTED) {
+        if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.DISCONNECTED) {
             // 收到呼叫或者呼叫对方时初始化通话状态监听
-            MLCallManager.getInstance().setCallStatus(MLCallManager.CallStatus.CONNECTING);
-            MLCallManager.getInstance().registerCallStateListener();
-            MLCallManager.getInstance().loadSound();
-            MLCallManager.getInstance().playCallSound();
+            VMCallManager.getInstance().setCallState(VMCallManager.CallState.CONNECTING);
+            VMCallManager.getInstance().registerCallStateListener();
+            VMCallManager.getInstance().playCallSound();
 
             // 如果不是对方打来的，就主动呼叫
-            if (!MLCallManager.getInstance().isInComingCall()) {
-                MLCallManager.getInstance().makeCall();
+            if (!VMCallManager.getInstance().isInComingCall()) {
+                VMCallManager.getInstance().makeCall();
             }
+        } else {
+            VMCallManager.getInstance().removeFloatWindow();
         }
     }
 
@@ -67,7 +67,7 @@ public class MLCallActivity extends MLBaseActivity {
      * 挂断通话
      */
     protected void endCall() {
-        MLCallManager.getInstance().endCall();
+        VMCallManager.getInstance().endCall();
         onFinish();
     }
 
@@ -75,7 +75,7 @@ public class MLCallActivity extends MLBaseActivity {
      * 拒绝通话
      */
     protected void rejectCall() {
-        MLCallManager.getInstance().rejectCall();
+        VMCallManager.getInstance().rejectCall();
         onFinish();
     }
 
@@ -83,7 +83,7 @@ public class MLCallActivity extends MLBaseActivity {
      * 接听通话
      */
     protected void answerCall() {
-        MLCallManager.getInstance().answerCall();
+        VMCallManager.getInstance().answerCall();
     }
 
     /**
@@ -97,8 +97,6 @@ public class MLCallActivity extends MLBaseActivity {
      * 销毁界面时做一些自己的操作
      */
     @Override protected void onFinish() {
-        // 关闭音效并释放资源
-        MLCallManager.getInstance().reset();
         super.onFinish();
     }
 
@@ -110,41 +108,29 @@ public class MLCallActivity extends MLBaseActivity {
 
     }
 
+    @Override protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
     @Override protected void onStop() {
         super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
      *
      */
     @Override protected void onUserLeaveHint() {
-        // 判断如果是通话中，暂停启动图像的传输
-        if (MLCallManager.getInstance().getCallStatus() != MLCallManager.CallStatus.VIDEO_PAUSE) {
-            sendCallNotification();
-            try {
-                EMClient.getInstance().callManager().pauseVideoTransfer();
-                MLCallManager.getInstance().setCallStatus(MLCallManager.CallStatus.VIDEO_PAUSE);
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-        }
         super.onUserLeaveHint();
     }
 
     @Override protected void onResume() {
         super.onResume();
         // 判断当前通话状态，如果已经挂断，则关闭通话界面
-        if (MLCallManager.getInstance().getCallStatus() == MLCallManager.CallStatus.DISCONNECTED) {
+        if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.DISCONNECTED) {
             onFinish();
             return;
-        }
-        // 判断如果是通话中，重新启动图像的传输
-        if (MLCallManager.getInstance().getCallStatus() == MLCallManager.CallStatus.VIDEO_PAUSE) {
-            try {
-                EMClient.getInstance().callManager().resumeVideoTransfer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
         }
         // 取消通知栏提醒
         if (notificationManager != null) {
