@@ -34,8 +34,8 @@ dependencies {
     compile 'com.android.support:design:25.3.0'
 
     // ButterKnife 库
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
     // 注解方式实现的
     compile 'org.greenrobot:eventbus:3.0.0'

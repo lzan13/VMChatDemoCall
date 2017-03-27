@@ -68,6 +68,9 @@ public class VMVoiceCallActivity extends VMCallActivity {
 
         // 判断当前通话时刚开始，还是从后台恢复已经存在的通话
         if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.ACCEPTED) {
+            endCallFab.setVisibility(View.VISIBLE);
+            answerCallFab.setVisibility(View.GONE);
+            rejectCallFab.setVisibility(View.GONE);
             callStateView.setText(R.string.call_accepted);
             refreshCallTime();
         }

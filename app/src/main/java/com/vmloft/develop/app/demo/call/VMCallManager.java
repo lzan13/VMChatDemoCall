@@ -397,8 +397,6 @@ public class VMCallManager {
         if (soundPool != null) {
             // 停止播放音效
             soundPool.stop(streamID);
-            // 释放资源
-            soundPool.release();
         }
         // 重置音频管理器
         if (audioManager != null) {

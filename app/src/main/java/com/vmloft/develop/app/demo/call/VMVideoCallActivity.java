@@ -89,6 +89,9 @@ public class VMVideoCallActivity extends VMCallActivity {
 
         // 判断当前通话时刚开始，还是从后台恢复已经存在的通话
         if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.ACCEPTED) {
+            endCallFab.setVisibility(View.VISIBLE);
+            answerCallFab.setVisibility(View.GONE);
+            rejectCallFab.setVisibility(View.GONE);
             callStateView.setText(R.string.call_accepted);
             refreshCallTime();
             surfaceViewState = 0;
@@ -394,7 +397,7 @@ public class VMVideoCallActivity extends VMCallActivity {
             surfaceLayout.addView(localSurface, localParams);
             surfaceLayout.addView(oppositeSurface, oppositeParams);
         }
-
+        // 设置通话界面画面填充方式
         localSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
