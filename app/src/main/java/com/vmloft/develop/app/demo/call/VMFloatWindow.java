@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by lzan13 on 2017/3/27.
+ *
  * 音视频通话悬浮窗操作类
  */
 public class VMFloatWindow {

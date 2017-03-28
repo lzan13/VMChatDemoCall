@@ -8,8 +8,9 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
 /**
- * 程序入口，做一些必要的初始化操作
  * Created by lzan13 on 2016/5/25.
+ *
+ * 程序入口，做一些必要的初始化操作
  */
 public class VMApplication extends Application {
 

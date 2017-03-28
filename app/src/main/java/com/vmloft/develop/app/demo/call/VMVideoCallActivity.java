@@ -25,6 +25,10 @@ import java.io.File;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+/**
+ * Created by lzan13 on 2016/10/18.
+ * 视频通话界面处理
+ */
 public class VMVideoCallActivity extends VMCallActivity {
 
     // 视频通话帮助类

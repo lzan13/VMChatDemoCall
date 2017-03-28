@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by lzan13 on 2017/2/8.
+ *
  * 实时音视频通话管理类，这是一个单例类，用来管理 app 通话操作
  */
 public class VMCallManager {

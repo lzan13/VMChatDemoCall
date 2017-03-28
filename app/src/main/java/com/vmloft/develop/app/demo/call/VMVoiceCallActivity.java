@@ -20,6 +20,11 @@ import com.vmloft.develop.library.tools.utils.VMLog;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+/**
+ * Created by lzan13 on 2016/10/18.
+ *
+ * 音频通话界面处理
+ */
 public class VMVoiceCallActivity extends VMCallActivity {
 
     // 使用 ButterKnife 注解的方式获取控件

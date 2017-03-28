@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by lzan13 on 2016/8/8.
+ *
  * 通话界面的父类，做一些音视频通话的通用操作
  */
 public class VMCallActivity extends VMBaseActivity {

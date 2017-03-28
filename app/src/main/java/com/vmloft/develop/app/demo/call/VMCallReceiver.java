@@ -6,6 +6,8 @@ import android.content.Intent;
 import com.hyphenate.chat.EMClient;
 
 /**
+ * Created by lzan13 on 2016/10/18.
+ *
  * 通话呼叫监听广播实现，用来监听其他账户对自己的呼叫
  */
 public class VMCallReceiver extends BroadcastReceiver {
