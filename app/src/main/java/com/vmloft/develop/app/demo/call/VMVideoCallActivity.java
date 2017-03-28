@@ -149,11 +149,12 @@ public class VMVideoCallActivity extends VMCallActivity {
                 onSpeaker();
                 break;
             case R.id.btn_screenshot:
-
+                // 保存通话截图
+                onScreenShot();
                 break;
             case R.id.btn_record_switch:
                 // 录制开关
-                recordCall();
+                onRecordCall();
                 break;
             case R.id.fab_end_call:
                 // 结束通话
@@ -283,14 +284,19 @@ public class VMVideoCallActivity extends VMCallActivity {
     /**
      * 录制视屏通话内容
      */
-    private void recordCall() {
+    private void onRecordCall() {
         // 根据开关状态决定是否开启录制
         if (recordSwitch.isActivated()) {
             // 设置按钮状态
             recordSwitch.setActivated(false);
             String path = videoCallHelper.stopVideoRecord();
-            Toast.makeText(activity, "录制完成" + path, Toast.LENGTH_LONG).show();
             VMCallManager.getInstance().setOpenRecord(false);
+            File file = new File(path);
+            if (file.exists()) {
+                Toast.makeText(activity, "录制视频成功 " + path, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(activity, "录制失败/(ㄒoㄒ)/~~", Toast.LENGTH_LONG).show();
+            }
         } else {
             // 设置按钮状态
             recordSwitch.setActivated(true);
@@ -304,6 +310,24 @@ public class VMVideoCallActivity extends VMCallActivity {
             VMLog.d("开始录制视频");
             Toast.makeText(activity, "开始录制", Toast.LENGTH_LONG).show();
             VMCallManager.getInstance().setOpenRecord(true);
+        }
+    }
+
+    /**
+     * 保存通话截图
+     */
+    private void onScreenShot() {
+        String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos/";
+        File dir = new File(dirPath);
+        if (!dir.isDirectory()) {
+            dir.mkdirs();
+        }
+        String path = dirPath + "video_" + System.currentTimeMillis() + ".jpg";
+        boolean result = videoCallHelper.takePicture(path);
+        if (result) {
+            Toast.makeText(activity, "截图保存成功 " + path, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(activity, "截图保存失败/(ㄒoㄒ)/~~", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -346,8 +370,8 @@ public class VMVideoCallActivity extends VMCallActivity {
                 }
             });
             // 将 view 添加到界面
-            surfaceLayout.addView(oppositeSurface, oppositeParams);
             surfaceLayout.addView(localSurface, localParams);
+            surfaceLayout.addView(oppositeSurface, oppositeParams);
         } else if (surfaceViewState == 0) {
             localParams.width = width;
             localParams.height = height;
