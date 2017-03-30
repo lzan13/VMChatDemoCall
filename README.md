@@ -36,10 +36,10 @@ VMChatDemoCall
 
 ### #项目截图
 **首界面**
-![首界面](/screenshorts/screenshot-main?raw=true "首界面")
+![首界面](/screenshots/screenshot-main?raw=true "首界面")
 **通话界面**
-![通话界面](/screenshorts/screenshot-call?raw=true "通话界面")
-![通话界面](/screenshorts/screenshot-call-horizontal?raw=true "通话界面")
+![通话界面](/screenshots/screenshot-call?raw=true "通话界面")
+![通话界面](/screenshots/screenshot-call-horizontal?raw=true "通话界面")
 **悬浮窗**
-![悬浮窗](/screenshorts/screenshot-call-float-window-1?raw=true "悬浮窗")
-![悬浮窗](/screenshorts/screenshot-call-float-window-2?raw=true "悬浮窗")
+![悬浮窗](/screenshots/screenshot-call-float-window-1?raw=true "悬浮窗")
+![悬浮窗](/screenshots/screenshot-call-float-window-2?raw=true "悬浮窗")
