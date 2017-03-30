@@ -16,7 +16,8 @@ VMChatDemoCall
 - [环信 SDK 3.3.0](http://www.easemob.com/download/im)
 - [自己封装的工具类库，暂时只能下载源码引用](https://github.com/lzan13/VMLibraryManager)
 
->需要注意的是，这边并没有将 libs 目录上传到 github，需要大家自己去环信官网下载最新的 sdk 放在 libs 下
+>PS:这边并没有将 libs 目录上传到 github，需要大家自己去环信官网下载最新的 sdk 放在 libs 下
+>PS:必须使用环信SDK3.3.0以后的版本
 
 
 ### #实现功能
@@ -33,5 +34,12 @@ VMChatDemoCall
 【[TV 端视频通话项目](https://github.com/lzan13/VMTVCall)】
 
 
->PS:必须使用环信SDK3.3.0以后的版本
-
+### #项目截图
+**首界面**
+![首界面](/screenshorts/screenshot-main?raw=true "首界面")
+**通话界面**
+![通话界面](/screenshorts/screenshot-call?raw=true "通话界面")
+![通话界面](/screenshorts/screenshot-call-horizontal?raw=true "通话界面")
+**悬浮窗**
+![悬浮窗](/screenshorts/screenshot-call-float-window-1?raw=true "悬浮窗")
+![悬浮窗](/screenshorts/screenshot-call-float-window-2?raw=true "悬浮窗")
