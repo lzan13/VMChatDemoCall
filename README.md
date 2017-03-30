@@ -30,7 +30,7 @@ VMChatDemoCall
 
 
 ### #关联项目
-这边同时还实现有一个 TV 端的应用，可以实现和 app 进行实时通话，给大家在 TV 端进行集成环信 SDK 进行参考
+实现有一个 TV 端的应用，可以实现和移动端进行实时通话，给大家在 TV 端使用环信 SDK 进行集成音视频通话加以参考  
 【[TV 端视频通话项目](https://github.com/lzan13/VMTVCall)】
 
 
