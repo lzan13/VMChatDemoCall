@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.NotificationCompat;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
@@ -23,10 +24,6 @@ public class VMCallActivity extends VMBaseActivity {
 
     // 呼叫方名字
     protected String chatId;
-
-    // 通知栏提醒管理类
-    protected NotificationManager notificationManager;
-    protected int callNotificationId = 0526;
 
     // 震动器
     private Vibrator vibrator;
@@ -59,8 +56,6 @@ public class VMCallActivity extends VMBaseActivity {
             if (!VMCallManager.getInstance().isInComingCall()) {
                 VMCallManager.getInstance().makeCall();
             }
-        } else {
-            VMCallManager.getInstance().removeFloatWindow();
         }
     }
 
@@ -101,14 +96,6 @@ public class VMCallActivity extends VMBaseActivity {
         super.onFinish();
     }
 
-    /**
-     * 重载返回键
-     */
-    @Override public void onBackPressed() {
-        // super.onBackPressed();
-
-    }
-
     @Override protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
@@ -120,10 +107,21 @@ public class VMCallActivity extends VMBaseActivity {
     }
 
     /**
-     *
+     * 通话界面拦截 Back 按键，不能返回
+     */
+    @Override public void onBackPressed() {
+        //super.onBackPressed();
+        VMCallManager.getInstance().addFloatWindow();
+        onFinish();
+    }
+
+    /**
+     * 监听通话界面是否隐藏，处理悬浮窗
      */
     @Override protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
+        //super.onUserLeaveHint();
+        VMCallManager.getInstance().addFloatWindow();
+        onFinish();
     }
 
     @Override protected void onResume() {
@@ -132,36 +130,8 @@ public class VMCallActivity extends VMBaseActivity {
         if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.DISCONNECTED) {
             onFinish();
             return;
+        } else {
+            VMCallManager.getInstance().removeFloatWindow();
         }
-        // 取消通知栏提醒
-        if (notificationManager != null) {
-            notificationManager.cancel(callNotificationId);
-        }
-    }
-
-    /**
-     * 发送通知栏提醒
-     */
-    private void sendCallNotification() {
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(activity);
-
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-        builder.setAutoCancel(true);
-        builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
-
-        builder.setContentText("通话进行中，点击恢复");
-
-        builder.setContentTitle(getString(R.string.app_name));
-        Intent intent = new Intent(activity, activity.getClass());
-        PendingIntent pIntent =
-                PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        builder.setContentIntent(pIntent);
-        builder.setOngoing(true);
-
-        builder.setWhen(System.currentTimeMillis());
-
-        notificationManager.notify(callNotificationId, builder.build());
     }
 }

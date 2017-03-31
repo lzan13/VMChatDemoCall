@@ -28,10 +28,9 @@ VMChatDemoCall
 - 视频通话的截图
 - 横竖屏的自动切换
 
-
-### #关联项目
-实现有一个 TV 端的应用，可以实现和移动端进行实时通话，给大家在 TV 端使用环信 SDK 进行集成音视频通话加以参考  
-【[TV 端视频通话项目](https://github.com/lzan13/VMTVCall)】
+### #已知问题
+- 未接通时切换到悬浮窗，当接通时无法显示画面
+- 主叫方接通时无法显示远程图像
 
 
 ### #项目截图
@@ -40,3 +39,7 @@ VMChatDemoCall
 ![通话界面](/screenshots/screenshot-call-horizontal.png?raw=true "通话界面")
 ![悬浮窗](/screenshots/screenshot-call-float-window-1.png?raw=true "悬浮窗")
 ![悬浮窗](/screenshots/screenshot-call-float-window-2.png?raw=true "悬浮窗")
+
+### #关联项目
+实现有一个 TV 端的应用，可以实现和移动端进行实时通话，给大家在 TV 端使用环信 SDK 进行集成音视频通话加以参考  
+【[TV 端视频通话项目](https://github.com/lzan13/VMTVCall)】

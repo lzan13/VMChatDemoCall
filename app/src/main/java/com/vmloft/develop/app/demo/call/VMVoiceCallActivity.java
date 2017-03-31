@@ -135,7 +135,7 @@ public class VMVoiceCallActivity extends VMCallActivity {
      * 退出全屏通话界面
      */
     private void exitFullScreen() {
-        VMCallManager.getInstance().showFloatWindow();
+        VMCallManager.getInstance().addFloatWindow();
         onFinish();
     }
 

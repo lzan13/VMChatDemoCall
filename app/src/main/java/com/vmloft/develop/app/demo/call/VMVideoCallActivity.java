@@ -42,7 +42,7 @@ public class VMVideoCallActivity extends VMCallActivity {
     // 使用 ButterKnife 注解的方式获取控件
     @BindView(R.id.layout_root) View rootView;
     @BindView(R.id.layout_call_control) View controlLayout;
-    @BindView(R.id.layout_surface) RelativeLayout surfaceLayout;
+    @BindView(R.id.layout_surface_container) RelativeLayout surfaceLayout;
 
     @BindView(R.id.btn_exit_full_screen) ImageButton exitFullScreenBtn;
     @BindView(R.id.text_call_state) TextView callStateView;
@@ -186,7 +186,7 @@ public class VMVideoCallActivity extends VMCallActivity {
      * 退出全屏通话界面
      */
     private void exitFullScreen() {
-        VMCallManager.getInstance().showFloatWindow();
+        VMCallManager.getInstance().addFloatWindow();
         // 结束当前界面
         onFinish();
     }
@@ -454,26 +454,18 @@ public class VMVideoCallActivity extends VMCallActivity {
                 break;
             case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
                 VMLog.i("正在连接" + callError);
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        if (VMCallManager.getInstance().isInComingCall()) {
-                            callStateView.setText(R.string.call_connected_is_incoming);
-                        } else {
-                            callStateView.setText(R.string.call_connected);
-                        }
-                    }
-                });
+                if (VMCallManager.getInstance().isInComingCall()) {
+                    callStateView.setText(R.string.call_connected_is_incoming);
+                } else {
+                    callStateView.setText(R.string.call_connected);
+                }
                 break;
             case ACCEPTED: // 通话已接通
                 VMLog.i("通话已接通");
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        callStateView.setText(R.string.call_accepted);
-                        // 通话接通，更新界面 UI 显示 TODO 在接通时设置 surfaceview 造成远程图像不显示
-                        surfaceViewState = 0;
-                        setupSurfaceView();
-                    }
-                });
+                callStateView.setText(R.string.call_accepted);
+                // 通话接通，更新界面 UI 显示 TODO 在接通时设置 surfaceview 造成远程图像不显示
+                surfaceViewState = 0;
+                setupSurfaceView();
                 break;
             case DISCONNECTED: // 通话已中断
                 VMLog.i("通话已结束" + callError);

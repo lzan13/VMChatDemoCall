@@ -1,10 +1,15 @@
 package com.vmloft.develop.app.demo.call;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
+import android.support.v7.app.NotificationCompat;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -28,6 +33,10 @@ public class VMCallManager {
 
     // 单例类实例
     private static VMCallManager instance;
+
+    // 通知栏提醒管理类
+    private NotificationManager notificationManager;
+    private int callNotificationId = 0526;
 
     // 音频管理器
     private AudioManager audioManager;
@@ -169,20 +178,6 @@ public class VMCallManager {
         message.setUnread(false);
         // 调用sdk的保存消息方法
         EMClient.getInstance().chatManager().saveMessage(message);
-    }
-
-    /**
-     * 显示通话悬浮窗
-     */
-    public void showFloatWindow() {
-        VMFloatWindow.getInstance(context).startFloatWindow();
-    }
-
-    /**
-     * 移除通话悬浮窗
-     */
-    public void removeFloatWindow() {
-        VMFloatWindow.getInstance(context).stopFloatWindow();
     }
 
     /**
@@ -401,6 +396,67 @@ public class VMCallManager {
             //soundPool.release();
         }
     }// --------------------------------- Sound end ---------------------------------
+
+    /**
+     * 添加通话悬浮窗并发送通知栏提醒
+     */
+    public void addFloatWindow() {
+        // 发送通知栏提醒
+        addCallNotification();
+        // 开启悬浮窗
+        VMFloatWindow.getInstance(context).addFloatWindow();
+    }
+
+    /**
+     * 移除通话悬浮窗和通知栏提醒
+     */
+    public void removeFloatWindow() {
+        // 取消通知栏提醒
+        cancelCallNotification();
+        // 关闭悬浮窗
+        VMFloatWindow.getInstance(context).removeFloatWindow();
+    }
+
+    /**
+     * 发送通知栏提醒，告知用户通话继续进行中
+     */
+    private void addCallNotification() {
+        notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.setAutoCancel(true);
+        builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
+
+        builder.setContentText("通话进行中，点击恢复");
+
+        builder.setContentTitle(context.getString(R.string.app_name));
+        Intent intent = new Intent();
+        if (callType == CallType.VIDEO) {
+            intent.setClass(context, VMVideoCallActivity.class);
+        } else {
+            intent.setClass(context, VMVoiceCallActivity.class);
+        }
+        PendingIntent pIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(pIntent);
+        builder.setOngoing(true);
+
+        builder.setWhen(System.currentTimeMillis());
+
+        notificationManager.notify(callNotificationId, builder.build());
+    }
+
+    /**
+     * 取消通话状态通知栏提醒
+     */
+    public void cancelCallNotification() {
+        if (notificationManager != null) {
+            notificationManager.cancel(callNotificationId);
+        }
+    }
 
     /**
      * 开始通话计时，这里在全局管理器中开启一个定时器进行计时，可以做到最小化，以及后台时进行计时

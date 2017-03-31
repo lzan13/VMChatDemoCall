@@ -1,19 +1,25 @@
 package com.vmloft.develop.app.demo.call;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.support.v7.app.NotificationCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.media.EMLocalSurfaceView;
 import com.hyphenate.media.EMOppositeSurfaceView;
 import com.superrtc.sdk.VideoView;
+import com.vmloft.develop.library.tools.utils.VMDimenUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,7 +60,10 @@ public class VMFloatWindow {
     /**
      * 开始展示悬浮窗
      */
-    public void startFloatWindow() {
+    public void addFloatWindow() {
+        if (floatView != null) {
+            return;
+        }
         EventBus.getDefault().register(this);
         layoutParams = new WindowManager.LayoutParams();
         // 位置为右侧顶部
@@ -83,20 +92,7 @@ public class VMFloatWindow {
             callTimeView = (TextView) floatView.findViewById(R.id.text_call_time);
             refreshCallTime();
         } else {
-            floatView.findViewById(R.id.layout_call_voice).setVisibility(View.GONE);
-            floatView.findViewById(R.id.layout_call_video).setVisibility(View.VISIBLE);
-            EMLocalSurfaceView localView =
-                    (EMLocalSurfaceView) floatView.findViewById(R.id.surface_view_local);
-            EMOppositeSurfaceView oppositeView =
-                    (EMOppositeSurfaceView) floatView.findViewById(R.id.surface_view_opposite);
-            // 设置本地预览图像显示在最上层
-            localView.setZOrderMediaOverlay(true);
-            localView.setZOrderOnTop(true);
-            // 设置通话画面的填充方式
-            localView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
-            oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
-            // 将 SurfaceView设置给 SDK
-            EMClient.getInstance().callManager().setSurfaceView(localView, oppositeView);
+            setupSurfaceView();
         }
 
         // 当点击悬浮窗时，返回到通话界面
@@ -156,9 +152,48 @@ public class VMFloatWindow {
     }
 
     /**
+     * 设置本地与远程画面显示控件
+     */
+    private void setupSurfaceView() {
+        floatView.findViewById(R.id.layout_call_voice).setVisibility(View.GONE);
+        floatView.findViewById(R.id.layout_call_video).setVisibility(View.VISIBLE);
+
+        RelativeLayout surfaceLayout =
+                (RelativeLayout) floatView.findViewById(R.id.layout_call_video);
+
+        // 将 SurfaceView设置给 SDK
+        surfaceLayout.removeAllViews();
+
+        EMLocalSurfaceView localView = new EMLocalSurfaceView(context);
+        EMOppositeSurfaceView oppositeView = new EMOppositeSurfaceView(context);
+
+        int lw = VMDimenUtil.dp2px(context, 24);
+        int lh = VMDimenUtil.dp2px(context, 32);
+        int ow = VMDimenUtil.dp2px(context, 90);
+        int oh = VMDimenUtil.dp2px(context, 120);
+        RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(lw, lh);
+        RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(ow, oh);
+        // 设置本地图像靠右
+        localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+        // 设置本地预览图像显示在最上层
+        localView.setZOrderMediaOverlay(true);
+        localView.setZOrderOnTop(true);
+
+        // 将 view 添加到界面
+        surfaceLayout.addView(oppositeView, oppositeParams);
+        surfaceLayout.addView(localView, localParams);
+        // 设置通话界面画面填充方式
+        localView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
+        EMClient.getInstance().callManager().setSurfaceView(localView, oppositeView);
+    }
+
+    /**
      * 停止悬浮窗
      */
-    public void stopFloatWindow() {
+    public void removeFloatWindow() {
         EventBus.getDefault().unregister(this);
         if (windowManager != null && floatView != null) {
             windowManager.removeView(floatView);

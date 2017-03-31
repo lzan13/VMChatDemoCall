@@ -11,8 +11,9 @@
     android:fitsSystemWindows="false"
     >
 
+    <!--通话界面容器-->
     <RelativeLayout
-        android:id="@+id/layout_surface"
+        android:id="@+id/layout_surface_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
