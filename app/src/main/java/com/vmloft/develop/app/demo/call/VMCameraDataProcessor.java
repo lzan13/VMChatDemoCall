@@ -6,6 +6,7 @@ import com.vmloft.develop.library.tools.utils.VMLog;
 
 /**
  * Created by lzan13 on 2016/8/9.
+ * 通话数据回调处理接口
  */
 public class VMCameraDataProcessor implements EMCallManager.EMCameraDataProcessor {
 
@@ -19,8 +20,8 @@ public class VMCameraDataProcessor implements EMCallManager.EMCameraDataProcesso
     // data size is width*height*2
     // the first width*height is Y, second part is UV
     // the storage layout detailed please refer 2.x demo CameraHelper.onPreviewFrame
-    @Override
-    public synchronized void onProcessData(byte[] data, Camera camera, int width, int height, int rotation) {
+    @Override public synchronized void onProcessData(byte[] data, Camera camera, int width,
+            int height, int rotation) {
         int wh = width * height;
         for (int i = 0; i < wh; i++) {
             int d = (data[i] & 0xFF) + yDelta;
@@ -29,5 +30,4 @@ public class VMCameraDataProcessor implements EMCallManager.EMCameraDataProcesso
             data[i] = (byte) d;
         }
     }
-
 }

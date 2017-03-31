@@ -53,7 +53,7 @@ public class VMCallActivity extends VMBaseActivity {
             // 收到呼叫或者呼叫对方时初始化通话状态监听
             VMCallManager.getInstance().setCallState(VMCallManager.CallState.CONNECTING);
             VMCallManager.getInstance().registerCallStateListener();
-            VMCallManager.getInstance().playCallSound();
+            VMCallManager.getInstance().attemptPlayCallSound();
 
             // 如果不是对方打来的，就主动呼叫
             if (!VMCallManager.getInstance().isInComingCall()) {

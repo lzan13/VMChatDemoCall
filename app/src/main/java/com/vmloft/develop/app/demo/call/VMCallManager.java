@@ -36,6 +36,7 @@ public class VMCallManager {
     // 声音资源 id
     private int streamID;
     private int loadId;
+    private boolean isLoaded = false;
 
     // 通话状态监听
     private VMCallStateListener callStateListener;
@@ -91,8 +92,8 @@ public class VMCallManager {
          */
         // 设置自动调节分辨率，默认为 true
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
-        // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800可以设置到10000)， 默认最小(80)
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(1500);
+        // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800)， 默认最小(80)
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(2500);
         EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
         // 设置视频通话分辨率 默认是(640, 480)
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(1280, 720);
@@ -105,6 +106,7 @@ public class VMCallManager {
         // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
         EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
     }
+
     /**
      * 通话结束，保存一条记录通话的消息
      */
@@ -307,7 +309,7 @@ public class VMCallManager {
     /**
      * 删除通话状态监听
      */
-    public void unregisterCallStateListener() {
+    private void unregisterCallStateListener() {
         if (callStateListener != null) {
             EMClient.getInstance().callManager().removeCallStateChangeListener(callStateListener);
             callStateListener = null;
@@ -316,58 +318,9 @@ public class VMCallManager {
 
     /**
      * ----------------------------- Sound start -----------------------------
-     * 加载音效资源
-     */
-    public void loadSound() {
-        if (isInComingCall) {
-            loadId = soundPool.load(context, R.raw.sound_call_incoming, 1);
-        } else {
-            loadId = soundPool.load(context, R.raw.sound_calling, 1);
-        }
-    }
-
-    /**
-     * 播放呼叫通话提示音
-     */
-    protected void playCallSound() {
-        loadSound();
-        // 设置资源加载监听，也因为加载资源在单独的进程，需要时间，所以等监听到加载完成才能播放
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                // 打开扬声器
-                openSpeaker();
-                // 设置音频管理器音频模式为铃音模式
-                audioManager.setMode(AudioManager.MODE_RINGTONE);
-                // 播放提示音，返回一个播放的音频id，等下停止播放需要用到
-                if (soundPool != null) {
-                    streamID = soundPool.play(loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序
-                            0.5f,   // 左声道音量
-                            0.5f,   // 右声道音量
-                            1,      // 优先级，数值越高，优先级越大
-                            -1,     // 是否循环；0 不循环，-1 循环，N 表示循环次数
-                            1);     // 播放速率；从0.5-2，一般设置为1，表示正常播放
-                }
-            }
-        });
-    }
-
-    /**
-     * 关闭音效的播放，并释放资源
-     */
-    protected void stopCallSound() {
-        if (soundPool != null) {
-            // 停止播放音效
-            soundPool.stop(streamID);
-            // 释放资源
-            soundPool.release();
-        }
-    }
-
-    /**
      * 初始化 SoundPool
      */
-    protected void initSoundPool() {
-
+    private void initSoundPool() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attributes = new AudioAttributes.Builder()
                     // 设置音频要用在什么地方，这里选择电话通知铃音
@@ -380,6 +333,72 @@ public class VMCallManager {
         } else {
             // 老版本使用构造函数方式实例化 SoundPool，MODE 设置为铃音 MODE_RINGTONE
             soundPool = new SoundPool(1, AudioManager.MODE_RINGTONE, 0);
+        }
+    }
+
+    /**
+     * 加载音效资源
+     */
+    private void loadSound() {
+        if (isInComingCall) {
+            loadId = soundPool.load(context, R.raw.sound_call_incoming, 1);
+        } else {
+            loadId = soundPool.load(context, R.raw.sound_calling, 1);
+        }
+    }
+
+    /**
+     * 尝试播放呼叫通话提示音
+     */
+    public void attemptPlayCallSound() {
+        // 检查音频资源是否已经加载完毕
+        if (isLoaded) {
+            playCallSound();
+        } else {
+            // 播放之前先去加载音效
+            loadSound();
+            // 设置资源加载监听，也因为加载资源在单独的进程，需要时间，所以等监听到加载完成才能播放
+            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                    VMLog.d("SoundPool load complete! loadId: %d", loadId);
+                    isLoaded = true;
+                    // 首次监听到加载完毕，开始播放音频
+                    playCallSound();
+                }
+            });
+        }
+    }
+
+    /**
+     * 播放音频
+     */
+    private void playCallSound() {
+        // 打开扬声器
+        openSpeaker();
+        // 设置音频管理器音频模式为铃音模式
+        audioManager.setMode(AudioManager.MODE_RINGTONE);
+        // 播放提示音，返回一个播放的音频id，等下停止播放需要用到
+        if (soundPool != null) {
+            streamID = soundPool.play(loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序
+                    0.5f,   // 左声道音量
+                    0.5f,   // 右声道音量
+                    1,      // 优先级，数值越高，优先级越大
+                    -1,     // 是否循环；0 不循环，-1 循环，N 表示循环次数
+                    1);     // 播放速率；从0.5-2，一般设置为1，表示正常播放
+        }
+    }
+
+    /**
+     * 关闭音效的播放，并释放资源
+     */
+    protected void stopCallSound() {
+        if (soundPool != null) {
+            // 停止播放音效
+            soundPool.stop(streamID);
+            // 卸载音效
+            //soundPool.unload(loadId);
+            // 释放资源
+            //soundPool.release();
         }
     }// --------------------------------- Sound end ---------------------------------
 
