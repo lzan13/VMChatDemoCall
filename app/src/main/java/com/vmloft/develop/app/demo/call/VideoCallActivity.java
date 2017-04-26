@@ -21,6 +21,7 @@ import com.hyphenate.media.EMOppositeSurfaceView;
 import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.library.tools.utils.VMDimenUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
+import com.vmloft.develop.library.tools.widget.VMCameraPreview;
 import java.io.File;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -29,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by lzan13 on 2016/10/18.
  * 视频通话界面处理
  */
-public class VMVideoCallActivity extends VMCallActivity {
+public class VideoCallActivity extends CallActivity {
 
     // 视频通话帮助类
     private EMCallManager.EMVideoCallHelper videoCallHelper;
@@ -71,7 +72,7 @@ public class VMVideoCallActivity extends VMCallActivity {
      */
     @Override protected void initView() {
         super.initView();
-        if (VMCallManager.getInstance().isInComingCall()) {
+        if (CallManager.getInstance().isInComingCall()) {
             endCallFab.setVisibility(View.GONE);
             answerCallFab.setVisibility(View.VISIBLE);
             rejectCallFab.setVisibility(View.VISIBLE);
@@ -83,16 +84,16 @@ public class VMVideoCallActivity extends VMCallActivity {
             callStateView.setText(R.string.call_connecting);
         }
 
-        micSwitch.setActivated(!VMCallManager.getInstance().isOpenMic());
-        cameraSwitch.setActivated(!VMCallManager.getInstance().isOpenCamera());
-        speakerSwitch.setActivated(VMCallManager.getInstance().isOpenSpeaker());
-        recordSwitch.setActivated(VMCallManager.getInstance().isOpenRecord());
+        micSwitch.setActivated(!CallManager.getInstance().isOpenMic());
+        cameraSwitch.setActivated(!CallManager.getInstance().isOpenCamera());
+        speakerSwitch.setActivated(CallManager.getInstance().isOpenSpeaker());
+        recordSwitch.setActivated(CallManager.getInstance().isOpenRecord());
 
         // 初始化视频通话帮助类
         videoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
 
         // 判断当前通话时刚开始，还是从后台恢复已经存在的通话
-        if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.ACCEPTED) {
+        if (CallManager.getInstance().getCallState() == CallManager.CallState.ACCEPTED) {
             endCallFab.setVisibility(View.VISIBLE);
             answerCallFab.setVisibility(View.GONE);
             rejectCallFab.setVisibility(View.GONE);
@@ -113,6 +114,7 @@ public class VMVideoCallActivity extends VMCallActivity {
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
+        CallManager.getInstance().setCallCameraDataProcessor();
     }
 
     /**
@@ -186,7 +188,7 @@ public class VMVideoCallActivity extends VMCallActivity {
      * 退出全屏通话界面
      */
     private void exitFullScreen() {
-        VMCallManager.getInstance().addFloatWindow();
+        CallManager.getInstance().addFloatWindow();
         // 结束当前界面
         onFinish();
     }
@@ -224,13 +226,13 @@ public class VMVideoCallActivity extends VMCallActivity {
                 micSwitch.setActivated(false);
                 // 暂停语音数据的传输
                 EMClient.getInstance().callManager().resumeVoiceTransfer();
-                VMCallManager.getInstance().setOpenMic(true);
+                CallManager.getInstance().setOpenMic(true);
             } else {
                 // 设置按钮状态
                 micSwitch.setActivated(true);
                 // 恢复语音数据的传输
                 EMClient.getInstance().callManager().pauseVoiceTransfer();
-                VMCallManager.getInstance().setOpenMic(false);
+                CallManager.getInstance().setOpenMic(false);
             }
         } catch (HyphenateException e) {
             VMLog.e("exception code: %d, %s", e.getErrorCode(), e.getMessage());
@@ -249,13 +251,13 @@ public class VMVideoCallActivity extends VMCallActivity {
                 cameraSwitch.setActivated(false);
                 // 暂停视频数据的传输
                 EMClient.getInstance().callManager().resumeVideoTransfer();
-                VMCallManager.getInstance().setOpenCamera(true);
+                CallManager.getInstance().setOpenCamera(true);
             } else {
                 // 设置按钮状态
                 cameraSwitch.setActivated(true);
                 // 恢复视频数据的传输
                 EMClient.getInstance().callManager().pauseVideoTransfer();
-                VMCallManager.getInstance().setOpenCamera(false);
+                CallManager.getInstance().setOpenCamera(false);
             }
         } catch (HyphenateException e) {
             VMLog.e("exception code: %d, %s", e.getErrorCode(), e.getMessage());
@@ -271,13 +273,13 @@ public class VMVideoCallActivity extends VMCallActivity {
         if (speakerSwitch.isActivated()) {
             // 设置按钮状态
             speakerSwitch.setActivated(false);
-            VMCallManager.getInstance().closeSpeaker();
-            VMCallManager.getInstance().setOpenSpeaker(false);
+            CallManager.getInstance().closeSpeaker();
+            CallManager.getInstance().setOpenSpeaker(false);
         } else {
             // 设置按钮状态
             speakerSwitch.setActivated(true);
-            VMCallManager.getInstance().openSpeaker();
-            VMCallManager.getInstance().setOpenSpeaker(true);
+            CallManager.getInstance().openSpeaker();
+            CallManager.getInstance().setOpenSpeaker(true);
         }
     }
 
@@ -290,7 +292,7 @@ public class VMVideoCallActivity extends VMCallActivity {
             // 设置按钮状态
             recordSwitch.setActivated(false);
             String path = videoCallHelper.stopVideoRecord();
-            VMCallManager.getInstance().setOpenRecord(false);
+            CallManager.getInstance().setOpenRecord(false);
             File file = new File(path);
             if (file.exists()) {
                 Toast.makeText(activity, "录制视频成功 " + path, Toast.LENGTH_LONG).show();
@@ -309,7 +311,7 @@ public class VMVideoCallActivity extends VMCallActivity {
             videoCallHelper.startVideoRecord(dirPath);
             VMLog.d("开始录制视频");
             Toast.makeText(activity, "开始录制", Toast.LENGTH_LONG).show();
-            VMCallManager.getInstance().setOpenRecord(true);
+            CallManager.getInstance().setOpenRecord(true);
         }
     }
 
@@ -359,19 +361,21 @@ public class VMVideoCallActivity extends VMCallActivity {
         RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(width, height);
         RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(width, height);
         if (surfaceViewState == -1) {
-            localParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            localParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-            // 设置点击事件
-            localSurface.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    onControlLayout();
-                }
-            });
-            // 将 view 添加到界面
-            surfaceLayout.addView(localSurface, localParams);
-            surfaceLayout.addView(oppositeSurface, oppositeParams);
+            //localParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            //localParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            //oppositeParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            //oppositeParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            //// 设置点击事件
+            //localSurface.setOnClickListener(new View.OnClickListener() {
+            //    @Override public void onClick(View v) {
+            //        onControlLayout();
+            //    }
+            //});
+            //// 将 view 添加到界面
+            //surfaceLayout.addView(localSurface, localParams);
+            //surfaceLayout.addView(oppositeSurface, oppositeParams);
+            VMCameraPreview preview = new VMCameraPreview(activity);
+            surfaceLayout.addView(preview);
         } else if (surfaceViewState == 0) {
             localParams.width = width;
             localParams.height = height;
@@ -432,7 +436,7 @@ public class VMVideoCallActivity extends VMCallActivity {
         EMClient.getInstance().callManager().setSurfaceView(localSurface, oppositeSurface);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(VMCallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
         if (event.isState()) {
             refreshCallView(event);
         }
@@ -445,7 +449,7 @@ public class VMVideoCallActivity extends VMCallActivity {
     /**
      * 刷新通话界面
      */
-    private void refreshCallView(VMCallEvent event) {
+    private void refreshCallView(CallEvent event) {
         EMCallStateChangeListener.CallError callError = event.getCallError();
         EMCallStateChangeListener.CallState callState = event.getCallState();
         switch (callState) {
@@ -454,7 +458,7 @@ public class VMVideoCallActivity extends VMCallActivity {
                 break;
             case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
                 VMLog.i("正在连接" + callError);
-                if (VMCallManager.getInstance().isInComingCall()) {
+                if (CallManager.getInstance().isInComingCall()) {
                     callStateView.setText(R.string.call_connected_is_incoming);
                 } else {
                     callStateView.setText(R.string.call_connected);
@@ -503,7 +507,7 @@ public class VMVideoCallActivity extends VMCallActivity {
      * 刷新通话时间显示
      */
     private void refreshCallTime() {
-        int t = VMCallManager.getInstance().getCallTime();
+        int t = CallManager.getInstance().getCallTime();
         int h = t / 60 / 60;
         int m = t / 60 % 60;
         int s = t % 60 % 60;

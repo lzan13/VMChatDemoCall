@@ -21,7 +21,7 @@ import com.vmloft.develop.library.tools.utils.VMSPUtil;
 /**
  * 音视频项目主类
  */
-public class VMMainActivity extends VMBaseActivity {
+public class MainActivity extends VMBaseActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     private VMBaseActivity activity;
@@ -96,10 +96,10 @@ public class VMMainActivity extends VMBaseActivity {
      */
     private void callVideo() {
         checkContacts();
-        Intent intent = new Intent(VMMainActivity.this, VMVideoCallActivity.class);
-        VMCallManager.getInstance().setChatId(contacts);
-        VMCallManager.getInstance().setInComingCall(false);
-        VMCallManager.getInstance().setCallType(VMCallManager.CallType.VIDEO);
+        Intent intent = new Intent(MainActivity.this, VideoCallActivity.class);
+        CallManager.getInstance().setChatId(contacts);
+        CallManager.getInstance().setInComingCall(false);
+        CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
         startActivity(intent);
     }
 
@@ -108,17 +108,17 @@ public class VMMainActivity extends VMBaseActivity {
      */
     private void callVoice() {
         checkContacts();
-        Intent intent = new Intent(VMMainActivity.this, VMVoiceCallActivity.class);
-        VMCallManager.getInstance().setChatId(contacts);
-        VMCallManager.getInstance().setInComingCall(false);
-        VMCallManager.getInstance().setCallType(VMCallManager.CallType.VOICE);
+        Intent intent = new Intent(MainActivity.this, VoiceCallActivity.class);
+        CallManager.getInstance().setChatId(contacts);
+        CallManager.getInstance().setInComingCall(false);
+        CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
         startActivity(intent);
     }
 
     private void checkContacts() {
         contacts = contactsView.getText().toString().trim();
         if (contacts.isEmpty()) {
-            Toast.makeText(VMMainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
             return;
         }
         VMSPUtil.put(activity, "contacts", contacts);

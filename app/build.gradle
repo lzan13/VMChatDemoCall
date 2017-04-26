@@ -6,17 +6,13 @@ android {
 
     defaultConfig {
         applicationId "com.vmloft.develop.app.demo.call"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
-            ndk {
-                abiFilters = ["armeabi-v7a"]
-            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

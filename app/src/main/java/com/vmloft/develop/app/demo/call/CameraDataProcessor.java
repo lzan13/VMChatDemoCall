@@ -8,7 +8,7 @@ import com.vmloft.develop.library.tools.utils.VMLog;
  * Created by lzan13 on 2016/8/9.
  * 通话数据回调处理接口
  */
-public class VMCameraDataProcessor implements EMCallManager.EMCameraDataProcessor {
+public class CameraDataProcessor implements EMCallManager.EMCameraDataProcessor {
 
     byte yDelta = 0;
 

@@ -6,7 +6,7 @@ import com.hyphenate.chat.EMCallStateChangeListener;
  * 通话相关事件传递对象
  * Created by lzan13 on 2017/3/24.
  */
-public class VMCallEvent {
+public class CallEvent {
 
     private boolean isState;
     private boolean isTime;

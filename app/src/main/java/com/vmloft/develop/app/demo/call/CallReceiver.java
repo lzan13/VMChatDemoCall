@@ -10,9 +10,9 @@ import com.hyphenate.chat.EMClient;
  *
  * 通话呼叫监听广播实现，用来监听其他账户对自己的呼叫
  */
-public class VMCallReceiver extends BroadcastReceiver {
+public class CallReceiver extends BroadcastReceiver {
 
-    public VMCallReceiver() {
+    public CallReceiver() {
     }
 
     @Override public void onReceive(Context context, Intent intent) {
@@ -34,16 +34,16 @@ public class VMCallReceiver extends BroadcastReceiver {
             // 根据通话类型跳转到语音通话或视频通话界面
             if (callType.equals("video")) {
                 // 设置当前通话类型为视频通话
-                VMCallManager.getInstance().setCallType(VMCallManager.CallType.VIDEO);
-                callIntent.setClass(context, VMVideoCallActivity.class);
+                CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
+                callIntent.setClass(context, VideoCallActivity.class);
             } else if (callType.equals("voice")) {
                 // 设置当前通话类型为语音通话
-                VMCallManager.getInstance().setCallType(VMCallManager.CallType.VOICE);
-                callIntent.setClass(context, VMVoiceCallActivity.class);
+                CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
+                callIntent.setClass(context, VoiceCallActivity.class);
             }
             // 初始化通化管理类的一些属性
-            VMCallManager.getInstance().setChatId(callFrom);
-            VMCallManager.getInstance().setInComingCall(true);
+            CallManager.getInstance().setChatId(callFrom);
+            CallManager.getInstance().setInComingCall(true);
 
             // 设置 activity 启动方式
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

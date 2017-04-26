@@ -1,17 +1,9 @@
 package com.vmloft.develop.app.demo.call;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v7.app.NotificationCompat;
-import android.view.KeyEvent;
 import android.view.WindowManager;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
 import com.vmloft.develop.library.tools.VMBaseActivity;
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,7 +12,7 @@ import org.greenrobot.eventbus.EventBus;
  *
  * 通话界面的父类，做一些音视频通话的通用操作
  */
-public class VMCallActivity extends VMBaseActivity {
+public class CallActivity extends VMBaseActivity {
 
     // 呼叫方名字
     protected String chatId;
@@ -46,15 +38,15 @@ public class VMCallActivity extends VMBaseActivity {
         // 初始化振动器
         vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
 
-        if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.DISCONNECTED) {
+        if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
             // 收到呼叫或者呼叫对方时初始化通话状态监听
-            VMCallManager.getInstance().setCallState(VMCallManager.CallState.CONNECTING);
-            VMCallManager.getInstance().registerCallStateListener();
-            VMCallManager.getInstance().attemptPlayCallSound();
+            CallManager.getInstance().setCallState(CallManager.CallState.CONNECTING);
+            CallManager.getInstance().registerCallStateListener();
+            CallManager.getInstance().attemptPlayCallSound();
 
             // 如果不是对方打来的，就主动呼叫
-            if (!VMCallManager.getInstance().isInComingCall()) {
-                VMCallManager.getInstance().makeCall();
+            if (!CallManager.getInstance().isInComingCall()) {
+                CallManager.getInstance().makeCall();
             }
         }
     }
@@ -63,7 +55,7 @@ public class VMCallActivity extends VMBaseActivity {
      * 挂断通话
      */
     protected void endCall() {
-        VMCallManager.getInstance().endCall();
+        CallManager.getInstance().endCall();
         onFinish();
     }
 
@@ -71,7 +63,7 @@ public class VMCallActivity extends VMBaseActivity {
      * 拒绝通话
      */
     protected void rejectCall() {
-        VMCallManager.getInstance().rejectCall();
+        CallManager.getInstance().rejectCall();
         onFinish();
     }
 
@@ -79,7 +71,7 @@ public class VMCallActivity extends VMBaseActivity {
      * 接听通话
      */
     protected void answerCall() {
-        VMCallManager.getInstance().answerCall();
+        CallManager.getInstance().answerCall();
     }
 
     /**
@@ -111,7 +103,7 @@ public class VMCallActivity extends VMBaseActivity {
      */
     @Override public void onBackPressed() {
         //super.onBackPressed();
-        VMCallManager.getInstance().addFloatWindow();
+        CallManager.getInstance().addFloatWindow();
         onFinish();
     }
 
@@ -120,18 +112,18 @@ public class VMCallActivity extends VMBaseActivity {
      */
     @Override protected void onUserLeaveHint() {
         //super.onUserLeaveHint();
-        VMCallManager.getInstance().addFloatWindow();
+        CallManager.getInstance().addFloatWindow();
         onFinish();
     }
 
     @Override protected void onResume() {
         super.onResume();
         // 判断当前通话状态，如果已经挂断，则关闭通话界面
-        if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.DISCONNECTED) {
+        if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
             onFinish();
             return;
         } else {
-            VMCallManager.getInstance().removeFloatWindow();
+            CallManager.getInstance().removeFloatWindow();
         }
     }
 }

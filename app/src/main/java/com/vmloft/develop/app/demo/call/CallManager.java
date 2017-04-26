@@ -26,13 +26,13 @@ import org.greenrobot.eventbus.EventBus;
  *
  * 实时音视频通话管理类，这是一个单例类，用来管理 app 通话操作
  */
-public class VMCallManager {
+public class CallManager {
 
     // 上下文菜单
     private Context context;
 
     // 单例类实例
-    private static VMCallManager instance;
+    private static CallManager instance;
 
     // 通知栏提醒管理类
     private NotificationManager notificationManager;
@@ -48,7 +48,7 @@ public class VMCallManager {
     private boolean isLoaded = false;
 
     // 通话状态监听
-    private VMCallStateListener callStateListener;
+    private CallStateListener callStateListener;
 
     // 记录通话方向，是呼出还是呼入
     private boolean isInComingCall = true;
@@ -72,15 +72,15 @@ public class VMCallManager {
     /**
      * 私有化构造函数
      */
-    private VMCallManager() {
+    private CallManager() {
     }
 
     /**
      * 获取单例对象实例方法
      */
-    public static VMCallManager getInstance() {
+    public static CallManager getInstance() {
         if (instance == null) {
-            instance = new VMCallManager();
+            instance = new CallManager();
         }
         return instance;
     }
@@ -102,14 +102,14 @@ public class VMCallManager {
         // 设置自动调节分辨率，默认为 true
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800)， 默认最小(80)
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(2500);
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
         EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
         // 设置视频通话分辨率 默认是(640, 480)
-        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(1280, 720);
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
         // 设置通话过程中对方如果离线是否发送离线推送通知
-        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
         // 设置音视频通话采样率，一般不需要设置，除非采集声音有问题才需要手动设置
         EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(48000);
         // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
@@ -185,7 +185,7 @@ public class VMCallManager {
      */
     public void setCallCameraDataProcessor() {
         // 初始化视频数据处理器
-        VMCameraDataProcessor cameraDataProcessor = new VMCameraDataProcessor();
+        CameraDataProcessor cameraDataProcessor = new CameraDataProcessor();
         // 设置视频通话数据处理类
         EMClient.getInstance().callManager().setCameraDataProcessor(cameraDataProcessor);
     }
@@ -292,11 +292,11 @@ public class VMCallManager {
 
     /**
      * 注册通话状态监听，监听音视频通话状态
-     * 状态监听详细实现在 {@link VMCallStateListener} 类中
+     * 状态监听详细实现在 {@link CallStateListener} 类中
      */
     public void registerCallStateListener() {
         if (callStateListener == null) {
-            callStateListener = new VMCallStateListener();
+            callStateListener = new CallStateListener();
         }
         EMClient.getInstance().callManager().addCallStateChangeListener(callStateListener);
     }
@@ -404,7 +404,7 @@ public class VMCallManager {
         // 发送通知栏提醒
         addCallNotification();
         // 开启悬浮窗
-        VMFloatWindow.getInstance(context).addFloatWindow();
+        FloatWindow.getInstance(context).addFloatWindow();
     }
 
     /**
@@ -414,7 +414,7 @@ public class VMCallManager {
         // 取消通知栏提醒
         cancelCallNotification();
         // 关闭悬浮窗
-        VMFloatWindow.getInstance(context).removeFloatWindow();
+        FloatWindow.getInstance(context).removeFloatWindow();
     }
 
     /**
@@ -435,9 +435,9 @@ public class VMCallManager {
         builder.setContentTitle(context.getString(R.string.app_name));
         Intent intent = new Intent();
         if (callType == CallType.VIDEO) {
-            intent.setClass(context, VMVideoCallActivity.class);
+            intent.setClass(context, VideoCallActivity.class);
         } else {
-            intent.setClass(context, VMVoiceCallActivity.class);
+            intent.setClass(context, VoiceCallActivity.class);
         }
         PendingIntent pIntent =
                 PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -462,7 +462,7 @@ public class VMCallManager {
      * 开始通话计时，这里在全局管理器中开启一个定时器进行计时，可以做到最小化，以及后台时进行计时
      */
     public void startCallTime() {
-        final VMCallEvent event = new VMCallEvent();
+        final CallEvent event = new CallEvent();
         EventBus.getDefault().post(event);
         event.setTime(true);
         if (timer == null) {

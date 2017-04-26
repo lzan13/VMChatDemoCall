@@ -10,10 +10,10 @@ import org.greenrobot.eventbus.EventBus;
  * 通话状态监听类，用来监听通话过程中状态的变化
  */
 
-public class VMCallStateListener implements EMCallStateChangeListener {
+public class CallStateListener implements EMCallStateChangeListener {
 
     @Override public void onCallStateChanged(CallState callState, CallError callError) {
-        VMCallEvent event = new VMCallEvent();
+        CallEvent event = new CallEvent();
         event.setState(true);
         event.setCallError(callError);
         event.setCallState(callState);
@@ -21,52 +21,52 @@ public class VMCallStateListener implements EMCallStateChangeListener {
         switch (callState) {
             case CONNECTING: // 正在呼叫对方，TODO 没见回调过
                 VMLog.i("正在呼叫对方" + callError);
-                VMCallManager.getInstance().setCallState(VMCallManager.CallState.CONNECTING);
+                CallManager.getInstance().setCallState(CallManager.CallState.CONNECTING);
                 break;
             case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
                 VMLog.i("正在连接" + callError);
-                VMCallManager.getInstance().setCallState(VMCallManager.CallState.CONNECTED);
+                CallManager.getInstance().setCallState(CallManager.CallState.CONNECTED);
                 break;
             case ACCEPTED: // 通话已接通
                 VMLog.i("通话已接通");
-                VMCallManager.getInstance().stopCallSound();
-                VMCallManager.getInstance().startCallTime();
-                VMCallManager.getInstance().setEndType(VMCallManager.EndType.NORMAL);
-                VMCallManager.getInstance().setCallState(VMCallManager.CallState.ACCEPTED);
+                CallManager.getInstance().stopCallSound();
+                CallManager.getInstance().startCallTime();
+                CallManager.getInstance().setEndType(CallManager.EndType.NORMAL);
+                CallManager.getInstance().setCallState(CallManager.CallState.ACCEPTED);
                 break;
             case DISCONNECTED: // 通话已中断
                 VMLog.i("通话已结束" + callError);
                 // 通话结束，重置通话状态
                 if (callError == CallError.ERROR_UNAVAILABLE) {
                     VMLog.i("对方不在线" + callError);
-                    VMCallManager.getInstance().setEndType(VMCallManager.EndType.OFFLINE);
+                    CallManager.getInstance().setEndType(CallManager.EndType.OFFLINE);
                 } else if (callError == CallError.ERROR_BUSY) {
                     VMLog.i("对方正忙" + callError);
-                    VMCallManager.getInstance().setEndType(VMCallManager.EndType.BUSY);
+                    CallManager.getInstance().setEndType(CallManager.EndType.BUSY);
                 } else if (callError == CallError.REJECTED) {
                     VMLog.i("对方已拒绝" + callError);
-                    VMCallManager.getInstance().setEndType(VMCallManager.EndType.REJECTED);
+                    CallManager.getInstance().setEndType(CallManager.EndType.REJECTED);
                 } else if (callError == CallError.ERROR_NORESPONSE) {
                     VMLog.i("对方未响应，可能手机不在身边" + callError);
-                    VMCallManager.getInstance().setEndType(VMCallManager.EndType.NORESPONSE);
+                    CallManager.getInstance().setEndType(CallManager.EndType.NORESPONSE);
                 } else if (callError == CallError.ERROR_TRANSPORT) {
                     VMLog.i("连接建立失败" + callError);
-                    VMCallManager.getInstance().setEndType(VMCallManager.EndType.TRANSPORT);
+                    CallManager.getInstance().setEndType(CallManager.EndType.TRANSPORT);
                 } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
                     VMLog.i("双方通讯协议不同" + callError);
-                    VMCallManager.getInstance().setEndType(VMCallManager.EndType.DIFFERENT);
+                    CallManager.getInstance().setEndType(CallManager.EndType.DIFFERENT);
                 } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
                     VMLog.i("双方通讯协议不同" + callError);
-                    VMCallManager.getInstance().setEndType(VMCallManager.EndType.DIFFERENT);
+                    CallManager.getInstance().setEndType(CallManager.EndType.DIFFERENT);
                 } else {
                     VMLog.i("通话已结束 %s", callError);
-                    if (VMCallManager.getInstance().getEndType() == VMCallManager.EndType.CANCEL) {
-                        VMCallManager.getInstance().setEndType(VMCallManager.EndType.CANCELLED);
+                    if (CallManager.getInstance().getEndType() == CallManager.EndType.CANCEL) {
+                        CallManager.getInstance().setEndType(CallManager.EndType.CANCELLED);
                     }
                 }
                 // 通话结束，保存消息
-                VMCallManager.getInstance().saveCallMessage();
-                VMCallManager.getInstance().reset();
+                CallManager.getInstance().saveCallMessage();
+                CallManager.getInstance().reset();
                 break;
             case NETWORK_UNSTABLE:
                 if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {

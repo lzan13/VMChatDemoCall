@@ -25,7 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
  *
  * 音频通话界面处理
  */
-public class VMVoiceCallActivity extends VMCallActivity {
+public class VoiceCallActivity extends CallActivity {
 
     // 使用 ButterKnife 注解的方式获取控件
     @BindView(R.id.layout_root) View rootView;
@@ -55,7 +55,7 @@ public class VMVoiceCallActivity extends VMCallActivity {
      */
     @Override protected void initView() {
         super.initView();
-        if (VMCallManager.getInstance().isInComingCall()) {
+        if (CallManager.getInstance().isInComingCall()) {
             endCallFab.setVisibility(View.GONE);
             answerCallFab.setVisibility(View.VISIBLE);
             rejectCallFab.setVisibility(View.VISIBLE);
@@ -67,12 +67,12 @@ public class VMVoiceCallActivity extends VMCallActivity {
             callStateView.setText(R.string.call_connecting);
         }
 
-        micSwitch.setActivated(!VMCallManager.getInstance().isOpenMic());
-        speakerSwitch.setActivated(VMCallManager.getInstance().isOpenSpeaker());
-        recordSwitch.setActivated(VMCallManager.getInstance().isOpenRecord());
+        micSwitch.setActivated(!CallManager.getInstance().isOpenMic());
+        speakerSwitch.setActivated(CallManager.getInstance().isOpenSpeaker());
+        recordSwitch.setActivated(CallManager.getInstance().isOpenRecord());
 
         // 判断当前通话时刚开始，还是从后台恢复已经存在的通话
-        if (VMCallManager.getInstance().getCallState() == VMCallManager.CallState.ACCEPTED) {
+        if (CallManager.getInstance().getCallState() == CallManager.CallState.ACCEPTED) {
             endCallFab.setVisibility(View.VISIBLE);
             answerCallFab.setVisibility(View.GONE);
             rejectCallFab.setVisibility(View.GONE);
@@ -135,7 +135,7 @@ public class VMVoiceCallActivity extends VMCallActivity {
      * 退出全屏通话界面
      */
     private void exitFullScreen() {
-        VMCallManager.getInstance().addFloatWindow();
+        CallManager.getInstance().addFloatWindow();
         onFinish();
     }
 
@@ -150,13 +150,13 @@ public class VMVoiceCallActivity extends VMCallActivity {
                 micSwitch.setActivated(false);
                 // 暂停语音数据的传输
                 EMClient.getInstance().callManager().resumeVoiceTransfer();
-                VMCallManager.getInstance().setOpenMic(true);
+                CallManager.getInstance().setOpenMic(true);
             } else {
                 // 设置按钮状态
                 micSwitch.setActivated(true);
                 // 恢复语音数据的传输
                 EMClient.getInstance().callManager().pauseVoiceTransfer();
-                VMCallManager.getInstance().setOpenMic(false);
+                CallManager.getInstance().setOpenMic(false);
             }
         } catch (HyphenateException e) {
             VMLog.e("exception code: %d, %s", e.getErrorCode(), e.getMessage());
@@ -172,13 +172,13 @@ public class VMVoiceCallActivity extends VMCallActivity {
         if (speakerSwitch.isActivated()) {
             // 设置按钮状态
             speakerSwitch.setActivated(false);
-            VMCallManager.getInstance().closeSpeaker();
-            VMCallManager.getInstance().setOpenSpeaker(false);
+            CallManager.getInstance().closeSpeaker();
+            CallManager.getInstance().setOpenSpeaker(false);
         } else {
             // 设置按钮状态
             speakerSwitch.setActivated(true);
-            VMCallManager.getInstance().openSpeaker();
-            VMCallManager.getInstance().setOpenSpeaker(true);
+            CallManager.getInstance().openSpeaker();
+            CallManager.getInstance().setOpenSpeaker(true);
         }
     }
 
@@ -191,15 +191,15 @@ public class VMVoiceCallActivity extends VMCallActivity {
         if (recordSwitch.isActivated()) {
             // 设置按钮状态
             recordSwitch.setActivated(false);
-            VMCallManager.getInstance().setOpenRecord(false);
+            CallManager.getInstance().setOpenRecord(false);
         } else {
             // 设置按钮状态
             recordSwitch.setActivated(true);
-            VMCallManager.getInstance().setOpenRecord(true);
+            CallManager.getInstance().setOpenRecord(true);
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(VMCallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
         if (event.isState()) {
             refreshCallView(event);
         }
@@ -212,7 +212,7 @@ public class VMVoiceCallActivity extends VMCallActivity {
     /**
      * 刷新通话界面
      */
-    private void refreshCallView(VMCallEvent event) {
+    private void refreshCallView(CallEvent event) {
         EMCallStateChangeListener.CallError callError = event.getCallError();
         EMCallStateChangeListener.CallState callState = event.getCallState();
         switch (callState) {
@@ -223,7 +223,7 @@ public class VMVoiceCallActivity extends VMCallActivity {
                 VMLog.i("正在连接" + callError);
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
-                        if (VMCallManager.getInstance().isInComingCall()) {
+                        if (CallManager.getInstance().isInComingCall()) {
                             callStateView.setText(R.string.call_connected_is_incoming);
                         } else {
                             callStateView.setText(R.string.call_connected);
@@ -275,7 +275,7 @@ public class VMVoiceCallActivity extends VMCallActivity {
      * 刷新通话时间显示
      */
     private void refreshCallTime() {
-        int t = VMCallManager.getInstance().getCallTime();
+        int t = CallManager.getInstance().getCallTime();
         int h = t / 60 / 60;
         int m = t / 60 % 60;
         int s = t % 60 % 60;

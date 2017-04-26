@@ -1,12 +1,8 @@
 package com.vmloft.develop.app.demo.call;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.support.v7.app.NotificationCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,13 +26,13 @@ import org.greenrobot.eventbus.ThreadMode;
  *
  * 音视频通话悬浮窗操作类
  */
-public class VMFloatWindow {
+public class FloatWindow {
 
     // 上下文菜单
     private Context context;
 
     // 当前单例类实例
-    private static VMFloatWindow instance;
+    private static FloatWindow instance;
 
     private WindowManager windowManager = null;
     private WindowManager.LayoutParams layoutParams = null;
@@ -45,14 +41,14 @@ public class VMFloatWindow {
     private View floatView;
     private TextView callTimeView;
 
-    public VMFloatWindow(Context context) {
+    public FloatWindow(Context context) {
         this.context = context;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
-    public static VMFloatWindow getInstance(Context context) {
+    public static FloatWindow getInstance(Context context) {
         if (instance == null) {
-            instance = new VMFloatWindow(context);
+            instance = new FloatWindow(context);
         }
         return instance;
     }
@@ -86,7 +82,7 @@ public class VMFloatWindow {
         floatView = LayoutInflater.from(context).inflate(R.layout.widget_float_window, null);
         // 添加悬浮窗 View 到窗口
         windowManager.addView(floatView, layoutParams);
-        if (VMCallManager.getInstance().getCallType() == VMCallManager.CallType.VOICE) {
+        if (CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
             floatView.findViewById(R.id.layout_call_voice).setVisibility(View.VISIBLE);
             floatView.findViewById(R.id.layout_call_video).setVisibility(View.GONE);
             callTimeView = (TextView) floatView.findViewById(R.id.text_call_time);
@@ -99,10 +95,10 @@ public class VMFloatWindow {
         floatView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Intent intent = new Intent();
-                if (VMCallManager.getInstance().getCallType() == VMCallManager.CallType.VOICE) {
-                    intent.setClass(context, VMVoiceCallActivity.class);
+                if (CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
+                    intent.setClass(context, VoiceCallActivity.class);
                 } else {
-                    intent.setClass(context, VMVideoCallActivity.class);
+                    intent.setClass(context, VideoCallActivity.class);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -201,11 +197,11 @@ public class VMFloatWindow {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(VMCallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
         if (event.isState()) {
             refreshCallView(event);
         }
-        if (event.isTime()) {
+        if (event.isTime() && CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
             refreshCallTime();
         }
     }
@@ -213,7 +209,7 @@ public class VMFloatWindow {
     /**
      * 刷新通话界面
      */
-    private void refreshCallView(VMCallEvent event) {
+    private void refreshCallView(CallEvent event) {
         EMCallStateChangeListener.CallError callError = event.getCallError();
         EMCallStateChangeListener.CallState callState = event.getCallState();
         switch (callState) {
@@ -228,7 +224,7 @@ public class VMFloatWindow {
                 break;
             case DISCONNECTED: // 通话已中断
                 VMLog.i("通话已结束" + callError);
-                VMCallManager.getInstance().removeFloatWindow();
+                CallManager.getInstance().removeFloatWindow();
                 break;
             // TODO 3.3.0版本 SDK 下边几个暂时都没有回调
             case NETWORK_UNSTABLE:
@@ -259,7 +255,7 @@ public class VMFloatWindow {
     }
 
     private void refreshCallTime() {
-        int t = VMCallManager.getInstance().getCallTime();
+        int t = CallManager.getInstance().getCallTime();
         int h = t / 60 / 60;
         int m = t / 60 % 60;
         int s = t % 60 % 60;
