@@ -17,6 +17,8 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.vmloft.develop.library.tools.VMBaseActivity;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 音视频项目主类
@@ -87,7 +89,18 @@ public class MainActivity extends VMBaseActivity {
      */
     private void sendTextMessage() {
         checkContacts();
-        EMMessage message = EMMessage.createTxtSendMessage("test text message", contacts);
+        EMMessage message = EMMessage.createTxtSendMessage("测试发送消息，主要是为了测试是否在线", contacts);
+        // 设置强制推送
+        message.setAttribute("em_force_notification", "true");
+        // 设置自定义推送提示
+        JSONObject extObj = new JSONObject();
+        try {
+            extObj.put("em_push_title", "测试消息推送，这里是推送内容，一般这里直接写上消息详情");
+            extObj.put("extern", "定义推送扩展内容");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        message.setAttribute("em_apns_ext", extObj);
         sendMessage(message);
     }
 

@@ -33,6 +33,10 @@ public class AppApplication extends VMApplication {
         // 动态设置appkey，如果清单配置文件设置了 appkey，这里可以不用设置
         //options.setAppKey("15697321312#mya2017");
 
+        // 设置小米推送 appID 和 appKey
+        options.setMipushConfig("2882303761517573806", "5981757315806");
+
+        // 设置消息是否按照服务器时间排序
         options.setSortMessageByServerTime(false);
 
         // 初始化环信SDK,一定要先调用init()
@@ -42,8 +46,7 @@ public class AppApplication extends VMApplication {
         EMClient.getInstance().setDebugMode(true);
 
         // 设置通话广播监听器
-        IntentFilter callFilter = new IntentFilter(
-                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (callReceiver == null) {
             callReceiver = new CallReceiver();
         }
@@ -53,5 +56,4 @@ public class AppApplication extends VMApplication {
         // 通话管理类的初始化
         CallManager.getInstance().init(context);
     }
-
 }

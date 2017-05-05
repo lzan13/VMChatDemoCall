@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 import android.support.v7.app.NotificationCompat;
+import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -99,9 +100,12 @@ public class CallManager {
         /**
          * SDK 3.2.x 版本后通话相关设置，一定要在初始化后，开始音视频功能前设置，否则设置无效
          */
-        // 设置通话过程中对方如果离线是否发送离线推送通知，默认 false
+        // 设置通话过程中对方如果离线是否发送离线推送通知，默认 false，这里需要和推送配合使用
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
-        // 设置是否启用外部输入视频数据，默认 false
+        /**
+         * 设置是否启用外部输入视频数据，默认 false，如果设置为 true，需要自己调用
+         * {@link EMCallManager#inputExternalVideoData(byte[], int, int, int)}输入视频数据
+         */
         EMClient.getInstance().callManager().getCallOptions().setEnableExternalVideoData(false);
         // 设置自动调节分辨率，默认为 true
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
@@ -325,8 +329,7 @@ public class CallManager {
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build();
             // 当系统的 SDK 版本高于21时，使用 build 的方式实例化 SoundPool
-            soundPool =
-                    new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(1).build();
+            soundPool = new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(1).build();
         } else {
             // 老版本使用构造函数方式实例化 SoundPool，MODE 设置为铃音 MODE_RINGTONE
             soundPool = new SoundPool(1, AudioManager.MODE_RINGTONE, 0);
@@ -423,8 +426,7 @@ public class CallManager {
      * 发送通知栏提醒，告知用户通话继续进行中
      */
     private void addCallNotification() {
-        notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         builder.setSmallIcon(R.mipmap.ic_launcher);
@@ -441,8 +443,7 @@ public class CallManager {
         } else {
             intent.setClass(context, VoiceCallActivity.class);
         }
-        PendingIntent pIntent =
-                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pIntent);
         builder.setOngoing(true);
 
