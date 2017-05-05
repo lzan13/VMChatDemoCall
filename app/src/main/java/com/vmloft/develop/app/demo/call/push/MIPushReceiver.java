@@ -37,6 +37,7 @@ public class MIPushReceiver extends EMMipushReceiver {
         }
         if (MiPushClient.COMMAND_REGISTER.equals(command)) {
             if (miPushCommandMessage.getResultCode() == ErrorCode.SUCCESS) {
+                // 这里可以获取到当前账户的 regId，可以发送给自己的服务器，用来做一些业务处理
                 regId = cmdArg1;
             }
         }
