@@ -18,6 +18,16 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         >
+        <Button
+            android:id="@+id/btn_change_call_view"
+            android:layout_width="@dimen/vm_dimen_96"
+            android:layout_height="@dimen/vm_dimen_128"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/vm_dimen_16"
+            android:layout_marginTop="@dimen/vm_dimen_96"
+            android:background="@color/vm_transparent"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
     <!--控制按钮层布局-->
