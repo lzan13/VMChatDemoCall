@@ -17,6 +17,7 @@ import com.hyphenate.media.EMOppositeSurfaceView;
 import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.library.tools.utils.VMDimenUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
+import com.vmloft.develop.library.tools.widget.VMCameraPreview;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -160,7 +161,7 @@ public class FloatWindow {
         // 将 SurfaceView设置给 SDK
         surfaceLayout.removeAllViews();
 
-        EMLocalSurfaceView localView = new EMLocalSurfaceView(context);
+        VMCameraPreview preview = VMCameraPreview.newInstance(context, 640, 480);
         EMOppositeSurfaceView oppositeView = new EMOppositeSurfaceView(context);
 
         int lw = VMDimenUtil.dp2px(context, 24);
@@ -173,17 +174,16 @@ public class FloatWindow {
         localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
         // 设置本地预览图像显示在最上层
-        localView.setZOrderMediaOverlay(true);
-        localView.setZOrderOnTop(true);
+        preview.setZOrderMediaOverlay(true);
+        preview.setZOrderOnTop(true);
 
         // 将 view 添加到界面
         surfaceLayout.addView(oppositeView, oppositeParams);
-        surfaceLayout.addView(localView, localParams);
+        surfaceLayout.addView(preview, localParams);
         // 设置通话界面画面填充方式
-        localView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
-        EMClient.getInstance().callManager().setSurfaceView(localView, oppositeView);
+        EMClient.getInstance().callManager().setSurfaceView(null, oppositeView);
     }
 
     /**
