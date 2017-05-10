@@ -196,6 +196,12 @@ public class VideoCallActivity extends CallActivity {
      * 退出全屏通话界面
      */
     private void exitFullScreen() {
+        surfaceLayout.removeAllViews();
+        if (preview != null) {
+            preview.close();
+            preview = null;
+        }
+        oppositeView = null;
         CallManager.getInstance().addFloatWindow();
         // 结束当前界面
         onFinish();
@@ -467,82 +473,6 @@ public class VideoCallActivity extends CallActivity {
         EMClient.getInstance().callManager().setSurfaceView(null, oppositeView);
     }
 
-    /**
-     * 设置本地与远程画面显示控件
-     */
-    //private void setupSurfaceView() {
-    //    VMLog.d("setupSurfaceView state: %d", surfaceViewState);
-    //    surfaceLayout.removeAllViews();
-    //
-    //    localSurface = new EMLocalSurfaceView(activity);
-    //    oppositeView = new EMOppositeSurfaceView(activity);
-    //
-    //    int width = VMDimenUtil.dp2px(activity, 90);
-    //    int height = VMDimenUtil.dp2px(activity, 120);
-    //    int rightMargin = VMDimenUtil.dp2px(activity, 16);
-    //    int topMargin = VMDimenUtil.dp2px(activity, 96);
-    //
-    //    RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(width, height);
-    //    RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(width, height);
-    //    if (surfaceViewState == 0) {
-    //        localParams.width = width;
-    //        localParams.height = height;
-    //        localParams.rightMargin = rightMargin;
-    //        localParams.topMargin = topMargin;
-    //        localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    //        oppositeParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-    //        oppositeParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-    //        // 设置点击事件
-    //        localSurface.setOnClickListener(new View.OnClickListener() {
-    //            @Override public void onClick(View v) {
-    //                surfaceViewState = 1;
-    //                setupSurfaceView();
-    //            }
-    //        });
-    //        oppositeView.setOnClickListener(new View.OnClickListener() {
-    //            @Override public void onClick(View v) {
-    //                onControlLayout();
-    //            }
-    //        });
-    //        // 设置本地预览图像显示在最上层
-    //        localSurface.setZOrderMediaOverlay(true);
-    //        localSurface.setZOrderOnTop(true);
-    //        // 将 view 添加到界面
-    //        surfaceLayout.addView(oppositeView, oppositeParams);
-    //        surfaceLayout.addView(localSurface, localParams);
-    //    } else if (surfaceViewState == 1) {
-    //        localParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-    //        localParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-    //        oppositeParams.width = width;
-    //        oppositeParams.height = height;
-    //        oppositeParams.rightMargin = rightMargin;
-    //        oppositeParams.topMargin = topMargin;
-    //        oppositeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-    //        // 设置点击事件
-    //        localSurface.setOnClickListener(new View.OnClickListener() {
-    //            @Override public void onClick(View v) {
-    //                onControlLayout();
-    //            }
-    //        });
-    //        oppositeView.setOnClickListener(new View.OnClickListener() {
-    //            @Override public void onClick(View v) {
-    //                surfaceViewState = 0;
-    //                setupSurfaceView();
-    //            }
-    //        });
-    //        // 设置远程图像显示在最上层
-    //        oppositeView.setZOrderOnTop(false);
-    //        oppositeView.setZOrderMediaOverlay(true);
-    //        // 将 view 添加到界面
-    //        surfaceLayout.addView(localSurface, localParams);
-    //        surfaceLayout.addView(oppositeView, oppositeParams);
-    //    }
-    //    // 设置通话界面画面填充方式
-    //    localSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
-    //    oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
-    //    // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
-    //    EMClient.getInstance().callManager().setSurfaceView(localSurface, oppositeView);
-    //}
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
         if (event.isState()) {
             refreshCallView(event);
@@ -647,11 +577,16 @@ public class VideoCallActivity extends CallActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override protected void onFinish() {
-        // 结束通话要把 SurfaceView 释放 重置为 null
-        surfaceLayout.removeAllViews();
-        preview = null;
-        oppositeView = null;
-        super.onFinish();
+    @Override protected void onUserLeaveHint() {
+        //super.onUserLeaveHint();
+        exitFullScreen();
+    }
+
+    /**
+     * 通话界面拦截 Back 按键，不能返回
+     */
+    @Override public void onBackPressed() {
+        //super.onBackPressed();
+        exitFullScreen();
     }
 }

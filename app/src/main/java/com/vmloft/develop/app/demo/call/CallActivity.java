@@ -110,24 +110,6 @@ public class CallActivity extends VMBaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 通话界面拦截 Back 按键，不能返回
-     */
-    @Override public void onBackPressed() {
-        //super.onBackPressed();
-        CallManager.getInstance().addFloatWindow();
-        onFinish();
-    }
-
-    /**
-     * 监听通话界面是否隐藏，处理悬浮窗
-     */
-    @Override protected void onUserLeaveHint() {
-        //super.onUserLeaveHint();
-        CallManager.getInstance().addFloatWindow();
-        onFinish();
-    }
-
     @Override protected void onResume() {
         super.onResume();
         // 判断当前通话状态，如果已经挂断，则关闭通话界面

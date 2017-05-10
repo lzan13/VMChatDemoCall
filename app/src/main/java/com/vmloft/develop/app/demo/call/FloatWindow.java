@@ -42,6 +42,9 @@ public class FloatWindow {
     private View floatView;
     private TextView callTimeView;
 
+    private VMCameraPreview preview;
+    private EMOppositeSurfaceView oppositeView;
+
     public FloatWindow(Context context) {
         this.context = context;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -76,8 +79,7 @@ public class FloatWindow {
         layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
 
         // 设置窗口标志类型，其中 FLAG_NOT_FOCUSABLE 是放置当前悬浮窗拦截点击事件，造成桌面控件不可操作
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
 
         // 获取要现实的布局
         floatView = LayoutInflater.from(context).inflate(R.layout.widget_float_window, null);
@@ -128,8 +130,7 @@ public class FloatWindow {
                     case MotionEvent.ACTION_MOVE:
                         VMLog.d("move x: %f, y: %f", event.getRawX(), event.getRawY());
                         // 当移动距离大于特定值时，表示是多动悬浮窗，则不触发后边的点击监听
-                        if (Math.abs(event.getRawX() - startX) > 20
-                                || Math.abs(event.getRawY() - startY) > 20) {
+                        if (Math.abs(event.getRawX() - startX) > 20 || Math.abs(event.getRawY() - startY) > 20) {
                             result = true;
                         }
                         // getRawX 获取触摸点相对于屏幕的坐标，getX 相对于当前悬浮窗坐标
@@ -155,14 +156,13 @@ public class FloatWindow {
         floatView.findViewById(R.id.layout_call_voice).setVisibility(View.GONE);
         floatView.findViewById(R.id.layout_call_video).setVisibility(View.VISIBLE);
 
-        RelativeLayout surfaceLayout =
-                (RelativeLayout) floatView.findViewById(R.id.layout_call_video);
+        RelativeLayout surfaceLayout = (RelativeLayout) floatView.findViewById(R.id.layout_call_video);
 
         // 将 SurfaceView设置给 SDK
         surfaceLayout.removeAllViews();
 
-        VMCameraPreview preview = VMCameraPreview.newInstance(context, 640, 480);
-        EMOppositeSurfaceView oppositeView = new EMOppositeSurfaceView(context);
+        preview = VMCameraPreview.newInstance(context, 640, 480);
+        oppositeView = new EMOppositeSurfaceView(context);
 
         int lw = VMDimenUtil.dp2px(context, 24);
         int lh = VMDimenUtil.dp2px(context, 32);
@@ -176,10 +176,17 @@ public class FloatWindow {
         // 设置本地预览图像显示在最上层
         preview.setZOrderMediaOverlay(true);
         preview.setZOrderOnTop(true);
-
         // 将 view 添加到界面
         surfaceLayout.addView(oppositeView, oppositeParams);
         surfaceLayout.addView(preview, localParams);
+
+        // 实现预览界面回调接口
+        preview.setCameraDataCallback(new VMCameraPreview.CameraDataCallback() {
+            @Override public void onCameraDataCallback(byte[] data, int width, int height, int rotation) {
+                VMLog.d("onCameraDataCallback data: %d, w: %d, h: %d, r: %d", data.length, width, height, rotation);
+                EMClient.getInstance().callManager().inputExternalVideoData(data, width, height, rotation);
+            }
+        });
         // 设置通话界面画面填充方式
         oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
@@ -194,6 +201,10 @@ public class FloatWindow {
         if (windowManager != null && floatView != null) {
             windowManager.removeView(floatView);
             floatView = null;
+        }
+        if (preview != null) {
+            preview.close();
+            preview = null;
         }
     }
 

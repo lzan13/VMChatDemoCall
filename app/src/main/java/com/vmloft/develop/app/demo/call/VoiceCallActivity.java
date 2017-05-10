@@ -85,8 +85,8 @@ public class VoiceCallActivity extends CallActivity {
      * 界面控件点击监听器
      */
     @OnClick({
-            R.id.btn_exit_full_screen, R.id.btn_mic_switch, R.id.btn_speaker_switch,
-            R.id.btn_record_switch, R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
+            R.id.btn_exit_full_screen, R.id.btn_mic_switch, R.id.btn_speaker_switch, R.id.btn_record_switch, R.id.fab_reject_call,
+            R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_exit_full_screen:
@@ -306,5 +306,18 @@ public class VoiceCallActivity extends CallActivity {
      */
     @Override public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override protected void onUserLeaveHint() {
+        //super.onUserLeaveHint();
+        exitFullScreen();
+    }
+
+    /**
+     * 通话界面拦截 Back 按键，不能返回
+     */
+    @Override public void onBackPressed() {
+        //super.onBackPressed();
+        exitFullScreen();
     }
 }
