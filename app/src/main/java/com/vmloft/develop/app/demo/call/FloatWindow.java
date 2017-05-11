@@ -12,12 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.media.EMLocalSurfaceView;
-import com.hyphenate.media.EMOppositeSurfaceView;
+import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.library.tools.utils.VMDimenUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
-import com.vmloft.develop.library.tools.widget.VMCameraPreview;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -42,8 +40,8 @@ public class FloatWindow {
     private View floatView;
     private TextView callTimeView;
 
-    private VMCameraPreview preview;
-    private EMOppositeSurfaceView oppositeView;
+    private EMCallSurfaceView localView;
+    private EMCallSurfaceView oppositeView;
 
     public FloatWindow(Context context) {
         this.context = context;
@@ -161,36 +159,30 @@ public class FloatWindow {
         // 将 SurfaceView设置给 SDK
         surfaceLayout.removeAllViews();
 
-        preview = VMCameraPreview.newInstance(context, 640, 480);
-        oppositeView = new EMOppositeSurfaceView(context);
+        localView = new EMCallSurfaceView(context);
+        oppositeView = new EMCallSurfaceView(context);
 
         int lw = VMDimenUtil.dp2px(context, 24);
         int lh = VMDimenUtil.dp2px(context, 32);
-        int ow = VMDimenUtil.dp2px(context, 90);
-        int oh = VMDimenUtil.dp2px(context, 120);
+        int ow = VMDimenUtil.dp2px(context, 96);
+        int oh = VMDimenUtil.dp2px(context, 128);
         RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(lw, lh);
         RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(ow, oh);
         // 设置本地图像靠右
         localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
         // 设置本地预览图像显示在最上层
-        preview.setZOrderMediaOverlay(true);
-        preview.setZOrderOnTop(true);
+        localView.setZOrderOnTop(false);
+        localView.setZOrderMediaOverlay(true);
         // 将 view 添加到界面
+        surfaceLayout.addView(localView, localParams);
         surfaceLayout.addView(oppositeView, oppositeParams);
-        surfaceLayout.addView(preview, localParams);
 
-        // 实现预览界面回调接口
-        preview.setCameraDataCallback(new VMCameraPreview.CameraDataCallback() {
-            @Override public void onCameraDataCallback(byte[] data, int width, int height, int rotation) {
-                VMLog.d("onCameraDataCallback data: %d, w: %d, h: %d, r: %d", data.length, width, height, rotation);
-                EMClient.getInstance().callManager().inputExternalVideoData(data, width, height, rotation);
-            }
-        });
         // 设置通话界面画面填充方式
+        localView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
-        EMClient.getInstance().callManager().setSurfaceView(null, oppositeView);
+        EMClient.getInstance().callManager().setSurfaceView(localView, oppositeView);
     }
 
     /**
@@ -201,10 +193,6 @@ public class FloatWindow {
         if (windowManager != null && floatView != null) {
             windowManager.removeView(floatView);
             floatView = null;
-        }
-        if (preview != null) {
-            preview.close();
-            preview = null;
         }
     }
 
