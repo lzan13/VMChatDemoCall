@@ -3,6 +3,3 @@ include ':app'
 // 引用其他项目下的 library，这里引用我自己的 VMLibraryManager 下的工具
 include ':vmtools'
 project(':vmtools').projectDir = new File('../VMLibraryManager/vmtools')
-
-include ':hyphenatechatsdk'
-project(':hyphenatechatsdk').projectDir = new File('../emclient-android/hyphenatechatsdk')

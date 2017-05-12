@@ -34,16 +34,15 @@ public class VideoCallActivity extends CallActivity {
     // 视频通话帮助类
     private EMCallManager.EMVideoCallHelper videoCallHelper;
     // SurfaceView 控件状态，-1 表示通话未接通，0 表示本小远大，1 表示远小本大
-    private int surfaceViewState = -1;
+    private int surfaceState = -1;
 
-    private EMCallSurfaceView localView = null;
-    private EMCallSurfaceView oppositeView = null;
+    private EMCallSurfaceView localSurface = null;
+    private EMCallSurfaceView oppositeSurface = null;
     private RelativeLayout.LayoutParams localParams = null;
     private RelativeLayout.LayoutParams oppositeParams = null;
 
     // 使用 ButterKnife 注解的方式获取控件
     @BindView(R.id.layout_root) View rootView;
-    @BindView(R.id.btn_change_call_view) Button changeCallViewBtn;
     @BindView(R.id.layout_call_control) View controlLayout;
     @BindView(R.id.layout_surface_container) RelativeLayout surfaceLayout;
 
@@ -95,7 +94,7 @@ public class VideoCallActivity extends CallActivity {
         videoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
 
         // 初始化显示通话画面
-        initCallView();
+        initCallSurface();
         // 判断当前通话时刚开始，还是从后台恢复已经存在的通话
         if (CallManager.getInstance().getCallState() == CallManager.CallState.ACCEPTED) {
             endCallFab.setVisibility(View.VISIBLE);
@@ -104,7 +103,7 @@ public class VideoCallActivity extends CallActivity {
             callStateView.setText(R.string.call_accepted);
             refreshCallTime();
             // 通话已接通，修改画面显示
-            onCallView();
+            onCallSurface();
         }
 
         try {
@@ -344,46 +343,46 @@ public class VideoCallActivity extends CallActivity {
     /**
      * 初始化通话界面控件
      */
-    private void initCallView() {
+    private void initCallSurface() {
         // 初始化显示远端画面控件
-        oppositeView = new EMCallSurfaceView(activity);
+        oppositeSurface = new EMCallSurfaceView(activity);
         oppositeParams = new RelativeLayout.LayoutParams(0, 0);
         oppositeParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
         oppositeParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        oppositeView.setLayoutParams(oppositeParams);
-        surfaceLayout.addView(oppositeView);
+        oppositeSurface.setLayoutParams(oppositeParams);
+        surfaceLayout.addView(oppositeSurface);
 
         // 初始化显示本地画面控件
-        localView = new EMCallSurfaceView(activity);
+        localSurface = new EMCallSurfaceView(activity);
         localParams = new RelativeLayout.LayoutParams(0, 0);
         localParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
         localParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        localView.setLayoutParams(localParams);
-        surfaceLayout.addView(localView);
+        localSurface.setLayoutParams(localParams);
+        surfaceLayout.addView(localSurface);
 
-        localView.setOnClickListener(new View.OnClickListener() {
+        localSurface.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onControlLayout();
             }
         });
 
-        localView.setZOrderOnTop(false);
-        localView.setZOrderMediaOverlay(true);
+        localSurface.setZOrderOnTop(false);
+        localSurface.setZOrderMediaOverlay(true);
 
         // 设置本地和远端画面的显示方式，是填充，还是居中
-        localView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
-        oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        localSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         // 设置通话画面显示控件
-        EMClient.getInstance().callManager().setSurfaceView(localView, oppositeView);
+        EMClient.getInstance().callManager().setSurfaceView(localSurface, oppositeSurface);
     }
 
     /**
      * 接通通话，这个时候要做的只是改变本地画面 view 大小，不需要做其他操作
      */
-    private void onCallView() {
+    private void onCallSurface() {
         // 更新通话界面控件状态
-        surfaceViewState = 0;
+        surfaceState = 0;
 
         int width = VMDimenUtil.dp2px(activity, 96);
         int height = VMDimenUtil.dp2px(activity, 128);
@@ -396,15 +395,15 @@ public class VideoCallActivity extends CallActivity {
         localParams.rightMargin = rightMargin;
         localParams.topMargin = topMargin;
         localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        localView.setLayoutParams(localParams);
+        localSurface.setLayoutParams(localParams);
 
-        localView.setOnClickListener(new View.OnClickListener() {
+        localSurface.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                changeCallView();
+                changeCallSurface();
             }
         });
 
-        oppositeView.setOnClickListener(new View.OnClickListener() {
+        oppositeSurface.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onControlLayout();
             }
@@ -414,13 +413,13 @@ public class VideoCallActivity extends CallActivity {
     /**
      * 切换通话界面，这里就是交换本地和远端画面控件设置，以达到通话大小画面的切换
      */
-    private void changeCallView() {
-        if (surfaceViewState == 0) {
-            surfaceViewState = 1;
-            EMClient.getInstance().callManager().setSurfaceView(oppositeView, localView);
+    private void changeCallSurface() {
+        if (surfaceState == 0) {
+            surfaceState = 1;
+            EMClient.getInstance().callManager().setSurfaceView(oppositeSurface, localSurface);
         } else {
-            surfaceViewState = 0;
-            EMClient.getInstance().callManager().setSurfaceView(localView, oppositeView);
+            surfaceState = 0;
+            EMClient.getInstance().callManager().setSurfaceView(localSurface, oppositeSurface);
         }
     }
 
@@ -456,7 +455,7 @@ public class VideoCallActivity extends CallActivity {
                 VMLog.i("通话已接通");
                 callStateView.setText(R.string.call_accepted);
                 // 通话接通，更新界面 UI 显示
-                onCallView();
+                onCallSurface();
                 break;
             case DISCONNECTED: // 通话已中断
                 VMLog.i("通话已结束" + callError);

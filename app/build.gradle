@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // ButterKnife 库
     compile 'com.jakewharton:butterknife:8.5.1'
@@ -34,5 +34,4 @@ dependencies {
 
     // 引用自己封装的工具类库，GitHub：https://github.com/lzan13/VMLibraryManager
     compile project(':vmtools')
-    compile project(':hyphenatechatsdk')
 }
