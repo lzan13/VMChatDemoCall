@@ -68,6 +68,9 @@ public class CallStateListener implements EMCallStateChangeListener {
                 CallManager.getInstance().saveCallMessage();
                 CallManager.getInstance().reset();
                 break;
+            case NETWORK_DISCONNECTED:
+                
+                break;
             case NETWORK_UNSTABLE:
                 if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
                     VMLog.i("没有通话数据" + callError);

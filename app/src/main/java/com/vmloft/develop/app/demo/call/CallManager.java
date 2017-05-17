@@ -277,8 +277,8 @@ public class CallManager {
             // 打开扬声器
             audioManager.setSpeakerphoneOn(true);
         }
-        // 设置声音模式为正常模式
-        audioManager.setMode(AudioManager.MODE_NORMAL);
+        // 开启了扬声器之后，因为是进行通话，声音的模式也要设置成通讯模式
+        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         setOpenSpeaker(true);
     }
 
@@ -292,7 +292,7 @@ public class CallManager {
             // 关闭扬声器
             audioManager.setSpeakerphoneOn(false);
         }
-        // 设置声音模式为通讯模式，即使用听筒播放
+        // 设置声音模式为通讯模式
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
     }
 
