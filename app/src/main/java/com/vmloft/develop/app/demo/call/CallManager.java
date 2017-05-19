@@ -107,6 +107,8 @@ public class CallManager {
          * {@link EMCallManager#inputExternalVideoData(byte[], int, int, int)}输入视频数据
          */
         EMClient.getInstance().callManager().getCallOptions().setEnableExternalVideoData(false);
+        // 设置视频旋转角度，启动前和视频通话中均可设置
+        //EMClient.getInstance().callManager().getCallOptions().setRotation(90);
         // 设置自动调节分辨率，默认为 true
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800)， 默认最小(80)

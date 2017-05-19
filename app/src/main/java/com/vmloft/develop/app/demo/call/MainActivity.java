@@ -12,6 +12,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCursorResult;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 import com.vmloft.develop.library.tools.VMBaseActivity;
@@ -169,6 +171,8 @@ public class MainActivity extends VMBaseActivity {
         });
         // 发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
+
+        testGetGroupDetails();
     }
 
     /**
@@ -184,6 +188,13 @@ public class MainActivity extends VMBaseActivity {
         EMClient.getInstance().login(username, password, new EMCallBack() {
             @Override public void onSuccess() {
                 VMLog.i("login success");
+
+                try {
+                    EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+
                 VMSPUtil.put(activity, "username", username);
                 VMSPUtil.put(activity, "password", password);
                 runOnUiThread(new Runnable() {
@@ -266,5 +277,33 @@ public class MainActivity extends VMBaseActivity {
 
             }
         });
+    }
+
+    /**
+     * 获取群组详情
+     */
+    private void testGetGroupDetails() {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    //EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("16364170444803");
+                    // 当前群里总人数
+                    int groupCount = 16;
+                    int count = 0;
+                    // 测试分页获取群成员列表
+                    EMCursorResult<String> result = null;
+                    do {
+                        result = EMClient.getInstance()
+                                .groupManager()
+                                .fetchGroupMembers("16364170444803", result != null ? result.getCursor() : "", 5);
+                        count += result.getData().size();
+                        VMLog.d("group members result: count: %d, %s", result.getData().size(), result.getData().toString());
+                    } while (count < groupCount - 1);
+                } catch (HyphenateException e) {
+                    VMLog.e("group details error: code - %d, msg - %s", e.getErrorCode(), e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
