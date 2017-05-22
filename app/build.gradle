@@ -11,7 +11,32 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    // 签名信息
+    signingConfigs {
+        // debug 打包签名信息
+        debug {
+            keyAlias 'debugKey'
+            keyPassword '123123'
+            storeFile file('debug-keystore.jks')
+            storePassword '123123'
+        }
+    }
+
+    // 编译配置
     buildTypes {
+        debug {
+            // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
+            ndk {
+                abiFilters = ["armeabi-v7a", "x86"]
+            }
+            // 是否开启压缩
+            zipAlignEnabled false
+            // 是否开启混淆
+            minifyEnabled false
+            // 设置debug的签名
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

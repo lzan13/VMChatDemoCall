@@ -2,36 +2,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vmloft.develop.app.demo.call">
 
-    <!-- 项目权限配置 -->
-    <!-- 相机 -->
+    <!--项目权限配置-->
+    <!--相机-->
     <uses-permission android:name="android.permission.CAMERA"/>
-    <!-- 网络 -->
+    <!--蓝牙-->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <!--网络-->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- 录音 -->
+    <!--录音-->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!--震动权限-->
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <!-- 访问网络状态 -->
+    <!--访问网络状态-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <!-- 访问WIFI状态 -->
+    <!--访问WIFI状态-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <!-- 访问精确定位 -->
+    <!--访问精确定位-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <!-- 读取手机状态 -->
+    <!--读取手机状态-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 写入外部存储 -->
+    <!--写入外部存储-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--读取外部存储-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <!--安装卸载文件系统-->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <!-- 修改音频设置 -->
+    <!--修改音频设置-->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <!-- 读取启动设置 -->
+    <!--读取启动设置-->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
     <!--唤醒锁屏，音视频通话所需-->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!-- 开机自启动 -->
+    <!--开机自启动-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!--悬浮窗权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>

@@ -40,17 +40,5 @@
         android:orientation="vertical"
         android:visibility="gone"
         >
-        <com.hyphenate.media.EMOppositeSurfaceView
-            android:id="@+id/surface_view_opposite"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-        <com.hyphenate.media.EMLocalSurfaceView
-            android:id="@+id/surface_view_local"
-            android:layout_width="@dimen/vm_dimen_24"
-            android:layout_height="@dimen/vm_dimen_32"
-            android:layout_alignParentRight="true"
-            />
     </RelativeLayout>
 </RelativeLayout>

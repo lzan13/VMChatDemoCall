@@ -1,3 +1,10 @@
 /build
 /libs
+/src/main/jniLibs
+/app.iml
 
+/config.properties
+/google-services.json
+
+*.apk
+*.jks

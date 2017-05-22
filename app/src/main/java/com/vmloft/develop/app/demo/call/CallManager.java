@@ -3,6 +3,9 @@ package com.vmloft.develop.app.demo.call;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
@@ -31,6 +34,10 @@ public class CallManager {
 
     // 上下文菜单
     private Context context;
+
+    // 蓝牙相关对象
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothHeadset bluetoothHeadset;
 
     // 单例类实例
     private static CallManager instance;
@@ -91,7 +98,8 @@ public class CallManager {
      */
     public void init(Context context) {
         this.context = context;
-
+        // 初始化蓝牙监听
+        initBluetoothListener();
         // 初始化音频池
         initSoundPool();
         // 音频管理器
@@ -282,6 +290,8 @@ public class CallManager {
         // 开启了扬声器之后，因为是进行通话，声音的模式也要设置成通讯模式
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         setOpenSpeaker(true);
+
+        disconnectBluetoothAudio();
     }
 
     /**
@@ -296,26 +306,45 @@ public class CallManager {
         }
         // 设置声音模式为通讯模式
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        setOpenSpeaker(false);
+
+        connectBluetoothAudio();
     }
 
     /**
-     * 注册通话状态监听，监听音视频通话状态
-     * 状态监听详细实现在 {@link CallStateListener} 类中
+     * 初始化蓝牙监听
      */
-    public void registerCallStateListener() {
-        if (callStateListener == null) {
-            callStateListener = new CallStateListener();
+    private void initBluetoothListener() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter != null) {
+            bluetoothAdapter.getProfileProxy(context, new BluetoothProfile.ServiceListener() {
+                @Override public void onServiceConnected(int profile, BluetoothProfile proxy) {
+                    bluetoothHeadset = (BluetoothHeadset) proxy;
+                    VMLog.d("bluetooth is ");
+                }
+
+                @Override public void onServiceDisconnected(int profile) {
+                    bluetoothHeadset = null;
+                }
+            }, BluetoothProfile.HEADSET);
         }
-        EMClient.getInstance().callManager().addCallStateChangeListener(callStateListener);
     }
 
     /**
-     * 删除通话状态监听
+     * 连接蓝牙音频输出设备，通过蓝牙输出声音
      */
-    private void unregisterCallStateListener() {
-        if (callStateListener != null) {
-            EMClient.getInstance().callManager().removeCallStateChangeListener(callStateListener);
-            callStateListener = null;
+    private void connectBluetoothAudio() {
+        if (bluetoothHeadset != null) {
+            bluetoothHeadset.startVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
+        }
+    }
+
+    /**
+     * 与蓝牙输出设备断开连接
+     */
+    private void disconnectBluetoothAudio() {
+        if (bluetoothHeadset != null) {
+            bluetoothHeadset.stopVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
         }
     }
 
@@ -402,7 +431,29 @@ public class CallManager {
             // 释放资源
             //soundPool.release();
         }
-    }// --------------------------------- Sound end ---------------------------------
+    }
+
+    /**
+     * ----------------------------- Call state -----------------------------
+     * 注册通话状态监听，监听音视频通话状态
+     * 状态监听详细实现在 {@link CallStateListener} 类中
+     */
+    public void registerCallStateListener() {
+        if (callStateListener == null) {
+            callStateListener = new CallStateListener();
+        }
+        EMClient.getInstance().callManager().addCallStateChangeListener(callStateListener);
+    }
+
+    /**
+     * 删除通话状态监听
+     */
+    private void unregisterCallStateListener() {
+        if (callStateListener != null) {
+            EMClient.getInstance().callManager().removeCallStateChangeListener(callStateListener);
+            callStateListener = null;
+        }
+    }
 
     /**
      * 添加通话悬浮窗并发送通知栏提醒
