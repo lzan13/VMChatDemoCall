@@ -111,7 +111,6 @@ public class CallActivity extends VMBaseActivity {
     }
 
     @Override protected void onResume() {
-        super.onResume();
         // 判断当前通话状态，如果已经挂断，则关闭通话界面
         if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
             onFinish();
@@ -119,5 +118,6 @@ public class CallActivity extends VMBaseActivity {
         } else {
             CallManager.getInstance().removeFloatWindow();
         }
+        super.onResume();
     }
 }

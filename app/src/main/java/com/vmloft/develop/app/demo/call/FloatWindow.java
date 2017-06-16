@@ -190,6 +190,20 @@ public class FloatWindow {
      */
     public void removeFloatWindow() {
         EventBus.getDefault().unregister(this);
+        if (localView != null) {
+            if (localView.getRenderer() != null) {
+                localView.getRenderer().dispose();
+            }
+            localView.release();
+            localView = null;
+        }
+        if (oppositeView != null) {
+            if (oppositeView.getRenderer() != null) {
+                oppositeView.getRenderer().dispose();
+            }
+            oppositeView.release();
+            oppositeView = null;
+        }
         if (windowManager != null && floatView != null) {
             windowManager.removeView(floatView);
             floatView = null;

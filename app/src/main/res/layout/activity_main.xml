@@ -61,21 +61,21 @@
                 android:id="@+id/btn_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign in"
+                android:text="登录"
                 />
 
             <Button
                 android:id="@+id/btn_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign up"
+                android:text="注册"
                 />
 
             <Button
                 android:id="@+id/btn_sign_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign out"
+                android:text="退出登录"
                 />
 
             <android.support.design.widget.TextInputLayout
@@ -103,21 +103,21 @@
                 android:id="@+id/btn_send"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Send Message"
+                android:text="发送测试消息"
                 />
 
             <Button
                 android:id="@+id/btn_call_voice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Voice Call"
+                android:text="语音通话"
                 />
 
             <Button
                 android:id="@+id/btn_call_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Video Call"
+                android:text="视频通话"
                 />
 
         </LinearLayout>

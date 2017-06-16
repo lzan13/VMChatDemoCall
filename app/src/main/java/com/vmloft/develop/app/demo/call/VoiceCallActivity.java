@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -66,6 +67,8 @@ public class VoiceCallActivity extends CallActivity {
             rejectCallFab.setVisibility(View.GONE);
             callStateView.setText(R.string.call_connecting);
         }
+
+        usernameView.setText(CallManager.getInstance().getChatId());
 
         micSwitch.setActivated(!CallManager.getInstance().isOpenMic());
         speakerSwitch.setActivated(CallManager.getInstance().isOpenSpeaker());
@@ -243,7 +246,13 @@ public class VoiceCallActivity extends CallActivity {
                 VMLog.i("通话已结束" + callError);
                 onFinish();
                 break;
-            // TODO 3.3.0版本 SDK 下边几个暂时都没有回调
+            case NETWORK_DISCONNECTED:
+                Toast.makeText(activity, "对方网络断开", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方网络断开");
+                break;
+            case NETWORK_NORMAL:
+                VMLog.i("网络正常");
+                break;
             case NETWORK_UNSTABLE:
                 if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
                     VMLog.i("没有通话数据" + callError);
@@ -251,20 +260,21 @@ public class VoiceCallActivity extends CallActivity {
                     VMLog.i("网络不稳定" + callError);
                 }
                 break;
-            case NETWORK_NORMAL:
-                VMLog.i("网络正常");
-                break;
             case VIDEO_PAUSE:
-                VMLog.i("视频传输已暂停");
+                Toast.makeText(activity, "对方已暂停视频传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已暂停视频传输");
                 break;
             case VIDEO_RESUME:
-                VMLog.i("视频传输已恢复");
+                Toast.makeText(activity, "对方已恢复视频传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已恢复视频传输");
                 break;
             case VOICE_PAUSE:
-                VMLog.i("语音传输已暂停");
+                Toast.makeText(activity, "对方已暂停语音传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已暂停语音传输");
                 break;
             case VOICE_RESUME:
-                VMLog.i("语音传输已恢复");
+                Toast.makeText(activity, "对方已恢复语音传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已恢复语音传输");
                 break;
             default:
                 break;

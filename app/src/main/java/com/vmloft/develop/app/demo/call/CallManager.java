@@ -119,7 +119,14 @@ public class CallManager {
         //EMClient.getInstance().callManager().getCallOptions().setRotation(90);
         // 设置自动调节分辨率，默认为 true
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
-        // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800)， 默认最小(80)
+        /**
+         * 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800)， 默认最小(80)
+         * 这里的带宽是指理想带宽，指单人单线情况下的最低要求
+         * >240p: 100k ~ 400kbps
+         * >480p: 300k ~ 1Mbps
+         * >720p: 900k ~ 2.5Mbps
+         * >1080p: 2M  ~ 5Mbps
+         */
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
         EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
         // 设置视频通话分辨率 默认是(640, 480)
@@ -288,7 +295,7 @@ public class CallManager {
             audioManager.setSpeakerphoneOn(true);
         }
         // 开启了扬声器之后，因为是进行通话，声音的模式也要设置成通讯模式
-        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        audioManager.setMode(AudioManager.MODE_IN_CALL);
         setOpenSpeaker(true);
 
         disconnectBluetoothAudio();
@@ -305,7 +312,7 @@ public class CallManager {
             audioManager.setSpeakerphoneOn(false);
         }
         // 设置声音模式为通讯模式
-        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        audioManager.setMode(AudioManager.MODE_IN_CALL);
         setOpenSpeaker(false);
 
         connectBluetoothAudio();

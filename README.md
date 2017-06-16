@@ -10,14 +10,13 @@ VMChatDemoCall
 - SDK Build Tools 25.0.3
 - SDK Compile 25
 - SDK mini 21
-- Design 25.3.0
-- [ButterKnife 8.5.1](https://github.com/JakeWharton/butterknife)
+- Design 25.3.1
+- [ButterKnife 8.6.0](https://github.com/JakeWharton/butterknife)
 - [EventBus 3.0.0](https://github.com/greenrobot/EventBus)
-- [环信 SDK 3.3.0](http://www.easemob.com/download/im)
+- [环信 SDK 3.3.2](http://www.easemob.com/download/im)
 - [自己封装的工具类库，暂时只能下载源码引用](https://github.com/lzan13/VMLibraryManager)
 
 >PS:这边并没有将 libs 目录上传到 github，需要大家自己去环信官网下载最新的 sdk 放在 libs 下
->PS:必须使用环信SDK3.3.0以后的版本
 
 
 ### #实现功能
@@ -31,6 +30,16 @@ VMChatDemoCall
 
 ### #已知问题
 - 未接通时切换到悬浮窗，当接通时无法显示画面
+
+
+### 更新日志
+记录最近一次的更新说明
+
+#### 2017.6.16 更新
+- 增加初始化多次的判断，防止测试时经常出现自己掉线的情况
+- 修改 ui 界面为中文
+- 更新 IM SDK 为最新3.3.2 实现通话 UI 大小视图切换
+- 解决Video通话界面内存泄露情况
 
 
 ### #项目截图

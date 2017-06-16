@@ -39,7 +39,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
-    <!--小米推送相关权限-->
+    <!--小米推送相关权限，权限这里一定要改成自己的包名-->
     <permission
         android:name="com.vmloft.develop.app.demo.call.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature"/>

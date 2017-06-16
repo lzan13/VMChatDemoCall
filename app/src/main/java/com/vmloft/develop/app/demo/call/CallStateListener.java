@@ -58,6 +58,8 @@ public class CallStateListener implements EMCallStateChangeListener {
                 } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
                     VMLog.i("双方通讯协议不同" + callError);
                     CallManager.getInstance().setEndType(CallManager.EndType.DIFFERENT);
+                } else if (callError == CallError.ERROR_NO_DATA) {
+                    VMLog.i("没有通话数据" + callError);
                 } else {
                     VMLog.i("通话已结束 %s", callError);
                     if (CallManager.getInstance().getEndType() == CallManager.EndType.CANCEL) {
@@ -69,7 +71,10 @@ public class CallStateListener implements EMCallStateChangeListener {
                 CallManager.getInstance().reset();
                 break;
             case NETWORK_DISCONNECTED:
-                
+                VMLog.i("对方网络不可用");
+                break;
+            case NETWORK_NORMAL:
+                VMLog.i("网络正常");
                 break;
             case NETWORK_UNSTABLE:
                 if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
@@ -78,10 +83,6 @@ public class CallStateListener implements EMCallStateChangeListener {
                     VMLog.i("网络不稳定" + callError);
                 }
                 break;
-            case NETWORK_NORMAL:
-                VMLog.i("网络正常");
-                break;
-            // TODO 3.3.0版本 SDK 下边四个暂时都没有回调
             case VIDEO_PAUSE:
                 VMLog.i("视频传输已暂停");
                 break;

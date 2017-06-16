@@ -322,11 +322,7 @@ public class VideoCallActivity extends CallActivity {
         }
         String path = dirPath + "video_" + System.currentTimeMillis() + ".jpg";
         boolean result = videoCallHelper.takePicture(path);
-        if (result) {
-            Toast.makeText(activity, "截图保存成功 " + path, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(activity, "截图保存失败/(ㄒoㄒ)/~~", Toast.LENGTH_LONG).show();
-        }
+        Toast.makeText(activity, "截图保存成功 " + path, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -460,7 +456,13 @@ public class VideoCallActivity extends CallActivity {
                 VMLog.i("通话已结束" + callError);
                 onFinish();
                 break;
-            // TODO 3.3.0版本 SDK 下边几个暂时都没有回调
+            case NETWORK_DISCONNECTED:
+                Toast.makeText(activity, "对方网络断开", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方网络断开");
+                break;
+            case NETWORK_NORMAL:
+                VMLog.i("网络正常");
+                break;
             case NETWORK_UNSTABLE:
                 if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
                     VMLog.i("没有通话数据" + callError);
@@ -468,20 +470,21 @@ public class VideoCallActivity extends CallActivity {
                     VMLog.i("网络不稳定" + callError);
                 }
                 break;
-            case NETWORK_NORMAL:
-                VMLog.i("网络正常");
-                break;
             case VIDEO_PAUSE:
-                VMLog.i("视频传输已暂停");
+                Toast.makeText(activity, "对方已暂停视频传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已暂停视频传输");
                 break;
             case VIDEO_RESUME:
-                VMLog.i("视频传输已恢复");
+                Toast.makeText(activity, "对方已恢复视频传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已恢复视频传输");
                 break;
             case VOICE_PAUSE:
-                VMLog.i("语音传输已暂停");
+                Toast.makeText(activity, "对方已暂停语音传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已暂停语音传输");
                 break;
             case VOICE_RESUME:
-                VMLog.i("语音传输已恢复");
+                Toast.makeText(activity, "对方已恢复语音传输", Toast.LENGTH_SHORT).show();
+                VMLog.i("对方已恢复语音传输");
                 break;
             default:
                 break;
@@ -536,5 +539,24 @@ public class VideoCallActivity extends CallActivity {
     @Override public void onBackPressed() {
         //super.onBackPressed();
         exitFullScreen();
+    }
+
+    @Override protected void onFinish() {
+        // release surface view
+        if (localSurface != null) {
+            if (localSurface.getRenderer() != null) {
+                localSurface.getRenderer().dispose();
+            }
+            localSurface.release();
+            localSurface = null;
+        }
+        if (oppositeSurface != null) {
+            if (oppositeSurface.getRenderer() != null) {
+                oppositeSurface.getRenderer().dispose();
+            }
+            oppositeSurface.release();
+            oppositeSurface = null;
+        }
+        super.onFinish();
     }
 }
