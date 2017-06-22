@@ -133,8 +133,8 @@ public class CallManager {
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
-        // 设置音视频通话采样率，一般不需要设置，除非采集声音有问题才需要手动设置
-        EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(48000);
+        // 设置音视频通话采样率，一般不需要设置，为了减少噪音，可以讲采集了适当调低，这里默认设置32k
+        EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(32000);
         // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
         EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
     }
@@ -219,9 +219,9 @@ public class CallManager {
     public void makeCall() {
         try {
             if (callType == CallType.VIDEO) {
-                EMClient.getInstance().callManager().makeVideoCall(chatId);
+                EMClient.getInstance().callManager().makeVideoCall(chatId, "ext 数据");
             } else {
-                EMClient.getInstance().callManager().makeVoiceCall(chatId);
+                EMClient.getInstance().callManager().makeVoiceCall(chatId, "ext 数据");
             }
             setEndType(EndType.CANCEL);
         } catch (EMServiceNotReadyException e) {
@@ -294,8 +294,13 @@ public class CallManager {
             // 打开扬声器
             audioManager.setSpeakerphoneOn(true);
         }
-        // 开启了扬声器之后，因为是进行通话，声音的模式也要设置成通讯模式
-        audioManager.setMode(AudioManager.MODE_IN_CALL);
+        if (callState == CallManager.CallState.ACCEPTED) {
+            // 开启了扬声器之后，因为是进行通话，声音的模式也要设置成通讯模式
+            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        } else {
+            // 在播放通话音效时声音模式需要设置为铃音模式
+            audioManager.setMode(AudioManager.MODE_NORMAL);
+        }
         setOpenSpeaker(true);
 
         disconnectBluetoothAudio();
@@ -311,8 +316,13 @@ public class CallManager {
             // 关闭扬声器
             audioManager.setSpeakerphoneOn(false);
         }
-        // 设置声音模式为通讯模式
-        audioManager.setMode(AudioManager.MODE_IN_CALL);
+        if (callState == CallManager.CallState.ACCEPTED) {
+            // 设置声音模式为通讯模式
+            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        } else {
+            // 在播放通话音效时声音模式需要设置为铃音模式
+            audioManager.setMode(AudioManager.MODE_NORMAL);
+        }
         setOpenSpeaker(false);
 
         connectBluetoothAudio();
@@ -414,7 +424,7 @@ public class CallManager {
         // 打开扬声器
         openSpeaker();
         // 设置音频管理器音频模式为铃音模式
-        audioManager.setMode(AudioManager.MODE_RINGTONE);
+        audioManager.setMode(AudioManager.MODE_NORMAL);
         // 播放提示音，返回一个播放的音频id，等下停止播放需要用到
         if (soundPool != null) {
             streamID = soundPool.play(loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序
