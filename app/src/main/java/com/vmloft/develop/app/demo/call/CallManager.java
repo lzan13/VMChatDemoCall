@@ -351,8 +351,12 @@ public class CallManager {
      * 连接蓝牙音频输出设备，通过蓝牙输出声音
      */
     private void connectBluetoothAudio() {
-        if (bluetoothHeadset != null) {
-            bluetoothHeadset.startVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
+        try {
+            if (bluetoothHeadset != null) {
+                bluetoothHeadset.startVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -360,8 +364,12 @@ public class CallManager {
      * 与蓝牙输出设备断开连接
      */
     private void disconnectBluetoothAudio() {
-        if (bluetoothHeadset != null) {
-            bluetoothHeadset.stopVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
+        try {
+            if (bluetoothHeadset != null) {
+                bluetoothHeadset.stopVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
