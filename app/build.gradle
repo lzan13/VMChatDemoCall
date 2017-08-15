@@ -28,7 +28,7 @@ android {
         debug {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi-v7a", "x86"]
+                abiFilters = ["armeabi-v7a"]
             }
             // 是否开启压缩
             zipAlignEnabled false

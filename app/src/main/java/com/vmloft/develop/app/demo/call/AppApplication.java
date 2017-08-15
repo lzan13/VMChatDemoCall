@@ -45,10 +45,14 @@ public class AppApplication extends VMApplication {
 
         // 初始化sdk的一些配置
         EMOptions options = new EMOptions();
-        options.setAutoLogin(true);
-        // 动态设置appkey，如果清单配置文件设置了 appkey，这里可以不用设置
+        //options.enableDNSConfig(false);
+        //options.setIMServer("118.193.28.212");
+        //options.setImPort(31097);
+        //options.setRestServer("118.193.28.212:31080");
+        //// 动态设置appkey，如果清单配置文件设置了 appkey，这里可以不用设置
         //options.setAppKey("easemob-demo#chatdemoui");
 
+        options.setAutoLogin(true);
         // 设置小米推送 appID 和 appKey
         options.setMipushConfig("2882303761517573806", "5981757315806");
 
