@@ -13,8 +13,8 @@ VMChatDemoCall
 - Design 25.3.1
 - [ButterKnife 8.6.0](https://github.com/JakeWharton/butterknife)
 - [EventBus 3.0.0](https://github.com/greenrobot/EventBus)
-- [环信 SDK 3.3.2](http://www.easemob.com/download/im)
-- [自己封装的工具类库，暂时只能下载源码引用 VMLibraryManager vmtools](https://github.com/lzan13/VMLibraryManager)
+- [环信 SDK 3.3.4](http://www.easemob.com/download/im)
+- 自己封装的工具类库，暂时只能下载源码引用 [VMLibraryManager vmtools](https://github.com/lzan13/VMLibraryManager)
 
 >PS:这边并没有将 libs 目录上传到 github，需要大家自己去环信官网下载最新的 sdk 放在 libs 下
 
