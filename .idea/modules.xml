@@ -4,7 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/VMChatDemoCall.iml" filepath="$PROJECT_DIR$/VMChatDemoCall.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../easemob3/emclient-android/hyphenatechatsdk/hyphenatechatsdk.iml" filepath="$PROJECT_DIR$/../easemob3/emclient-android/hyphenatechatsdk/hyphenatechatsdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../easemob3/EMRTCAndroid/rtcsdk/rtcsdk.iml" filepath="$PROJECT_DIR$/../easemob3/EMRTCAndroid/rtcsdk/rtcsdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/../VMLibraryManager/vmtools/vmtools.iml" filepath="$PROJECT_DIR$/../VMLibraryManager/vmtools/vmtools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../easemob3/EMRTCAndroid/websocket/websocket.iml" filepath="$PROJECT_DIR$/../easemob3/EMRTCAndroid/websocket/websocket.iml" />
     </modules>
   </component>
 </project>

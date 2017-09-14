@@ -2,11 +2,16 @@ package com.vmloft.develop.app.demo.call;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.conference.EMConferenceListener;
+import com.hyphenate.chat.conference.EMConferenceStream;
+import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
 import com.vmloft.develop.library.tools.VMApplication;
+import com.vmloft.develop.library.tools.utils.VMLog;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,10 +54,10 @@ public class AppApplication extends VMApplication {
         //options.setIMServer("118.193.28.212");
         //options.setImPort(31097);
         //options.setRestServer("118.193.28.212:31080");
-        //// 动态设置appkey，如果清单配置文件设置了 appkey，这里可以不用设置
-        //options.setAppKey("easemob-demo#chatdemoui");
+        //options.setAppKey("easemob-demo#chatuidemo");
 
         options.setAutoLogin(true);
+        options.setGCMNumber("127088616464");
         // 设置小米推送 appID 和 appKey
         options.setMipushConfig("2882303761517573806", "5981757315806");
 
@@ -75,6 +80,62 @@ public class AppApplication extends VMApplication {
 
         // 通话管理类的初始化
         CallManager.getInstance().init(context);
+
+        EMClient.getInstance().conferenceManager().addConferenceListener(new EMConferenceListener() {
+            @Override public void onMemberJoined(String username) {
+                VMLog.i("Joined username: %s", username);
+            }
+
+            @Override public void onMemberExited(String username) {
+                VMLog.i("Exited username: %s", username);
+            }
+
+            @Override public void onStreamAdded(EMConferenceStream stream) {
+                VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
+                        stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
+                        stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                VMLog.i("Conference stream subscribable: %d, subscribed: %d",
+                        EMClient.getInstance().conferenceManager().getSubscribableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
+            }
+
+            @Override public void onStreamRemoved(EMConferenceStream stream) {
+                VMLog.i("Stream removed streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
+                        stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
+                        stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                VMLog.i("Conference stream subscribable: %d, subscribed: %d",
+                        EMClient.getInstance().conferenceManager().getSubscribableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
+            }
+
+            @Override public void onStreamUpdate(EMConferenceStream stream) {
+                VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
+                        stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
+                        stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                VMLog.i("Conference stream subscribable: %d, subscribed: %d",
+                        EMClient.getInstance().conferenceManager().getSubscribableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
+            }
+
+            @Override public void onPassiveLeave(int error, String message) {
+                VMLog.i("passive leave code: %d, message: %s", error, message);
+            }
+
+            @Override public void onState(ConferenceState state, String confId, Object object) {
+                VMLog.i("State code=%d, confId=%s, object=" + object, state.ordinal(), confId);
+            }
+
+            @Override public void onReceiveInvite(String confId, String password, String extension) {
+                VMLog.i("Receive conference invite confId: %s, password: %s, extension: %s", confId, password, extension);
+
+                Intent conferenceIntent = new Intent(context, ConferenceActivity.class);
+                conferenceIntent.putExtra("isCreator", false);
+                conferenceIntent.putExtra("confId", confId);
+                conferenceIntent.putExtra("password", password);
+                conferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(conferenceIntent);
+            }
+        });
     }
 
     /**

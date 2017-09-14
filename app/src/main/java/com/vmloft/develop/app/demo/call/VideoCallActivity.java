@@ -12,6 +12,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMVideoCallHelper;
@@ -19,6 +20,7 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.library.tools.utils.VMDimenUtil;
+import com.vmloft.develop.library.tools.utils.VMFileUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import java.io.File;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,6 +36,12 @@ public class VideoCallActivity extends CallActivity {
     private EMVideoCallHelper videoCallHelper;
     // SurfaceView 控件状态，-1 表示通话未接通，0 表示本小远大，1 表示远小本大
     private int surfaceState = -1;
+
+    private int littleWidth;
+    private int littleHeight;
+    private int rightMargin;
+    private int topMargin;
+
 
     private EMCallSurfaceView localSurface = null;
     private EMCallSurfaceView oppositeSurface = null;
@@ -71,6 +79,11 @@ public class VideoCallActivity extends CallActivity {
      * 重载父类方法,实现一些当前通话的操作，
      */
     @Override protected void initView() {
+        littleWidth = VMDimenUtil.dp2px(activity, 96);
+        littleHeight = VMDimenUtil.dp2px(activity, 128);
+        rightMargin = VMDimenUtil.dp2px(activity, 16);
+        topMargin = VMDimenUtil.dp2px(activity, 96);
+
         super.initView();
         if (CallManager.getInstance().isInComingCall()) {
             endCallFab.setVisibility(View.GONE);
@@ -315,14 +328,14 @@ public class VideoCallActivity extends CallActivity {
      * 保存通话截图
      */
     private void onScreenShot() {
-        String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos/";
+        String dirPath = VMFileUtil.getFilesFromSDCard(activity) + "videos/";
         File dir = new File(dirPath);
         if (!dir.isDirectory()) {
             dir.mkdirs();
         }
-        String path = dirPath + "video_" + System.currentTimeMillis() + ".jpg";
-        boolean result = videoCallHelper.takePicture(path);
-        Toast.makeText(activity, "截图保存成功 " + path, Toast.LENGTH_LONG).show();
+        String path = dirPath + " IMG_" + System.currentTimeMillis() + ".jpg";
+        videoCallHelper.takePicture(path);
+        Toast.makeText(activity, "拍照保存成功 " + path, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -379,14 +392,9 @@ public class VideoCallActivity extends CallActivity {
         // 更新通话界面控件状态
         surfaceState = 0;
 
-        int width = VMDimenUtil.dp2px(activity, 96);
-        int height = VMDimenUtil.dp2px(activity, 128);
-        int rightMargin = VMDimenUtil.dp2px(activity, 16);
-        int topMargin = VMDimenUtil.dp2px(activity, 96);
-
-        localParams = new RelativeLayout.LayoutParams(width, height);
-        localParams.width = width;
-        localParams.height = height;
+        localParams = new RelativeLayout.LayoutParams(littleWidth, littleHeight);
+        localParams.width = littleWidth;
+        localParams.height = littleHeight;
         localParams.rightMargin = rightMargin;
         localParams.topMargin = topMargin;
         localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -541,7 +549,7 @@ public class VideoCallActivity extends CallActivity {
         exitFullScreen();
     }
 
-    @Override protected void onFinish() {
+    @Override public void onFinish() {
         // release surface view
         if (localSurface != null) {
             if (localSurface.getRenderer() != null) {

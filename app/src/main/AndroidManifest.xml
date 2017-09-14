@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vmloft.develop.app.demo.call">
 
+    <!--硬件功能请求-->
+    <uses-feature android:name="android.hardware.camera.any"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
     <!--项目权限配置-->
     <!--相机-->
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -15,6 +19,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!--访问网络状态-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <!--访问WIFI状态-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!--访问精确定位-->
@@ -45,6 +50,13 @@
         android:protectionLevel="signature"/>
     <uses-permission android:name="com.vmloft.develop.app.demo.call.permission.MIPUSH_RECEIVE"/>
     <!--小米推送权限 end-->
+
+    <!-- GCM required, remember replace package name to your own package -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <permission
+        android:name="com.vmloft.develop.app.demo.call.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.vmloft.develop.app.demo.call.permission.C2D_MESSAGE"/>
 
     <!--程序入口-->
     <application
@@ -82,6 +94,12 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <!--视频会议界面-->
+        <activity
+            android:name=".conference.ConferenceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <!-- 设置环信应用的appkey -->
         <meta-data
@@ -105,12 +123,12 @@
         <!--</receiver>-->
 
         <!--小米推送相关配置-->
-        <service
-            android:name="com.xiaomi.push.service.XMJobService"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":pushservice"/>
+        <!--<service-->
+        <!--android:name="com.xiaomi.push.service.XMJobService"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="false"-->
+        <!--android:permission="android.permission.BIND_JOB_SERVICE"-->
+        <!--android:process=":pushservice"/>-->
 
         <service
             android:name="com.xiaomi.push.service.XMPushService"
@@ -158,32 +176,32 @@
         </receiver>
         <!--小米推送配置 end-->
 
-        <!--华为 HMS Config-->
-        <!--华为开发者后台创建的应用的 APP ID-->
-        <meta-data
-            android:name="com.huawei.hms.client.appid"
-            android:value="100011439" />
-        <!--华为推送广播接收器，可以直接使用环信 sdk 封装好的，也可以继承自环信重写，如果继承自环信，实现 onToken 方法时必须要调用 super 方法-->
-        <receiver android:name="com.hyphenate.chat.EMHWPushReceiver">
+        <!-- gcm start -->
+        <receiver
+            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <!-- 必须,用于接收 TOKEN -->
-                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
-                <!-- 必须，用于接收消息 -->
-                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
-                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发 onEvent 回调 -->
-                <action android:name="com.huawei.android.push.intent.CLICK"/>
-                <!-- 可选，查看 PUSH 通道是否连接，不查看则不需要 -->
-                <action android:name="com.huawei.intent.action.PUSH_STATE"/>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="com.vmloft.develop.app.demo.call"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
+        <service
+            android:name="com.hyphenate.chat.EMGCMListenerService"
+            android:exported="false"/>
+
+        <receiver
+            android:name=".push.GCMPushReceiver"
+            android:exported="false">
             <intent-filter>
-                <!-- 接收通道发来的通知栏消息，兼容老版本 PUSH -->
-                <action android:name="com.huawei.intent.action.PUSH"/>
+                <action android:name="com.hyphenate.sdk.push"/>
+
+                <category android:name="com.vmloft.develop.app.demo.call"/>
             </intent-filter>
         </receiver>
-        <!-- huawei push end -->
+        <!-- gcm end -->
 
     </application>
 

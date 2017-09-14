@@ -4,9 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
-import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMClient;
-import com.vmloft.develop.library.tools.VMBaseActivity;
+import com.vmloft.develop.library.tools.VMActivity;
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -14,7 +13,7 @@ import org.greenrobot.eventbus.EventBus;
  *
  * 通话界面的父类，做一些音视频通话的通用操作
  */
-public class CallActivity extends VMBaseActivity {
+public class CallActivity extends VMActivity {
 
     // 呼叫方名字
     protected String chatId;
@@ -96,7 +95,7 @@ public class CallActivity extends VMBaseActivity {
     /**
      * 销毁界面时做一些自己的操作
      */
-    @Override protected void onFinish() {
+    @Override public void onFinish() {
         super.onFinish();
     }
 

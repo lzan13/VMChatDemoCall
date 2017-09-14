@@ -11,6 +11,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/../VMLibraryManager/vmtools" />
+            <option value="$PROJECT_DIR$/../easemob3/EMRTCAndroid/rtcsdk" />
+            <option value="$PROJECT_DIR$/../easemob3/EMRTCAndroid/websocket" />
+            <option value="$PROJECT_DIR$/../easemob3/emclient-android/hyphenatechatsdk" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -12,12 +12,14 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.EMCallBack;
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
-import com.vmloft.develop.library.tools.VMBaseActivity;
+import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
+import com.vmloft.develop.library.tools.VMActivity;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
 import com.vmloft.develop.library.tools.widget.VMViewGroup;
@@ -27,10 +29,9 @@ import org.json.JSONObject;
 /**
  * 音视频项目主类
  */
-public class MainActivity extends VMBaseActivity {
+public class MainActivity extends VMActivity {
 
     private final String TAG = this.getClass().getSimpleName();
-    private VMBaseActivity activity;
 
     @BindView(R.id.layout_root) View rootView;
     @BindView(R.id.view_group) VMViewGroup viewGroup;
@@ -41,13 +42,11 @@ public class MainActivity extends VMBaseActivity {
 
     private String username;
     private String password;
-    private String contact;
+    private String toUsername;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        activity = this;
 
         ButterKnife.bind(activity);
 
@@ -57,13 +56,13 @@ public class MainActivity extends VMBaseActivity {
     private void init() {
         username = (String) VMSPUtil.get(activity, "username", "");
         password = (String) VMSPUtil.get(activity, "password", "");
-        contact = (String) VMSPUtil.get(activity, "contact", "");
+        toUsername = (String) VMSPUtil.get(activity, "toUsername", "");
         usernameView.setText(username);
         passwordView.setText(password);
-        contactsView.setText(contact);
+        contactsView.setText(toUsername);
 
         String[] btnTitle = {
-                "登录", "注册", "退出登录", "发送消息", "语音呼叫", "视频呼叫", "测试新版推送扩展"
+                "登录", "注册", "退出", "发送消息", "语音呼叫", "视频呼叫", "新版推送", "发起会议"
         };
 
         for (int i = 0; i < btnTitle.length; i++) {
@@ -98,6 +97,9 @@ public class MainActivity extends VMBaseActivity {
                     break;
                 case 106:
                     sendNewPushMessage();
+                    break;
+                case 107:
+                    videoConference(true);
                     break;
             }
         }
@@ -181,7 +183,7 @@ public class MainActivity extends VMBaseActivity {
      * 退出登录
      */
     private void signOut() {
-        EMClient.getInstance().logout(true, new EMCallBack() {
+        EMClient.getInstance().logout(EMClient.getInstance().isConnected(), new EMCallBack() {
             @Override public void onSuccess() {
                 VMLog.i("logout success");
                 runOnUiThread(new Runnable() {
@@ -208,11 +210,44 @@ public class MainActivity extends VMBaseActivity {
     }
 
     /**
+     * 视频呼叫
+     */
+    private void callVideo() {
+        checkContacts();
+        Intent intent = new Intent(MainActivity.this, VideoCallActivity.class);
+        CallManager.getInstance().setChatId(toUsername);
+        CallManager.getInstance().setInComingCall(false);
+        CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
+        startActivity(intent);
+    }
+
+    /**
+     * 语音呼叫
+     */
+    private void callVoice() {
+        checkContacts();
+        Intent intent = new Intent(MainActivity.this, VoiceCallActivity.class);
+        CallManager.getInstance().setChatId(toUsername);
+        CallManager.getInstance().setInComingCall(false);
+        CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
+        startActivity(intent);
+    }
+
+    private void checkContacts() {
+        toUsername = contactsView.getText().toString().trim();
+        if (toUsername.isEmpty()) {
+            Toast.makeText(MainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
+            return;
+        }
+        VMSPUtil.put(activity, "toUsername", toUsername);
+    }
+
+    /**
      * 发送消息
      */
     private void sendMessage() {
         checkContacts();
-        EMMessage message = EMMessage.createTxtSendMessage("测试发送消息，主要是为了测试是否在线", contact);
+        EMMessage message = EMMessage.createTxtSendMessage("测试发送消息，主要是为了测试是否在线", toUsername);
         //设置强制推送
         message.setAttribute("em_force_notification", "true");
         //设置自定义推送提示
@@ -227,9 +262,12 @@ public class MainActivity extends VMBaseActivity {
         sendMessage(message);
     }
 
-    private void sendNewPushMessage(){
+    /**
+     * 发送新版推送消息
+     */
+    private void sendNewPushMessage() {
         checkContacts();
-        EMMessage message = EMMessage.createTxtSendMessage("测试发送消息，主要是为了测试是否在线", contact);
+        EMMessage message = EMMessage.createTxtSendMessage("测试发送消息，主要是为了测试是否在线", toUsername);
         //设置强制推送
         message.setAttribute("em_force_notification", "true");
         //设置自定义推送提示
@@ -243,39 +281,6 @@ public class MainActivity extends VMBaseActivity {
         }
         message.setAttribute("em_apns_ext", extObj);
         sendMessage(message);
-    }
-
-    /**
-     * 视频呼叫
-     */
-    private void callVideo() {
-        checkContacts();
-        Intent intent = new Intent(MainActivity.this, VideoCallActivity.class);
-        CallManager.getInstance().setChatId(contact);
-        CallManager.getInstance().setInComingCall(false);
-        CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
-        startActivity(intent);
-    }
-
-    /**
-     * 语音呼叫
-     */
-    private void callVoice() {
-        checkContacts();
-        Intent intent = new Intent(MainActivity.this, VoiceCallActivity.class);
-        CallManager.getInstance().setChatId(contact);
-        CallManager.getInstance().setInComingCall(false);
-        CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
-        startActivity(intent);
-    }
-
-    private void checkContacts() {
-        contact = contactsView.getText().toString().trim();
-        if (contact.isEmpty()) {
-            Toast.makeText(MainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
-            return;
-        }
-        VMSPUtil.put(activity, "contact", contact);
     }
 
     /**
@@ -309,5 +314,15 @@ public class MainActivity extends VMBaseActivity {
         });
         // 发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
+    }
+
+    /**
+     * 发起视频会议
+     */
+    private void videoConference(boolean isCreator) {
+        Intent intent = new Intent(activity, ConferenceActivity.class);
+        intent.putExtra("isCreator", isCreator);
+        intent.putExtra("username", toUsername);
+        onStartActivity(activity, intent);
     }
 }
