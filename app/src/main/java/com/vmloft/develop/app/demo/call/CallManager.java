@@ -234,6 +234,7 @@ public class CallManager {
      */
     public void rejectCall() {
         try {
+            VMLog.i("rejectCall");
             // 调用 SDK 的拒绝通话方法
             EMClient.getInstance().callManager().rejectCall();
             // 设置结束原因为拒绝
@@ -252,6 +253,7 @@ public class CallManager {
      */
     public void endCall() {
         try {
+            VMLog.i("endCall");
             // 调用 SDK 的结束通话方法
             EMClient.getInstance().callManager().endCall();
         } catch (EMNoActiveCallException e) {
@@ -272,6 +274,7 @@ public class CallManager {
         stopCallSound();
         // 调用接通通话方法
         try {
+            VMLog.i("answerCall");
             EMClient.getInstance().callManager().answerCall();
             return true;
         } catch (EMNoActiveCallException e) {

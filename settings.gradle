@@ -7,9 +7,3 @@ project(':vmtools').projectDir = new File('../VMLibraryManager/vmtools')
 // 引用 sdk 源码，测试 sdk 部分代码
 include ':hyphenatechatsdk'
 project(':hyphenatechatsdk').projectDir = new File('../easemob3/emclient-android/hyphenatechatsdk')
-
-include ':rtcsdk'
-project(':rtcsdk').projectDir = new File('../easemob3/EMRTCAndroid/rtcsdk')
-
-include ':websocket'
-project(':websocket').projectDir = new File('../easemob3/EMRTCAndroid/websocket')

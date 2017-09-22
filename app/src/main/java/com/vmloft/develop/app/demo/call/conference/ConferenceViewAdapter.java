@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.hyphenate.chat.conference.EMConferenceStream;
+import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.app.demo.call.R;

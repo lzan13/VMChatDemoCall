@@ -51,13 +51,6 @@
     <uses-permission android:name="com.vmloft.develop.app.demo.call.permission.MIPUSH_RECEIVE"/>
     <!--小米推送权限 end-->
 
-    <!-- GCM required, remember replace package name to your own package -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <permission
-        android:name="com.vmloft.develop.app.demo.call.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/>
-    <uses-permission android:name="com.vmloft.develop.app.demo.call.permission.C2D_MESSAGE"/>
-
     <!--程序入口-->
     <application
         android:name="com.vmloft.develop.app.demo.call.AppApplication"
@@ -99,7 +92,7 @@
             android:name=".conference.ConferenceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- 设置环信应用的appkey -->
         <meta-data
@@ -175,33 +168,6 @@
             </intent-filter>
         </receiver>
         <!--小米推送配置 end-->
-
-        <!-- gcm start -->
-        <receiver
-            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-
-                <category android:name="com.vmloft.develop.app.demo.call"/>
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.hyphenate.chat.EMGCMListenerService"
-            android:exported="false"/>
-
-        <receiver
-            android:name=".push.GCMPushReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.hyphenate.sdk.push"/>
-
-                <category android:name="com.vmloft.develop.app.demo.call"/>
-            </intent-filter>
-        </receiver>
-        <!-- gcm end -->
 
     </application>
 

@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConferenceListener;
+import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chat.conference.EMConferenceListener;
-import com.hyphenate.chat.conference.EMConferenceStream;
 import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
 import com.vmloft.develop.library.tools.VMApplication;
 import com.vmloft.develop.library.tools.utils.VMLog;
@@ -57,7 +57,6 @@ public class AppApplication extends VMApplication {
         //options.setAppKey("easemob-demo#chatuidemo");
 
         options.setAutoLogin(true);
-        options.setGCMNumber("127088616464");
         // 设置小米推送 appID 和 appKey
         options.setMipushConfig("2882303761517573806", "5981757315806");
 
@@ -95,7 +94,7 @@ public class AppApplication extends VMApplication {
                         stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
                         stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
                 VMLog.i("Conference stream subscribable: %d, subscribed: %d",
-                        EMClient.getInstance().conferenceManager().getSubscribableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
                         EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
             }
 
@@ -104,7 +103,7 @@ public class AppApplication extends VMApplication {
                         stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
                         stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
                 VMLog.i("Conference stream subscribable: %d, subscribed: %d",
-                        EMClient.getInstance().conferenceManager().getSubscribableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
                         EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
             }
 
@@ -113,7 +112,7 @@ public class AppApplication extends VMApplication {
                         stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
                         stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
                 VMLog.i("Conference stream subscribable: %d, subscribed: %d",
-                        EMClient.getInstance().conferenceManager().getSubscribableStreamMap().size(),
+                        EMClient.getInstance().conferenceManager().getAvailableStreamMap().size(),
                         EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
             }
 
@@ -121,8 +120,12 @@ public class AppApplication extends VMApplication {
                 VMLog.i("passive leave code: %d, message: %s", error, message);
             }
 
-            @Override public void onState(ConferenceState state, String confId, Object object) {
-                VMLog.i("State code=%d, confId=%s, object=" + object, state.ordinal(), confId);
+            @Override public void onNotice(ConferenceState state) {
+                VMLog.i("State " + state);
+            }
+
+            @Override public void onStreamSetup(String streamId) {
+                VMLog.i("Stream id %s", streamId);
             }
 
             @Override public void onReceiveInvite(String confId, String password, String extension) {

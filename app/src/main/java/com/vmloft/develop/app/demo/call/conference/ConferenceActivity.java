@@ -19,14 +19,15 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.conference.EMConference;
-import com.hyphenate.chat.conference.EMConferenceListener;
-import com.hyphenate.chat.conference.EMConferenceStream;
-import com.hyphenate.chat.conference.EMConferenceStreamConfig;
-import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.chat.EMConference;
+import com.hyphenate.chat.EMConferenceListener;
+import com.hyphenate.chat.EMConferenceStream;
+import com.hyphenate.chat.EMStreamParam;
 import com.vmloft.develop.app.demo.call.R;
 import com.vmloft.develop.library.tools.VMActivity;
+import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.widget.VMViewGroup;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,12 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
     private AudioManager audioManager;
 
     // 会议实体类对象，保存了会议的一些简单信息
+
     private EMConference conference;
-    private EMConferenceStreamConfig config;
+    private EMStreamParam param;
     private boolean isCreator = false;
+    private String confId = "";
+    private String password = "";
 
     // 屏幕宽度，为了处理画面展示大小
     private int screenWidth;
@@ -87,24 +91,19 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         conferenceListener = this;
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        String confId = getIntent().getStringExtra("confId");
-        String password = getIntent().getStringExtra("password");
-        conference = new EMConference();
-        conference.setConferenceId(confId);
-        conference.setPassword(password);
+        confId = getIntent().getStringExtra("confId");
+        password = getIntent().getStringExtra("password");
 
-        config = new EMConferenceStreamConfig();
-        // 默认开启扬声器
+        param = new EMStreamParam();
         speakerSwitch.setActivated(true);
         openSpeaker();
 
         isCreator = getIntent().getBooleanExtra("isCreator", false);
         if (isCreator) {
-            creatorCreateConference();
+            createAndJoinConference();
             cancelBtn.setVisibility(View.GONE);
             addBtn.setVisibility(View.GONE);
         } else {
-            memberGetConference();
             exitBtn.setVisibility(View.GONE);
         }
     }
@@ -166,8 +165,8 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         params.width = screenWidth;
         params.height = screenWidth;
         localView.setLayoutParams(params);
-        localView.updateVideoState(config.isVideoOff());
-        localView.updateMuteState(config.isMute());
+        localView.updateVideoState(param.isVideoOff());
+        localView.updateMuteState(param.isMute());
         localView.setPubOrSub(false);
         callConferenceViewGroup.addView(localView);
         EMClient.getInstance().conferenceManager().setLocalSurfaceView(localView.getSurfaceView());
@@ -213,10 +212,6 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
     private void removeConferenceView(EMConferenceStream stream) {
         int index = streamList.indexOf(stream);
         final ConferenceMemberView memberView = (ConferenceMemberView) callConferenceViewGroup.getChildAt(index + 1);
-        //if (memberView.isPubOrSub()) {
-        //    // 已订阅就取消订阅
-        //    EMClient.getInstance().conferenceManager().asyncUnsubscribe(stream, null);
-        //}
         streamList.remove(stream);
         callConferenceViewGroup.removeView(memberView);
     }
@@ -229,6 +224,12 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         ConferenceMemberView conferenceMemberView = (ConferenceMemberView) callConferenceViewGroup.getChildAt(position + 1);
         conferenceMemberView.updateMuteState(stream.isAudioOff());
         conferenceMemberView.updateVideoState(stream.isVideoOff());
+    }
+
+    /**
+     * 更新所有 Member view
+     */
+    private void updateConferenceViewGroup() {
         int memberViewSize;
         if (streamList.size() > 8) {
             memberViewSize = screenWidth / 4;
@@ -249,56 +250,46 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
     }
 
     /**
-     * 作为会议创建者创建会议
+     * 作为创建者创建并加入会议
      */
-    private void creatorCreateConference() {
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    // 创建者需要先创建会议，得到 ticket，然后邀请其他人加入
-                    conference = EMClient.getInstance().conferenceManager().createConference(conference.getPassword());
-                    joinConference();
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
+    private void createAndJoinConference() {
+        EMClient.getInstance().conferenceManager().createAndJoinConference(password, param, new EMValueCallBack<EMConference>() {
+            @Override public void onSuccess(EMConference value) {
+                conference = value;
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        localView.setPubOrSub(true);
+                    }
+                });
             }
-        }).start();
+
+            @Override public void onError(int error, String errorMsg) {
+                VMLog.e("create and join conference failed error " + error + ", msg " + errorMsg);
+            }
+        });
     }
 
     /**
-     * 作为成员获取会议信息
-     */
-    private void memberGetConference() {
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    // 成员加入前需要根据收到的 ConferenceId 和 Password 获取
-                    EMConference temp = EMClient.getInstance()
-                            .conferenceManager()
-                            .getConference(conference.getConferenceId(), conference.getPassword());
-                    // 这里因为外部可能已经设置了 conference 其他信息，所以没有直接 =
-                    conference.setTicket(temp.getTicket());
-                    conference.setConferenceId(temp.getConferenceId());
-                    conference.setPassword(temp.getPassword());
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 加入会议，不论创建者还是其他成员，都需要主动去调用加入会议方法
+     * 作为成员直接根据 confId 和 password 加入会议
      */
     private void joinConference() {
         cancelBtn.setVisibility(View.GONE);
         exitBtn.setVisibility(View.VISIBLE);
         addBtn.setVisibility(View.GONE);
-        try {
-            EMClient.getInstance().conferenceManager().joinConference(conference, config);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+        EMClient.getInstance().conferenceManager().joinConference(confId, password, param, new EMValueCallBack<EMConference>() {
+            @Override public void onSuccess(EMConference value) {
+                conference = value;
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        localView.setPubOrSub(true);
+                    }
+                });
+            }
+
+            @Override public void onError(int error, String errorMsg) {
+                VMLog.e("join conference failed error " + error + ", msg " + errorMsg);
+            }
+        });
     }
 
     /**
@@ -317,18 +308,18 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                     return;
                 }
                 final String username = editText.getText().toString();
-                new Thread(new Runnable() {
-                    @Override public void run() {
-                        try {
-                            EMClient.getInstance()
-                                    .conferenceManager()
-                                    .inviteUserToJoinConference(conference.getConferenceId(), conference.getPassword(), username,
-                                            "{'extension':'invite ext'}");
-                        } catch (HyphenateException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                EMClient.getInstance()
+                        .conferenceManager()
+                        .inviteUserToJoinConference(conference.getConferenceId(), conference.getPassword(), username,
+                                "{'extension':'invite'}", new EMValueCallBack() {
+                                    @Override public void onSuccess(Object value) {
+                                        VMLog.e("invite join conference success");
+                                    }
+
+                                    @Override public void onError(int error, String errorMsg) {
+                                        VMLog.e("invite join conference failed error: %d, msg: %s", error, errorMsg);
+                                    }
+                                });
             }
         });
         alertDialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -343,58 +334,94 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      * 退出会议
      */
     private void exitConference() {
-        try {
-            EMClient.getInstance().conferenceManager().exitConference();
-            finish();
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        } finally {
-            finish();
-        }
+        EMClient.getInstance().conferenceManager().exitConference(new EMValueCallBack() {
+            @Override public void onSuccess(Object value) {
+                finish();
+            }
+
+            @Override public void onError(int error, String errorMsg) {
+                VMLog.e("exit conference failed " + error + ", " + errorMsg);
+                finish();
+            }
+        });
     }
 
     /**
      * 开始推自己的数据
      */
     private void publish() {
-        try {
-            EMClient.getInstance().conferenceManager().publish(config);
-            localView.setPubOrSub(true);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+        EMClient.getInstance().conferenceManager().publish(param, new EMValueCallBack<String>() {
+            @Override public void onSuccess(String value) {
+                conference.setPubStreamId(value);
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        localView.setPubOrSub(true);
+                    }
+                });
+            }
+
+            @Override public void onError(int error, String errorMsg) {
+                VMLog.e("publish failed: error=" + error + ", msg=" + errorMsg);
+            }
+        });
     }
 
     /**
      * 停止推自己的数据
      */
     private void unpublish() {
-        try {
-            EMClient.getInstance().conferenceManager().unpublish();
-            localView.setPubOrSub(false);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+        EMClient.getInstance().conferenceManager().unpublish(conference.getPubStreamId(), new EMValueCallBack<String>() {
+            @Override public void onSuccess(String value) {
+                conference.setPubStreamId(value);
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        localView.setPubOrSub(false);
+                    }
+                });
+            }
+
+            @Override public void onError(int error, String errorMsg) {
+                VMLog.e("unpublish failed: error=" + error + ", msg=" + errorMsg);
+            }
+        });
     }
 
-    private void subscribe(final EMConferenceStream stream, final ConferenceMemberView memberView) {
-        // 未订阅就去订阅
-        try {
-            EMClient.getInstance().conferenceManager().subscribe(stream, memberView.getSurfaceView());
-            memberView.setPubOrSub(true);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+    /**
+     * 订阅指定成员 stream
+     */
+    private void subscribe(EMConferenceStream stream, final ConferenceMemberView memberView) {
+        EMClient.getInstance().conferenceManager().subscribe(stream, memberView.getSurfaceView(), new EMValueCallBack<String>() {
+            @Override public void onSuccess(String value) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        memberView.setPubOrSub(true);
+                    }
+                });
+            }
+
+            @Override public void onError(int error, String errorMsg) {
+
+            }
+        });
     }
 
+    /**
+     * 取消订阅指定成员 stream
+     */
     private void unsubscribe(EMConferenceStream stream, final ConferenceMemberView memberView) {
-        // 已订阅就取消订阅
-        try {
-            EMClient.getInstance().conferenceManager().unsubscribe(stream);
-            memberView.setPubOrSub(false);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+        EMClient.getInstance().conferenceManager().unsubscribe(stream, new EMValueCallBack<String>() {
+            @Override public void onSuccess(String value) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        memberView.setPubOrSub(false);
+                    }
+                });
+            }
+
+            @Override public void onError(int error, String errorMsg) {
+
+            }
+        });
     }
 
     /**
@@ -435,30 +462,30 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      * 语音开关
      */
     private void voiceSwitch() {
-        if (config.isMute()) {
-            config.setMute(false);
+        if (param.isMute()) {
+            param.setMute(false);
             EMClient.getInstance().conferenceManager().openVoiceTransfer();
         } else {
-            config.setMute(true);
+            param.setMute(true);
             EMClient.getInstance().conferenceManager().closeVoiceTransfer();
         }
-        micSwitch.setActivated(config.isMute());
-        localView.updateMuteState(config.isMute());
+        micSwitch.setActivated(param.isMute());
+        localView.updateMuteState(param.isMute());
     }
 
     /**
      * 视频开关
      */
     private void videoSwitch() {
-        if (config.isVideoOff()) {
-            config.setVideoOff(false);
+        if (param.isVideoOff()) {
+            param.setVideoOff(false);
             EMClient.getInstance().conferenceManager().openVideoTransfer();
         } else {
-            config.setVideoOff(true);
+            param.setVideoOff(true);
             EMClient.getInstance().conferenceManager().closeVideoTransfer();
         }
-        cameraSwitch.setActivated(config.isVideoOff());
-        localView.updateVideoState(config.isVideoOff());
+        cameraSwitch.setActivated(param.isVideoOff());
+        localView.updateVideoState(param.isVideoOff());
     }
 
     /**
@@ -516,6 +543,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                 streamList.add(stream);
                 addConferenceView();
                 updateConferenceMemberView(stream);
+                updateConferenceViewGroup();
             }
         });
     }
@@ -526,7 +554,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                 Toast.makeText(activity, stream.getUsername() + " stream removed!", Toast.LENGTH_SHORT).show();
                 if (streamList.contains(stream)) {
                     removeConferenceView(stream);
-                    updateConferenceMemberView(stream);
+                    updateConferenceViewGroup();
                 }
             }
         });
@@ -549,14 +577,23 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         });
     }
 
-    @Override public void onState(final ConferenceState state, final String confId, final Object object) {
+    @Override public void onNotice(final ConferenceState state) {
         runOnUiThread(new Runnable() {
             @Override public void run() {
-                if (state == ConferenceState.STATE_PUBLISH_SETUP) {
-                    localView.setPubOrSub(true);
+                Toast.makeText(activity, "State=" + state, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override public void onStreamSetup(final String streamId) {
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                if (streamId.indexOf(conference.getPubStreamId()) != -1) {
+                    conference.setPubStreamId(streamId);
+                    Toast.makeText(activity, "Publish setup streamId=" + streamId, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, "Subscribe setup streamId=" + streamId, Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(activity, "State=" + state + ", confId=" + confId + ", object=" + object, Toast.LENGTH_SHORT)
-                        .show();
             }
         });
     }
