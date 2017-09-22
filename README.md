@@ -5,7 +5,7 @@ VMChatDemoCall
 此项目实现了音视频过界面的最小化，以及视频通话界面本地和远程画面的大小切换等功能
 
 ### #使用版本
-- AndrodiStudio 2.3.1
+- AndrodiStudio 2.3.3
 - Gradle 3.3
 - SDK Build Tools 25.0.3
 - SDK Compile 25
@@ -30,17 +30,6 @@ VMChatDemoCall
 
 ### #已知问题
 - 未接通时切换到悬浮窗，当接通时无法显示画面
-
-
-### 更新日志
-记录最近一次的更新说明
-
-#### 2017.6.16 更新
-- 增加初始化多次的判断，防止测试时经常出现自己掉线的情况
-- 修改 ui 界面为中文
-- 更新 IM SDK 为最新3.3.2 实现通话 UI 大小视图切换
-- 解决Video通话界面内存泄露情况
-
 
 ### #项目截图
 ![首界面](/screenshots/screenshot-main.png?raw=true "首界面")
