@@ -39,6 +39,12 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
+    <!--极光推送-->
+    <permission
+        android:name="com.vmloft.develop.app.demo.call.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.vmloft.develop.app.demo.call.permission.JPUSH_MESSAGE" />
+
     <!--小米推送相关权限，权限这里一定要改成自己的包名-->
     <permission
         android:name="com.vmloft.develop.app.demo.call.permission.MIPUSH_RECEIVE"
@@ -164,7 +170,7 @@
             android:name="com.huawei.hms.client.appid"
             android:value="100011439" />
         <!--华为推送广播接收器，可以直接使用环信 sdk 封装好的，也可以继承自环信重写，如果继承自环信，实现 onToken 方法时必须要调用 super 方法-->
-        <receiver android:name="com.hyphenate.chat.EMHWPushReceiver">
+        <receiver android:name=".push.HWPushReceiver">
             <intent-filter>
                 <!-- 必须,用于接收 TOKEN -->
                 <action android:name="com.huawei.android.push.intent.REGISTRATION"/>

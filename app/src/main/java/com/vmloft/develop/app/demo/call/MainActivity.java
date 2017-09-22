@@ -11,13 +11,12 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.huawei.hms.api.HuaweiApiClient;
 import com.hyphenate.EMCallBack;
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
-import com.vmloft.develop.library.tools.VMBaseActivity;
+import com.vmloft.develop.library.tools.VMActivity;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
 import com.vmloft.develop.library.tools.widget.VMViewGroup;
@@ -27,10 +26,11 @@ import org.json.JSONObject;
 /**
  * 音视频项目主类
  */
-public class MainActivity extends VMBaseActivity {
+public class MainActivity extends VMActivity {
 
     private final String TAG = this.getClass().getSimpleName();
-    private VMBaseActivity activity;
+    private VMActivity activity;
+    private HuaweiApiClient huaweiApiClient;
 
     @BindView(R.id.layout_root) View rootView;
     @BindView(R.id.view_group) VMViewGroup viewGroup;
@@ -227,7 +227,7 @@ public class MainActivity extends VMBaseActivity {
         sendMessage(message);
     }
 
-    private void sendNewPushMessage(){
+    private void sendNewPushMessage() {
         checkContacts();
         EMMessage message = EMMessage.createTxtSendMessage("测试发送消息，主要是为了测试是否在线", contact);
         //设置强制推送
@@ -309,5 +309,12 @@ public class MainActivity extends VMBaseActivity {
         });
         // 发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        if (huaweiApiClient != null) {
+            huaweiApiClient.disconnect();
+        }
     }
 }

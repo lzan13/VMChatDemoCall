@@ -541,7 +541,7 @@ public class VideoCallActivity extends CallActivity {
         exitFullScreen();
     }
 
-    @Override protected void onFinish() {
+    @Override public void onFinish() {
         // release surface view
         if (localSurface != null) {
             if (localSurface.getRenderer() != null) {
