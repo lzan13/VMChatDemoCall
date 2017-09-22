@@ -44,6 +44,12 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
+    <!--极光推送-->
+    <permission
+        android:name="com.vmloft.develop.app.demo.call.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.vmloft.develop.app.demo.call.permission.JPUSH_MESSAGE"/>
+
     <!--小米推送相关权限，权限这里一定要改成自己的包名-->
     <permission
         android:name="com.vmloft.develop.app.demo.call.permission.MIPUSH_RECEIVE"
@@ -99,21 +105,21 @@
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo"/>
         <!-- 声明sdk所需的 Service SDK核心功能 -->
-        <!--<service-->
-        <!--android:name="com.hyphenate.chat.EMChatService"-->
-        <!--android:exported="true"/>-->
-        <!--&lt;!&ndash;声明sdk所需的receiver&ndash;&gt;-->
-        <!--<receiver android:name="com.hyphenate.chat.EMMonitorReceiver">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
-        <!--<data android:scheme="package"/>-->
-        <!--</intent-filter>-->
-        <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-        <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true"/>
+        <!--声明sdk所需的receiver-->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
 
         <!--小米推送相关配置-->
         <!--<service-->
@@ -168,6 +174,33 @@
             </intent-filter>
         </receiver>
         <!--小米推送配置 end-->
+
+        <!--华为 HMS Config-->
+        <!--华为开发者后台创建的应用的 APP ID-->
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="100011439"/>
+        <!--华为推送广播接收器，可以直接使用环信 sdk 封装好的，也可以继承自环信重写，如果继承自环信，实现 onToken 方法时必须要调用 super 方法-->
+        <receiver android:name=".push.HWPushReceiver">
+            <intent-filter>
+                <!-- 必须,用于接收 TOKEN -->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
+                <!-- 必须，用于接收消息 -->
+                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
+                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发 onEvent 回调 -->
+                <action android:name="com.huawei.android.push.intent.CLICK"/>
+                <!-- 可选，查看 PUSH 通道是否连接，不查看则不需要 -->
+                <action android:name="com.huawei.intent.action.PUSH_STATE"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
+            <intent-filter>
+                <!-- 接收通道发来的通知栏消息，兼容老版本 PUSH -->
+                <action android:name="com.huawei.intent.action.PUSH"/>
+            </intent-filter>
+        </receiver>
+        <!-- huawei push end -->
 
     </application>
 
