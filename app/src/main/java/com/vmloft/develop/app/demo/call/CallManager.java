@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaRecorder;
 import android.media.SoundPool;
 
 import android.support.v7.app.NotificationCompat;
@@ -134,9 +135,11 @@ public class CallManager {
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
         // 设置音视频通话采样率，一般不需要设置，为了减少噪音，可以讲采集了适当调低，这里默认设置32k
-        EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(32000);
+        EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(16000);
         // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
         EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
+        // 设置通话音频源类型
+        EMClient.getInstance().callManager().getCallOptions().setCallAudioSource(MediaRecorder.AudioSource.MIC);
     }
 
     /**
@@ -219,9 +222,9 @@ public class CallManager {
     public void makeCall() {
         try {
             if (callType == CallType.VIDEO) {
-                EMClient.getInstance().callManager().makeVideoCall(chatId, "ext 数据");
+                EMClient.getInstance().callManager().makeVideoCall(chatId, "{'ext':{'type':'video','key':'value'}}");
             } else {
-                EMClient.getInstance().callManager().makeVoiceCall(chatId, "ext 数据");
+                EMClient.getInstance().callManager().makeVoiceCall(chatId, "{'ext':{'type':'voice','key':'value'}}");
             }
             setEndType(EndType.CANCEL);
         } catch (EMServiceNotReadyException e) {

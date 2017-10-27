@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    buildToolsVersion '26.0.0'
 
     defaultConfig {
         applicationId "com.vmloft.develop.app.demo.call"
@@ -56,17 +56,13 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
-    // GCM 库
-    compile 'com.google.android.gms:play-services-gcm:11.0.4'
-
     // ButterKnife 库
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 
+    compile 'org.greenrobot:eventbus:3.0.0'
+
     // 引用自己封装的工具类库，GitHub：https://github.com/lzan13/VMLibraryManager
     compile project(':vmtools')
 
-    compile project(':hyphenatechatsdk')
 }
-// 一定要添加在最底部
-//apply plugin: 'com.google.gms.google-services'

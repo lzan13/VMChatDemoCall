@@ -577,7 +577,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         });
     }
 
-    @Override public void onNotice(final ConferenceState state) {
+    @Override public void onConferenceState(final ConferenceState state) {
         runOnUiThread(new Runnable() {
             @Override public void run() {
                 Toast.makeText(activity, "State=" + state, Toast.LENGTH_SHORT).show();

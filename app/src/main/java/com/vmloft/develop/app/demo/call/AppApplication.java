@@ -12,19 +12,21 @@ import com.hyphenate.chat.EMOptions;
 import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
 import com.vmloft.develop.library.tools.VMApplication;
 import com.vmloft.develop.library.tools.utils.VMLog;
+
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by lzan13 on 2016/5/25.
- *
+ * <p>
  * 程序入口，做一些必要的初始化操作
  */
 public class AppApplication extends VMApplication {
 
     private CallReceiver callReceiver;
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         super.onCreate();
 
         // 初始化环信sdk
@@ -50,12 +52,16 @@ public class AppApplication extends VMApplication {
 
         // 初始化sdk的一些配置
         EMOptions options = new EMOptions();
-        //options.enableDNSConfig(false);
-        //options.setIMServer("118.193.28.212");
-        //options.setImPort(31097);
-        //options.setRestServer("118.193.28.212:31080");
+//        options.enableDNSConfig(false);
+//        options.setIMServer("im1.jx.zto.com");
+//        options.setImPort(6717);
+//        options.setRestServer("a1.jx.zto.com");
+//        options.setAppKey("ssy#chat");
         //options.setAppKey("easemob-demo#chatuidemo");
+        //options.setAppKey("hx-ps#api4vip6");
+//        options.setAppKey("cx-dev#cxstudy");
 
+        options.setUseHttps(false);
         options.setAutoLogin(true);
         // 设置小米推送 appID 和 appKey
         options.setMipushConfig("2882303761517573806", "5981757315806");
@@ -81,15 +87,18 @@ public class AppApplication extends VMApplication {
         CallManager.getInstance().init(context);
 
         EMClient.getInstance().conferenceManager().addConferenceListener(new EMConferenceListener() {
-            @Override public void onMemberJoined(String username) {
+            @Override
+            public void onMemberJoined(String username) {
                 VMLog.i("Joined username: %s", username);
             }
 
-            @Override public void onMemberExited(String username) {
+            @Override
+            public void onMemberExited(String username) {
                 VMLog.i("Exited username: %s", username);
             }
 
-            @Override public void onStreamAdded(EMConferenceStream stream) {
+            @Override
+            public void onStreamAdded(EMConferenceStream stream) {
                 VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
                         stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
                         stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
@@ -98,7 +107,8 @@ public class AppApplication extends VMApplication {
                         EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
             }
 
-            @Override public void onStreamRemoved(EMConferenceStream stream) {
+            @Override
+            public void onStreamRemoved(EMConferenceStream stream) {
                 VMLog.i("Stream removed streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
                         stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
                         stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
@@ -107,7 +117,8 @@ public class AppApplication extends VMApplication {
                         EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
             }
 
-            @Override public void onStreamUpdate(EMConferenceStream stream) {
+            @Override
+            public void onStreamUpdate(EMConferenceStream stream) {
                 VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
                         stream.getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(),
                         stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
@@ -116,19 +127,23 @@ public class AppApplication extends VMApplication {
                         EMClient.getInstance().conferenceManager().getSubscribedStreamMap().size());
             }
 
-            @Override public void onPassiveLeave(int error, String message) {
+            @Override
+            public void onPassiveLeave(int error, String message) {
                 VMLog.i("passive leave code: %d, message: %s", error, message);
             }
 
-            @Override public void onNotice(ConferenceState state) {
+            @Override
+            public void onConferenceState(ConferenceState state) {
                 VMLog.i("State " + state);
             }
 
-            @Override public void onStreamSetup(String streamId) {
+            @Override
+            public void onStreamSetup(String streamId) {
                 VMLog.i("Stream id %s", streamId);
             }
 
-            @Override public void onReceiveInvite(String confId, String password, String extension) {
+            @Override
+            public void onReceiveInvite(String confId, String password, String extension) {
                 VMLog.i("Receive conference invite confId: %s, password: %s, extension: %s", confId, password, extension);
 
                 Intent conferenceIntent = new Intent(context, ConferenceActivity.class);

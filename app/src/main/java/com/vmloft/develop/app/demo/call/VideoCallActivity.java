@@ -1,11 +1,14 @@
 package com.vmloft.develop.app.demo.call;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +55,7 @@ public class VideoCallActivity extends CallActivity {
     @BindView(R.id.layout_root) View rootView;
     @BindView(R.id.layout_call_control) View controlLayout;
     @BindView(R.id.layout_surface_container) RelativeLayout surfaceLayout;
+    @BindView(R.id.img_test) ImageView testImgView;
 
     @BindView(R.id.btn_exit_full_screen) ImageButton exitFullScreenBtn;
     @BindView(R.id.text_call_state) TextView callStateView;
@@ -333,9 +337,17 @@ public class VideoCallActivity extends CallActivity {
         if (!dir.isDirectory()) {
             dir.mkdirs();
         }
-        String path = dirPath + " IMG_" + System.currentTimeMillis() + ".jpg";
+        String path = dirPath + "IMG_" + System.currentTimeMillis() + ".jpg";
         videoCallHelper.takePicture(path);
         Toast.makeText(activity, "拍照保存成功 " + path, Toast.LENGTH_LONG).show();
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        testImgView.setImageBitmap(bitmap);
+        testImgView.setVisibility(View.VISIBLE);
+        testImgView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                testImgView.setVisibility(View.GONE);
+            }
+        });
     }
 
     /**
