@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.hyphenate.EMConferenceListener;
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConferenceListener;
 import com.hyphenate.chat.EMConferenceStream;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
 import com.vmloft.develop.library.tools.VMApplication;
@@ -31,6 +33,7 @@ public class AppApplication extends VMApplication {
 
         // 初始化环信sdk
         initHyphenate();
+
     }
 
     /**
@@ -86,6 +89,16 @@ public class AppApplication extends VMApplication {
         // 通话管理类的初始化
         CallManager.getInstance().init(context);
 
+        setConferenceListener();
+
+        setMessageListener();
+
+    }
+
+    /**
+     * 设置多人会议监听
+     */
+    private void setConferenceListener() {
         EMClient.getInstance().conferenceManager().addConferenceListener(new EMConferenceListener() {
             @Override
             public void onMemberJoined(String username) {
@@ -152,6 +165,42 @@ public class AppApplication extends VMApplication {
                 conferenceIntent.putExtra("password", password);
                 conferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(conferenceIntent);
+            }
+        });
+    }
+
+    private void setMessageListener() {
+        EMClient.getInstance().chatManager().addMessageListener(new EMMessageListener() {
+            @Override
+            public void onMessageReceived(List<EMMessage> list) {
+                for (EMMessage message : list) {
+                    VMLog.i("收到新消息" + message);
+                }
+            }
+
+            @Override
+            public void onCmdMessageReceived(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageRead(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageDelivered(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageRecalled(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageChanged(EMMessage emMessage, Object o) {
+
             }
         });
     }

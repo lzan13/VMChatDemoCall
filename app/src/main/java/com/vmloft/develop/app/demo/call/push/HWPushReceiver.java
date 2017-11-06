@@ -2,6 +2,7 @@ package com.vmloft.develop.app.demo.call.push;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import com.hyphenate.chat.EMHWPushReceiver;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
@@ -20,5 +21,11 @@ public class HWPushReceiver extends EMHWPushReceiver {
         } else {
             VMLog.e("register huawei push token fail");
         }
+    }
+
+    @Override
+    public void onEvent(Context context, Event event, Bundle bundle) {
+        super.onEvent(context, event, bundle);
+        VMLog.d("huawei hms push notification event");
     }
 }

@@ -5,15 +5,15 @@ VMChatDemoCall
 此项目实现了音视频过界面的最小化，以及视频通话界面本地和远程画面的大小切换等功能
 
 ### #使用版本
-- AndrodiStudio 2.3.3
+- AndrodiStudio 3.0
 - Gradle 3.3
-- SDK Build Tools 25.0.3
-- SDK Compile 25
+- SDK Build Tools 26.0.2
+- SDK Compile 26
 - SDK mini 21
-- Design 25.3.1
-- [ButterKnife 8.6.0](https://github.com/JakeWharton/butterknife)
+- Design 26.1.0
+- [ButterKnife 8.8.1](https://github.com/JakeWharton/butterknife)
 - [EventBus 3.0.0](https://github.com/greenrobot/EventBus)
-- [环信 SDK 3.3.4](http://www.easemob.com/download/im)
+- [环信 SDK 3.3.6](http://www.easemob.com/download/im)
 - 自己封装的工具类库，暂时只能下载源码引用 [VMLibraryManager vmtools](https://github.com/lzan13/VMLibraryManager)
 
 >PS:这边并没有将 libs 目录上传到 github，需要大家自己去环信官网下载最新的 sdk 放在 libs 下
@@ -27,6 +27,7 @@ VMChatDemoCall
 - 视频通话的截图
 - 横竖屏的自动切换
 - 呼叫对方离线时发送推送通知
+- 多人会议
 
 ### #已知问题
 - 未接通时切换到悬浮窗，当接通时无法显示画面

@@ -139,7 +139,7 @@ public class CallManager {
         // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
         EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
         // 设置通话音频源类型
-        EMClient.getInstance().callManager().getCallOptions().setCallAudioSource(MediaRecorder.AudioSource.MIC);
+//        EMClient.getInstance().callManager().getCallOptions().setCallAudioSource(MediaRecorder.AudioSource.MIC);
     }
 
     /**

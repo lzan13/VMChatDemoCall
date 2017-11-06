@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.0'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.vmloft.develop.app.demo.call"
@@ -10,17 +10,6 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
-    }
-
-    // 签名信息
-    signingConfigs {
-        // debug 打包签名信息
-        debug {
-            keyAlias 'debugKey'
-            keyPassword '123123'
-            storeFile file('debug-keystore.jks')
-            storePassword '123123'
-        }
     }
 
     // 编译配置
@@ -34,8 +23,6 @@ android {
             zipAlignEnabled false
             // 是否开启混淆
             minifyEnabled false
-            // 设置debug的签名
-            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled false
@@ -57,8 +44,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // ButterKnife 库
-    compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     compile 'org.greenrobot:eventbus:3.0.0'
 
