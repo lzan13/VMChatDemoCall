@@ -15,7 +15,6 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMVideoCallHelper;
@@ -26,6 +25,7 @@ import com.vmloft.develop.library.tools.utils.VMDimenUtil;
 import com.vmloft.develop.library.tools.utils.VMFileUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import java.io.File;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 

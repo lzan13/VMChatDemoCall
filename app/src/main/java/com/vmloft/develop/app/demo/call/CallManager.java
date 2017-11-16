@@ -130,6 +130,8 @@ public class CallManager {
          */
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
         EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
+        // 需要录制视频
+        EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         // 设置视频通话分辨率 默认是(640, 480)
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)

@@ -2,7 +2,6 @@ package com.vmloft.develop.app.demo.call;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.HandlerThread;
 import android.support.design.widget.Snackbar;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -21,6 +20,8 @@ import com.vmloft.develop.library.tools.VMActivity;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
 import com.vmloft.develop.library.tools.widget.VMViewGroup;
+
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 

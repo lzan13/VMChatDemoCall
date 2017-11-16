@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.hyphenate.EMConferenceListener;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceStream;
@@ -89,10 +91,48 @@ public class AppApplication extends VMApplication {
         // 通话管理类的初始化
         CallManager.getInstance().init(context);
 
+        setConnectionListener();
+
         setConferenceListener();
 
         setMessageListener();
 
+    }
+
+    /**
+     * 设置连接监听
+     */
+    private void setConnectionListener() {
+        EMConnectionListener connectionListener = new EMConnectionListener() {
+            @Override
+            public void onConnected() {
+
+            }
+
+            @Override
+            public void onDisconnected(int i) {
+                String str = "" + i;
+                switch (i) {
+                    case EMError.USER_REMOVED:
+                        str = "账户被移除";
+                        break;
+                    case EMError.USER_LOGIN_ANOTHER_DEVICE:
+                        str = "其他设备登录";
+                        break;
+                    case EMError.USER_KICKED_BY_OTHER_DEVICE:
+                        str = "其他设备强制下线";
+                        break;
+                    case EMError.USER_KICKED_BY_CHANGE_PASSWORD:
+                        str = "密码修改";
+                        break;
+                    case EMError.SERVER_SERVICE_RESTRICTED:
+                        str = "被后台限制";
+                        break;
+                }
+                VMLog.i("onDisconnected %s", str);
+            }
+        };
+        EMClient.getInstance().addConnectionListener(connectionListener);
     }
 
     /**
