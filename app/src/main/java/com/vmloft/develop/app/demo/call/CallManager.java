@@ -10,10 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaRecorder;
 import android.media.SoundPool;
+import android.support.v4.app.NotificationCompat;
 
-import android.support.v7.app.NotificationCompat;
 import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
@@ -22,8 +21,10 @@ import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
 
 import com.vmloft.develop.library.tools.utils.VMLog;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -110,10 +111,11 @@ public class CallManager {
          * SDK 3.2.x 版本后通话相关设置，一定要在初始化后，开始音视频功能前设置，否则设置无效
          */
         // 设置通话过程中对方如果离线是否发送离线推送通知，默认 false，这里需要和推送配合使用
-        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
         /**
          * 设置是否启用外部输入视频数据，默认 false，如果设置为 true，需要自己调用
          * {@link EMCallManager#inputExternalVideoData(byte[], int, int, int)}输入视频数据
+         * 视频数据的格式是摄像头采集的格式即：NV21 420sp 自己手动传入时需要将 rgb 格式的数据转为 yuv
          */
         EMClient.getInstance().callManager().getCallOptions().setEnableExternalVideoData(false);
         // 设置视频旋转角度，启动前和视频通话中均可设置
@@ -128,20 +130,21 @@ public class CallManager {
          * >720p: 900k ~ 2.5Mbps
          * >1080p: 2M  ~ 5Mbps
          */
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
-        EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(150);
+        EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(30);
         // 需要录制视频
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         // 设置视频通话分辨率 默认是(640, 480)
-        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(176, 144);
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(20);
         // 设置音视频通话采样率，一般不需要设置，为了减少噪音，可以讲采集了适当调低，这里默认设置32k
         EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(16000);
+        EMClient.getInstance().callManager().getCallOptions().setMaxAudioKbps(16);
         // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
         EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
         // 设置通话音频源类型
-//        EMClient.getInstance().callManager().getCallOptions().setCallAudioSource(MediaRecorder.AudioSource.MIC);
+        //        EMClient.getInstance().callManager().getCallOptions().setCallAudioSource(MediaRecorder.AudioSource.MIC);
     }
 
     /**
@@ -160,40 +163,40 @@ public class CallManager {
             message.setTo(chatId);
         }
         switch (endType) {
-            case NORMAL: // 正常结束通话
-                content = String.valueOf(getCallTime());
-                break;
-            case CANCEL: // 取消
-                content = context.getString(R.string.call_cancel);
-                break;
-            case CANCELLED: // 被取消
-                content = context.getString(R.string.call_cancel_is_incoming);
-                break;
-            case BUSY: // 对方忙碌
-                content = context.getString(R.string.call_busy);
-                break;
-            case OFFLINE: // 对方不在线
-                content = context.getString(R.string.call_offline);
-                break;
-            case REJECT: // 拒绝的
-                content = context.getString(R.string.call_reject_is_incoming);
-                break;
-            case REJECTED: // 被拒绝的
-                content = context.getString(R.string.call_reject);
-                break;
-            case NORESPONSE: // 未响应
-                content = context.getString(R.string.call_no_response);
-                break;
-            case TRANSPORT: // 建立连接失败
-                content = context.getString(R.string.call_connection_fail);
-                break;
-            case DIFFERENT: // 通讯协议不同
-                content = context.getString(R.string.call_offline);
-                break;
-            default:
-                // 默认取消
-                content = context.getString(R.string.call_cancel);
-                break;
+        case NORMAL: // 正常结束通话
+            content = String.valueOf(getCallTime());
+            break;
+        case CANCEL: // 取消
+            content = context.getString(R.string.call_cancel);
+            break;
+        case CANCELLED: // 被取消
+            content = context.getString(R.string.call_cancel_is_incoming);
+            break;
+        case BUSY: // 对方忙碌
+            content = context.getString(R.string.call_busy);
+            break;
+        case OFFLINE: // 对方不在线
+            content = context.getString(R.string.call_offline);
+            break;
+        case REJECT: // 拒绝的
+            content = context.getString(R.string.call_reject_is_incoming);
+            break;
+        case REJECTED: // 被拒绝的
+            content = context.getString(R.string.call_reject);
+            break;
+        case NORESPONSE: // 未响应
+            content = context.getString(R.string.call_no_response);
+            break;
+        case TRANSPORT: // 建立连接失败
+            content = context.getString(R.string.call_connection_fail);
+            break;
+        case DIFFERENT: // 通讯协议不同
+            content = context.getString(R.string.call_offline);
+            break;
+        default:
+            // 默认取消
+            content = context.getString(R.string.call_cancel);
+            break;
         }
         body = new EMTextMessageBody(content);
         message.addBody(body);
@@ -209,24 +212,16 @@ public class CallManager {
     }
 
     /**
-     * 设置通话图像回调处理器
-     */
-    public void setCallCameraDataProcessor() {
-        // 初始化视频数据处理器
-        CameraDataProcessor cameraDataProcessor = new CameraDataProcessor();
-        // 设置视频通话数据处理类
-        EMClient.getInstance().callManager().setCameraDataProcessor(cameraDataProcessor);
-    }
-
-    /**
      * 开始呼叫对方
      */
     public void makeCall() {
         try {
             if (callType == CallType.VIDEO) {
-                EMClient.getInstance().callManager().makeVideoCall(chatId, "{'ext':{'type':'video','key':'value'}}");
+                EMClient.getInstance().callManager().makeVideoCall(chatId,
+                        "{'ext':{'type':'video','key':'value'}}");
             } else {
-                EMClient.getInstance().callManager().makeVoiceCall(chatId, "{'ext':{'type':'voice','key':'value'}}");
+                EMClient.getInstance().callManager().makeVoiceCall(chatId,
+                        "{'ext':{'type':'voice','key':'value'}}");
             }
             setEndType(EndType.CANCEL);
         } catch (EMServiceNotReadyException e) {
@@ -343,12 +338,14 @@ public class CallManager {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter != null) {
             bluetoothAdapter.getProfileProxy(context, new BluetoothProfile.ServiceListener() {
-                @Override public void onServiceConnected(int profile, BluetoothProfile proxy) {
+                @Override
+                public void onServiceConnected(int profile, BluetoothProfile proxy) {
                     bluetoothHeadset = (BluetoothHeadset) proxy;
                     VMLog.d("bluetooth is ");
                 }
 
-                @Override public void onServiceDisconnected(int profile) {
+                @Override
+                public void onServiceDisconnected(int profile) {
                     bluetoothHeadset = null;
                 }
             }, BluetoothProfile.HEADSET);
@@ -361,7 +358,8 @@ public class CallManager {
     private void connectBluetoothAudio() {
         try {
             if (bluetoothHeadset != null) {
-                bluetoothHeadset.startVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
+                bluetoothHeadset.startVoiceRecognition(
+                        bluetoothHeadset.getConnectedDevices().get(0));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -374,7 +372,8 @@ public class CallManager {
     private void disconnectBluetoothAudio() {
         try {
             if (bluetoothHeadset != null) {
-                bluetoothHeadset.stopVoiceRecognition(bluetoothHeadset.getConnectedDevices().get(0));
+                bluetoothHeadset.stopVoiceRecognition(
+                        bluetoothHeadset.getConnectedDevices().get(0));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -389,11 +388,12 @@ public class CallManager {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attributes = new AudioAttributes.Builder()
                     // 设置音频要用在什么地方，这里选择电话通知铃音
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).setContentType(
+                            AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             // 当系统的 SDK 版本高于21时，使用 build 的方式实例化 SoundPool
-            soundPool = new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(1).build();
+            soundPool = new SoundPool.Builder().setAudioAttributes(attributes)
+                                               .setMaxStreams(1)
+                                               .build();
         } else {
             // 老版本使用构造函数方式实例化 SoundPool，MODE 设置为铃音 MODE_RINGTONE
             soundPool = new SoundPool(1, AudioManager.MODE_RINGTONE, 0);
@@ -423,7 +423,8 @@ public class CallManager {
             loadSound();
             // 设置资源加载监听，也因为加载资源在单独的进程，需要时间，所以等监听到加载完成才能播放
             soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
                     VMLog.d("SoundPool load complete! loadId: %d", loadId);
                     isLoaded = true;
                     // 首次监听到加载完毕，开始播放音频
@@ -512,7 +513,8 @@ public class CallManager {
      * 发送通知栏提醒，告知用户通话继续进行中
      */
     private void addCallNotification() {
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(
+                Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         builder.setSmallIcon(R.mipmap.ic_launcher);
@@ -529,7 +531,8 @@ public class CallManager {
         } else {
             intent.setClass(context, VoiceCallActivity.class);
         }
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pIntent);
         builder.setOngoing(true);
 
@@ -559,7 +562,8 @@ public class CallManager {
         }
         timer.purge();
         TimerTask task = new TimerTask() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 callTime++;
                 EventBus.getDefault().post(event);
             }
@@ -688,7 +692,8 @@ public class CallManager {
      * 通话类型
      */
     public enum CallType {
-        VIDEO,  // 视频通话
+        VIDEO,
+        // 视频通话
         VOICE   // 音频通话
     }
 
@@ -696,9 +701,12 @@ public class CallManager {
      * 通话状态枚举值
      */
     public enum CallState {
-        CONNECTING,     // 连接中
-        CONNECTED,      // 连接成功，等待接受
-        ACCEPTED,       // 通话中
+        CONNECTING,
+        // 连接中
+        CONNECTED,
+        // 连接成功，等待接受
+        ACCEPTED,
+        // 通话中
         DISCONNECTED    // 通话中断
 
     }
@@ -707,15 +715,24 @@ public class CallManager {
      * 通话结束状态类型
      */
     public enum EndType {
-        NORMAL,     // 正常结束通话
-        CANCEL,     // 取消
-        CANCELLED,  // 被取消
-        BUSY,       // 对方忙碌
-        OFFLINE,    // 对方不在线
-        REJECT,     // 拒绝的
-        REJECTED,   // 被拒绝的
-        NORESPONSE, // 未响应
-        TRANSPORT,  // 建立连接失败
+        NORMAL,
+        // 正常结束通话
+        CANCEL,
+        // 取消
+        CANCELLED,
+        // 被取消
+        BUSY,
+        // 对方忙碌
+        OFFLINE,
+        // 对方不在线
+        REJECT,
+        // 拒绝的
+        REJECTED,
+        // 被拒绝的
+        NORESPONSE,
+        // 未响应
+        TRANSPORT,
+        // 建立连接失败
         DIFFERENT   // 通讯协议不同
     }
 }

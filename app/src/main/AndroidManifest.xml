@@ -2,67 +2,65 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vmloft.develop.app.demo.call">
 
-    <!--硬件功能请求-->
+    <!-- 硬件功能请求 -->
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <!--项目权限配置-->
-    <!--相机-->
+    <!-- 项目权限配置 -->
+    <!-- 相机 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <!--蓝牙-->
+    <!-- 蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <!--网络-->
+    <!-- 网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--录音-->
+    <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--震动权限-->
+    <!-- 震动权限 -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!--访问网络状态-->
+    <!-- 访问网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!--访问WIFI状态-->
+    <!-- 访问WIFI状态 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--访问精确定位-->
+    <!-- 访问精确定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--读取手机状态-->
+    <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--写入外部存储-->
+    <!-- 写入外部存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--读取外部存储-->
+    <!-- 读取外部存储 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--安装卸载文件系统-->
+    <!-- 安装卸载文件系统 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <!--修改音频设置-->
+    <!-- 修改音频设置 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <!--读取启动设置-->
+    <!-- 读取启动设置 -->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <!--唤醒锁屏，音视频通话所需-->
+    <!-- 唤醒锁屏，音视频通话所需 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--开机自启动-->
-    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
-    <!--悬浮窗权限-->
+    <!-- 悬浮窗权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
-    <!--小米推送相关权限，权限这里一定要改成自己的包名-->
+    <!-- 小米推送相关权限，权限这里一定要改成自己的包名 -->
     <permission
         android:name="com.vmloft.develop.app.demo.call.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.vmloft.develop.app.demo.call.permission.MIPUSH_RECEIVE" />
-    <!--小米推送权限 end-->
+    <!-- 小米推送权限 end -->
 
-    <!--程序入口-->
+    <!-- 程序入口 -->
     <application
-        android:name="com.vmloft.develop.app.demo.call.AppApplication"
+        android:name=".AppApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--项目入口-->
+
+        <!-- 项目入口 -->
         <activity
-            android:name="com.vmloft.develop.app.demo.call.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -73,19 +71,19 @@
             </intent-filter>
         </activity>
 
-        <!--语音通话界面-->
+        <!-- 语音通话界面 -->
         <activity
-            android:name="com.vmloft.develop.app.demo.call.VoiceCallActivity"
+            android:name=".VoiceCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <!--视频通话界面-->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- 视频通话界面 -->
         <activity
-            android:name="com.vmloft.develop.app.demo.call.VideoCallActivity"
+            android:name=".VideoCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <!--视频会议界面-->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- 视频会议界面 -->
         <activity
             android:name=".conference.ConferenceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -100,32 +98,18 @@
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true" />
-        <!--声明sdk所需的receiver-->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <data android:scheme="package" />
-            </intent-filter>
-            <!-- 可选filter -->
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
 
-        <!--小米推送相关配置-->
+        <!-- 小米推送相关配置 -->
         <service
             android:name="com.xiaomi.push.service.XMJobService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:process=":pushservice" />
-
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"
             android:process=":pushservice" />
-
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
@@ -134,7 +118,7 @@
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true" />
 
-        <!--推送消息广播接收器-->
+        <!-- 推送消息广播接收器 -->
         <receiver
             android:name=".push.MIPushReceiver"
             android:exported="true">
@@ -165,10 +149,11 @@
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
         </receiver>
-        <!--小米推送配置 end-->
+        <!-- 小米推送配置 end -->
 
-        <!--华为 HMS Config-->
-        <!--华为开发者后台创建的应用的 APP ID-->
+
+        <!-- 华为 HMS Config -->
+        <!--华为开发者后台创建的应用的 APP ID -->
         <meta-data
             android:name="com.huawei.hms.client.appid"
             android:value="100137027" />
@@ -185,6 +170,7 @@
                 <action android:name="com.huawei.intent.action.PUSH_STATE" />
             </intent-filter>
         </receiver>
+
 
         <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
             <intent-filter>

@@ -1,16 +1,21 @@
 package com.vmloft.develop.app.demo.call;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
@@ -19,11 +24,13 @@ import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
 import com.vmloft.develop.library.tools.VMActivity;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
+import com.vmloft.develop.library.tools.utils.VMViewUtil;
 import com.vmloft.develop.library.tools.widget.VMViewGroup;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * 音视频项目主类
@@ -43,7 +50,8 @@ public class MainActivity extends VMActivity {
     private String password;
     private String toUsername;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -53,53 +61,62 @@ public class MainActivity extends VMActivity {
     }
 
     private void init() {
-        username = (String) VMSPUtil.get(activity, "username", "");
-        password = (String) VMSPUtil.get(activity, "password", "");
-        toUsername = (String) VMSPUtil.get(activity, "toUsername", "");
+        username = (String) VMSPUtil.get("username", "");
+        password = (String) VMSPUtil.get("password", "");
+        toUsername = (String) VMSPUtil.get("toUsername", "");
         usernameView.setText(username);
         passwordView.setText(password);
         contactsView.setText(toUsername);
 
-        String[] btnTitle = {
-                "登录", "注册", "退出", "发送消息", "语音呼叫", "视频呼叫", "新版推送", "发起会议"
-        };
+        String[] btnTitle = {"登录", "注册", "退出", "发送消息", "语音呼叫", "视频呼叫", "新版推送", "发起会议", "私有配置",
+                "黑名单"};
 
         for (int i = 0; i < btnTitle.length; i++) {
-            Button btn = new Button(new ContextThemeWrapper(activity, R.style.VMBtn_Green), null, 0);
+            Button btn = new Button(new ContextThemeWrapper(activity, R.style.VMBtn_Green), null,
+                    0);
             btn.setText(btnTitle[i]);
             btn.setId(100 + i);
             btn.setOnClickListener(viewListener);
             viewGroup.addView(btn);
         }
+
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override public void onClick(View v) {
+        @Override
+        public void onClick(View v) {
             switch (v.getId()) {
-                case 100:
-                    signIn();
-                    break;
-                case 101:
-                    signUp();
-                    break;
-                case 102:
-                    signOut();
-                    break;
-                case 103:
-                    sendMessage();
-                    break;
-                case 104:
-                    callVoice();
-                    break;
-                case 105:
-                    callVideo();
-                    break;
-                case 106:
-                    sendNewPushMessage();
-                    break;
-                case 107:
-                    videoConference(true);
-                    break;
+            case 100:
+                signIn();
+                break;
+            case 101:
+                signUp();
+                break;
+            case 102:
+                signOut();
+                break;
+            case 103:
+                sendMessage();
+                break;
+            case 104:
+                callVoice();
+                break;
+            case 105:
+                callVideo();
+                break;
+            case 106:
+                sendNewPushMessage();
+                break;
+            case 107:
+                videoConference(true);
+                break;
+            case 108:
+                //                setConfig();
+                testExecutor();
+                break;
+            case 109:
+                getBlacklist();
+                break;
             }
         }
     };
@@ -115,36 +132,34 @@ public class MainActivity extends VMActivity {
             return;
         }
         EMClient.getInstance().login(username, password, new EMCallBack() {
-            @Override public void onSuccess() {
+            @Override
+            public void onSuccess() {
                 VMLog.i("login success");
 
-                EMClient.getInstance().chatManager().loadAllConversations();
-                try {
-                    EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-
-                VMSPUtil.put(activity, "username", username);
-                VMSPUtil.put(activity, "password", password);
+                VMSPUtil.put("username", username);
+                VMSPUtil.put("password", password);
                 runOnUiThread(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         Snackbar.make(rootView, "login success", Snackbar.LENGTH_INDEFINITE).show();
                     }
                 });
             }
 
-            @Override public void onError(final int i, final String s) {
+            @Override
+            public void onError(final int i, final String s) {
                 final String str = "login error: " + i + "; " + s;
                 VMLog.i(str);
                 runOnUiThread(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         Snackbar.make(rootView, str, Snackbar.LENGTH_INDEFINITE).show();
                     }
                 });
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override
+            public void onProgress(int i, String s) {
 
             }
         });
@@ -161,14 +176,16 @@ public class MainActivity extends VMActivity {
             return;
         }
         new Thread(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 try {
                     EMClient.getInstance().createAccount(username, password);
                 } catch (HyphenateException e) {
                     final String str = "sign up error " + e.getErrorCode() + "; " + e.getMessage();
                     VMLog.d(str);
                     runOnUiThread(new Runnable() {
-                        @Override public void run() {
+                        @Override
+                        public void run() {
                             Snackbar.make(rootView, str, Snackbar.LENGTH_INDEFINITE).show();
                         }
                     });
@@ -183,26 +200,32 @@ public class MainActivity extends VMActivity {
      */
     private void signOut() {
         EMClient.getInstance().logout(EMClient.getInstance().isConnected(), new EMCallBack() {
-            @Override public void onSuccess() {
+            @Override
+            public void onSuccess() {
                 VMLog.i("logout success");
                 runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        Snackbar.make(rootView, "logout success", Snackbar.LENGTH_INDEFINITE).show();
+                    @Override
+                    public void run() {
+                        Snackbar.make(rootView, "logout success", Snackbar.LENGTH_INDEFINITE)
+                                .show();
                     }
                 });
             }
 
-            @Override public void onError(int i, String s) {
+            @Override
+            public void onError(int i, String s) {
                 final String str = "logout error: " + i + "; " + s;
                 VMLog.i(str);
                 runOnUiThread(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         Snackbar.make(rootView, str, Snackbar.LENGTH_INDEFINITE).show();
                     }
                 });
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override
+            public void onProgress(int i, String s) {
 
             }
         });
@@ -238,7 +261,7 @@ public class MainActivity extends VMActivity {
             Toast.makeText(MainActivity.this, "constact user not null", Toast.LENGTH_LONG).show();
             return;
         }
-        VMSPUtil.put(activity, "toUsername", toUsername);
+        VMSPUtil.put("toUsername", toUsername);
     }
 
     /**
@@ -294,19 +317,23 @@ public class MainActivity extends VMActivity {
          *  所以这里在发送之前先设置消息的状态回调
          */
         message.setMessageStatusCallback(new EMCallBack() {
-            @Override public void onSuccess() {
-                String str = String.format("消息发送成功 msgId %s, content %s", message.getMsgId(), message.getBody());
+            @Override
+            public void onSuccess() {
+                String str = String.format("消息发送成功 msgId %s, content %s", message.getMsgId(),
+                        message.getBody());
                 Snackbar.make(rootView, str, Snackbar.LENGTH_INDEFINITE).show();
                 VMLog.i(str);
             }
 
-            @Override public void onError(final int i, final String s) {
+            @Override
+            public void onError(final int i, final String s) {
                 String str = String.format("消息发送失败 code: %d, error: %s", i, s);
                 Snackbar.make(rootView, str, Snackbar.LENGTH_INDEFINITE).show();
                 VMLog.i(str);
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override
+            public void onProgress(int i, String s) {
                 // TODO 消息发送进度，这里不处理，留给消息Item自己去更新
                 VMLog.i("消息发送中 progress: %d, %s", i, s);
             }
@@ -324,4 +351,44 @@ public class MainActivity extends VMActivity {
         intent.putExtra("username", toUsername);
         onStartActivity(activity, intent);
     }
+
+    /**
+     * 获取账户黑名单列表
+     */
+    private void getBlacklist() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    List<String> blacklist = EMClient.getInstance()
+                                                     .contactManager()
+                                                     .getBlackListFromServer();
+                    VMLog.i("user blacklist " + blacklist);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void setConfig() {
+        try {
+            EMClient.getInstance().changeAppkey("easemob-demo#chatdemoui");
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    int level = 1;
+
+    private void testExecutor() {
+        VMViewUtil.getAllChildViews(rootView, 0);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        System.exit(0);
+    }
+
 }

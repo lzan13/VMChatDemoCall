@@ -1,85 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/vm_theme_background_light"
-    >
+    android:background="@color/vm_theme_background_light">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_vertical_margin"
-        >
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vm_dimen_16"
-            android:textColor="@color/vm_black_87"
-            android:textColorHint="@color/vm_black_38"
-            >
-            <EditText
-                android:id="@+id/edit_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="账户名"
-                android:inputType="textImeMultiLine"
-                android:textColor="@color/vm_black_87"
-                android:textColorHint="@color/vm_black_38"
-                android:textSize="@dimen/vm_size_body"
-                />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vm_dimen_16"
-            android:textColor="@color/vm_black_87"
-            android:textColorHint="@color/vm_black_38"
-            >
-
-            <EditText
-                android:id="@+id/edit_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="密码"
-                android:inputType="textImeMultiLine"
-                android:textColor="@color/vm_black_87"
-                android:textColorHint="@color/vm_black_38"
-                android:textSize="@dimen/vm_size_body"
-                />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vm_dimen_16"
-            android:textColor="@color/vm_black_87"
-            android:textColorHint="@color/vm_black_38"
-            >
-
-            <EditText
-                android:id="@+id/edit_contacts_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="对方名字"
-                android:inputType="textImeMultiLine"
-                android:textColor="@color/vm_black_87"
-                android:textColorHint="@color/vm_black_38"
-                android:textSize="@dimen/vm_size_body"
-                />
-        </android.support.design.widget.TextInputLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <com.vmloft.develop.library.tools.widget.VMViewGroup
-                android:id="@+id/view_group"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_vertical_margin">
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_marginTop="@dimen/vm_dimen_16"
+                android:textColor="@color/vm_black_87"
+                android:textColorHint="@color/vm_black_38">
+
+                <EditText
+                    android:id="@+id/edit_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="账户名"
+                    android:inputType="textImeMultiLine"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
+                    android:textSize="@dimen/vm_size_body" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vm_dimen_16"
+                android:textColor="@color/vm_black_87"
+                android:textColorHint="@color/vm_black_38">
+
+                <EditText
+                    android:id="@+id/edit_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="密码"
+                    android:inputType="textImeMultiLine"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
+                    android:textSize="@dimen/vm_size_body" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vm_dimen_16"
+                android:textColor="@color/vm_black_87"
+                android:textColorHint="@color/vm_black_38">
+
+                <EditText
+                    android:id="@+id/edit_contacts_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="对方名字"
+                    android:inputType="textImeMultiLine"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
+                    android:textSize="@dimen/vm_size_body" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.vmloft.develop.library.tools.widget.VMViewGroup
+                    android:id="@+id/view_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

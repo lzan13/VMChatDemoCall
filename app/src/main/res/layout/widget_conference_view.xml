@@ -2,51 +2,56 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <com.hyphenate.media.EMCallSurfaceView
         android:id="@+id/item_surface_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
+
     <ImageView
         android:id="@+id/img_call_avatar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/vm_image_default"
-        />
-    <LinearLayout
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_character_blackcat" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/vm_dimen_24"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@color/vm_black_38"
-        android:gravity="center"
-        >
+        android:background="@color/vm_black_12">
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/vm_white_87"
+            android:textSize="@dimen/vm_size_10" />
 
         <ImageView
             android:id="@+id/icon_mute"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_mic_off_white_24dp"
-            android:visibility="gone"
-            />
+            android:layout_width="@dimen/vm_dimen_16"
+            android:layout_height="@dimen/vm_dimen_16"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/vm_dimen_4"
+            android:background="@drawable/click_circle_red"
+            android:padding="@dimen/vm_dimen_2"
+            android:src="@drawable/ic_mic_off_24dp"
+            android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/icon_video"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_videocam_off_white_24dp"
-            android:visibility="gone"
-            />
-        <View
-            android:id="@+id/icon_activate"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_margin="8dp"
-            android:background="@color/vm_red_54"
-            />
-    </LinearLayout>
+            android:id="@+id/icon_talking"
+            android:layout_width="@dimen/vm_dimen_16"
+            android:layout_height="@dimen/vm_dimen_16"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/vm_dimen_4"
+            android:background="@drawable/click_circle_green"
+            android:padding="@dimen/vm_dimen_2"
+            android:src="@drawable/ic_volume_up_24dp"
+            android:visibility="gone" />
+    </RelativeLayout>
 </RelativeLayout>

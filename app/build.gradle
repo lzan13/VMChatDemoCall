@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.vmloft.develop.app.demo.call"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName '0.1.0'
     }
 
     // 编译配置
@@ -42,14 +42,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
+    implementation 'com.android.support:design:26.1.0'
     // ButterKnife 库
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
     compile 'org.greenrobot:eventbus:3.0.0'
-
     // 引用自己封装的工具类库，GitHub：https://github.com/lzan13/VMLibraryManager
     compile project(':vmtools')
-
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_root"
     android:layout_width="match_parent"
@@ -8,23 +7,20 @@
     android:animateLayoutChanges="true"
     android:background="@color/vm_theme_background"
     android:clipToPadding="false"
-    android:fitsSystemWindows="false"
-    >
+    android:fitsSystemWindows="false">
 
     <!--通话界面容器-->
     <RelativeLayout
         android:id="@+id/layout_surface_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        >
+        android:animateLayoutChanges="true">
         <!--多人会议时显示成员画面控件容器-->
         <com.vmloft.develop.library.tools.widget.VMViewGroup
             android:id="@+id/surface_view_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            />
+            android:animateLayoutChanges="true" />
     </RelativeLayout>
 
     <!--控制按钮层布局-->
@@ -32,15 +28,13 @@
         android:id="@+id/layout_call_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        >
+        android:fitsSystemWindows="true">
 
         <!--头部状态以及最小化操作-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            >
+            android:layout_marginTop="24dp">
             <!--界面最小化按钮-->
             <ImageButton
                 android:id="@+id/btn_exit_full_screen"
@@ -49,15 +43,14 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/click_circle_transparent"
-                android:src="@drawable/ic_fullscreen_exit_white_24dp"
-                />
+                android:src="@drawable/ic_fullscreen_exit_24dp" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <!--通话时间-->
                 <TextView
@@ -69,8 +62,7 @@
                     android:shadowRadius="2"
                     android:text="@string/app_name"
                     android:textColor="@color/vm_white_54"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
             </LinearLayout>
             <!--邀请加入-->
             <ImageButton
@@ -80,8 +72,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/click_circle_transparent"
-                android:src="@drawable/ic_add_24dp"
-                />
+                android:src="@drawable/ic_add_24dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -91,15 +82,13 @@
             android:layout_alignParentBottom="true"
             android:background="@color/vm_black_38"
             android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <!--麦克风开关-->
                 <ImageButton
@@ -108,8 +97,7 @@
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
                     android:background="@drawable/click_circle_transparent"
-                    android:src="@drawable/ic_mic_off_white_24dp"
-                    />
+                    android:src="@drawable/ic_mic_off_24dp" />
 
                 <!--扬声器开关-->
                 <ImageButton
@@ -118,8 +106,7 @@
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
                     android:background="@drawable/click_circle_transparent"
-                    android:src="@drawable/ic_volume_up_white_24dp"
-                    />
+                    android:src="@drawable/ic_volume_up_24dp" />
 
                 <!--摄像头开关-->
                 <ImageButton
@@ -128,8 +115,16 @@
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
                     android:background="@drawable/click_circle_transparent"
-                    android:src="@drawable/ic_videocam_off_white_24dp"
-                    />
+                    android:src="@drawable/ic_videocam_off_24dp" />
+
+                <!--桌面共享-->
+                <ImageButton
+                    android:id="@+id/btn_desktop_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/click_circle_transparent"
+                    android:src="@drawable/ic_screen_share_24dp" />
 
                 <!--切换摄像头-->
                 <ImageButton
@@ -140,16 +135,14 @@
                     android:layout_margin="8dp"
                     android:layout_marginRight="@dimen/vm_dimen_16"
                     android:background="@drawable/click_circle_transparent"
-                    android:src="@drawable/ic_camera_front_white_24dp"
-                    />
+                    android:src="@drawable/ic_camera_change_24dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <!--拒绝接听-->
                 <android.support.design.widget.FloatingActionButton
@@ -158,10 +151,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="24dp"
-                    android:src="@drawable/ic_call_end_white_24dp"
+                    android:src="@drawable/ic_call_end_24dp"
                     app:backgroundTint="@color/vm_red_87"
-                    app:fabSize="normal"
-                    />
+                    app:fabSize="normal" />
 
                 <!--结束通话-->
                 <android.support.design.widget.FloatingActionButton
@@ -170,10 +162,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="24dp"
-                    android:src="@drawable/ic_call_end_white_24dp"
+                    android:src="@drawable/ic_call_end_24dp"
                     app:backgroundTint="@color/vm_red_87"
-                    app:fabSize="normal"
-                    />
+                    app:fabSize="normal" />
 
                 <!--接听通话-->
                 <android.support.design.widget.FloatingActionButton
@@ -182,10 +173,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="24dp"
-                    android:src="@drawable/ic_call_white_24dp"
+                    android:src="@drawable/ic_call_24dp"
                     app:backgroundTint="@color/vm_green_87"
-                    app:fabSize="normal"
-                    />
+                    app:fabSize="normal" />
 
             </LinearLayout>
         </LinearLayout>
