@@ -133,8 +133,9 @@ public class VideoCallActivity extends CallActivity {
 
         try {
             // 设置默认摄像头为前置
-            EMClient.getInstance().callManager().setCameraFacing(
-                    Camera.CameraInfo.CAMERA_FACING_FRONT);
+            EMClient.getInstance()
+                    .callManager()
+                    .setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
@@ -143,10 +144,7 @@ public class VideoCallActivity extends CallActivity {
     /**
      * 界面控件点击监听器
      */
-    @OnClick({R.id.layout_call_control, R.id.btn_exit_full_screen, R.id.btn_call_info,
-                     R.id.btn_mic_switch, R.id.btn_camera_switch, R.id.btn_speaker_switch,
-                     R.id.btn_record_switch, R.id.btn_screenshot, R.id.btn_change_camera_switch,
-                     R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call})
+    @OnClick({R.id.layout_call_control, R.id.btn_exit_full_screen, R.id.btn_call_info, R.id.btn_mic_switch, R.id.btn_camera_switch, R.id.btn_speaker_switch, R.id.btn_record_switch, R.id.btn_screenshot, R.id.btn_change_camera_switch, R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call})
     void onClick(View v) {
         switch (v.getId()) {
         case R.id.layout_call_control:
@@ -233,15 +231,12 @@ public class VideoCallActivity extends CallActivity {
             new Thread(new Runnable() {
                 public void run() {
                     while (isMonitor) {
-                        final String info = String.format(
-                                "分辨率: %d*%d, \n延迟: %d, \n帧率: %d, \n丢失: %d, \n本地码率: %d, \n远端码率: %d, \n直连: %b",
-                                videoCallHelper.getVideoWidth(), videoCallHelper.getVideoHeight(),
-                                videoCallHelper.getVideoLatency(),
-                                videoCallHelper.getVideoFrameRate(),
-                                videoCallHelper.getVideoLostRate(),
-                                videoCallHelper.getLocalBitrate(),
-                                videoCallHelper.getRemoteBitrate(),
-                                EMClient.getInstance().callManager().isDirectCall());
+                        final String info = String.format("分辨率: %d*%d, \n延迟: %d, \n帧率: %d, \n丢失: %d, \n本地码率: %d, \n远端码率: %d, \n直连: %b", videoCallHelper
+                                .getVideoWidth(), videoCallHelper.getVideoHeight(), videoCallHelper.getVideoLatency(), videoCallHelper
+                                .getVideoFrameRate(), videoCallHelper.getVideoLostRate(), videoCallHelper
+                                .getLocalBitrate(), videoCallHelper.getRemoteBitrate(), EMClient.getInstance()
+                                                                                                .callManager()
+                                                                                                .isDirectCall());
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 callInfoView.setText(info);
@@ -440,8 +435,8 @@ public class VideoCallActivity extends CallActivity {
         localSurface.setZOrderMediaOverlay(true);
 
         // 设置本地和远端画面的显示方式，是填充，还是居中
-        localSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
-        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        localSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
+        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
         // 设置通话画面显示控件
         EMClient.getInstance().callManager().setSurfaceView(localSurface, oppositeSurface);
     }

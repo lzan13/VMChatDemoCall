@@ -53,7 +53,7 @@ public class ConferenceMemberView extends RelativeLayout {
         talkingView = (ImageView) findViewById(R.id.icon_talking);
         nameView = (TextView) findViewById(R.id.text_name);
 
-        surfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        surfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
     }
 
     public EMCallSurfaceView getSurfaceView() {
@@ -97,6 +97,7 @@ public class ConferenceMemberView extends RelativeLayout {
 
     public void setDesktop(boolean desktop) {
         isDesktop = desktop;
+        avatarView.setVisibility(View.GONE);
     }
 
     /**

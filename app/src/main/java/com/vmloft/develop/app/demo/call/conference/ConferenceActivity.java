@@ -90,10 +90,10 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conference);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                                     | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                                     | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                                     | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                                     | WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         ButterKnife.bind(activity);
 
@@ -142,7 +142,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
     void onClick(View view) {
         switch (view.getId()) {
         case R.id.btn_exit_full_screen:
-            Toast.makeText(activity, "暂未实现最小化", Toast.LENGTH_SHORT).show();
+            miniMode();
             break;
         case R.id.btn_invite_join:
             inviteUserToJoinConference();
@@ -184,6 +184,10 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         }
     }
 
+    private void miniMode() {
+        Toast.makeText(activity, "暂未实现最小化", Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * 初始化多人音视频画面管理控件
      */
@@ -218,6 +222,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      * 添加一个展示远端画面的 view
      */
     private void addConferenceView(EMConferenceStream stream) {
+        streamList.add(stream);
         final ConferenceMemberView memberView = new ConferenceMemberView(activity);
         callConferenceViewGroup.addView(memberView);
         ViewGroup.LayoutParams params = memberView.getLayoutParams();
@@ -226,6 +231,8 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         memberView.setLayoutParams(params);
         memberView.setUsername(stream.getUsername());
         memberView.setStreamId(stream.getStreamId());
+        memberView.setAudioOff(stream.isAudioOff());
+        memberView.setVideoOff(stream.isVideoOff());
         memberView.setDesktop(stream.getStreamType() == EMConferenceStream.StreamType.DESKTOP);
         subscribe(stream, memberView);
         memberView.setOnClickListener(new View.OnClickListener() {
@@ -330,8 +337,9 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      * 作为创建者创建并加入会议
      */
     private void createAndJoinConference() {
-        EMClient.getInstance().conferenceManager().createAndJoinConference(password,
-                new EMValueCallBack<EMConference>() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .createAndJoinConference(password, new EMValueCallBack<EMConference>() {
                     @Override
                     public void onSuccess(EMConference value) {
                         VMLog.e("create and join conference success");
@@ -342,7 +350,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                             @Override
                             public void run() {
                                 Toast.makeText(activity, "Create and join conference success",
-                                        Toast.LENGTH_SHORT).show();
+                                               Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -354,7 +362,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                             @Override
                             public void run() {
                                 Toast.makeText(activity, "Create and join conference error",
-                                        Toast.LENGTH_SHORT).show();
+                                               Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -368,8 +376,9 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         cancelBtn.setVisibility(View.GONE);
         exitBtn.setVisibility(View.VISIBLE);
         addBtn.setVisibility(View.GONE);
-        EMClient.getInstance().conferenceManager().joinConference(confId, password,
-                new EMValueCallBack<EMConference>() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .joinConference(confId, password, new EMValueCallBack<EMConference>() {
                     @Override
                     public void onSuccess(EMConference value) {
                         conference = value;
@@ -379,7 +388,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                             @Override
                             public void run() {
                                 Toast.makeText(activity, "Join conference success",
-                                        Toast.LENGTH_SHORT).show();
+                                               Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -391,7 +400,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                             @Override
                             public void run() {
                                 Toast.makeText(activity, "Join conference success",
-                                        Toast.LENGTH_SHORT).show();
+                                               Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -416,20 +425,24 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                     return;
                 }
                 final String username = editText.getText().toString();
-                EMClient.getInstance().conferenceManager().inviteUserToJoinConference(
-                        conference.getConferenceId(), conference.getPassword(), username,
-                        "{'extension':'invite'}", new EMValueCallBack() {
-                            @Override
-                            public void onSuccess(Object value) {
-                                VMLog.e("invite join conference success");
-                            }
+                EMClient.getInstance()
+                        .conferenceManager()
+                        .inviteUserToJoinConference(conference.getConferenceId(),
+                                                    conference.getPassword(), username,
+                                                    "{'extension':'invite'}",
+                                                    new EMValueCallBack() {
+                                                        @Override
+                                                        public void onSuccess(Object value) {
+                                                            VMLog.e("invite join conference success");
+                                                        }
 
-                            @Override
-                            public void onError(int error, String errorMsg) {
-                                VMLog.e("invite join conference failed error: %d, msg: %s", error,
-                                        errorMsg);
-                            }
-                        });
+                                                        @Override
+                                                        public void onError(int error,
+                                                                String errorMsg) {
+                                                            VMLog.e("invite join conference failed error: %d, msg: %s",
+                                                                    error, errorMsg);
+                                                        }
+                                                    });
             }
         });
         alertDialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -484,8 +497,9 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      * 开始推自己的数据
      */
     private void publish() {
-        EMClient.getInstance().conferenceManager().publish(normalParam,
-                new EMValueCallBack<String>() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .publish(normalParam, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                         conference.setPubStreamId(value, EMConferenceStream.StreamType.NORMAL);
@@ -504,14 +518,16 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (ScreenCaptureManager.getInstance().state == ScreenCaptureManager.State.IDLE) {
                 ScreenCaptureManager.getInstance().init(activity);
-                ScreenCaptureManager.getInstance().setScreenCaptureCallback(
-                        new ScreenCaptureManager.ScreenCaptureCallback() {
-                            @Override
-                            public void onBitmap(Bitmap bitmap) {
-                                EMClient.getInstance().conferenceManager().inputExternalVideoData(
-                                        bitmap);
-                            }
-                        });
+                ScreenCaptureManager.getInstance()
+                                    .setScreenCaptureCallback(
+                                            new ScreenCaptureManager.ScreenCaptureCallback() {
+                                                @Override
+                                                public void onBitmap(Bitmap bitmap) {
+                                                    EMClient.getInstance()
+                                                            .conferenceManager()
+                                                            .inputExternalVideoData(bitmap);
+                                                }
+                                            });
             }
         }
     }
@@ -522,8 +538,9 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
         } else {
             desktopParam.setShareView(activity.getWindow().getDecorView());
         }
-        EMClient.getInstance().conferenceManager().publish(desktopParam,
-                new EMValueCallBack<String>() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .publish(desktopParam, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                         conference.setPubStreamId(value, EMConferenceStream.StreamType.DESKTOP);
@@ -548,8 +565,9 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                 ScreenCaptureManager.getInstance().stop();
             }
         }
-        EMClient.getInstance().conferenceManager().unpublish(publishId,
-                new EMValueCallBack<String>() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .unpublish(publishId, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {}
 
@@ -564,8 +582,9 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      * 订阅指定成员 stream
      */
     private void subscribe(EMConferenceStream stream, final ConferenceMemberView memberView) {
-        EMClient.getInstance().conferenceManager().subscribe(stream, memberView.getSurfaceView(),
-                new EMValueCallBack<String>() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .subscribe(stream, memberView.getSurfaceView(), new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                     }
@@ -581,8 +600,9 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      * 取消订阅指定成员 stream
      */
     private void unsubscribe(EMConferenceStream stream) {
-        EMClient.getInstance().conferenceManager().unsubscribe(stream,
-                new EMValueCallBack<String>() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .unsubscribe(stream, new EMValueCallBack<String>() {
                     @Override
                     public void onSuccess(String value) {
                     }
@@ -667,7 +687,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
 
     @Override
     public void onBackPressed() {
-        exitConference();
+
     }
 
     @Override
@@ -716,9 +736,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
             public void run() {
                 Toast.makeText(activity, stream.getUsername() + " stream add!", Toast.LENGTH_SHORT)
                      .show();
-                streamList.add(stream);
                 addConferenceView(stream);
-                updateConferenceMemberView(stream);
                 updateConferenceViewGroup();
             }
         });
@@ -730,7 +748,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
             @Override
             public void run() {
                 Toast.makeText(activity, stream.getUsername() + " stream removed!",
-                        Toast.LENGTH_SHORT).show();
+                               Toast.LENGTH_SHORT).show();
                 if (streamList.contains(stream)) {
                     removeConferenceView(stream);
                     updateConferenceViewGroup();
@@ -745,7 +763,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
             @Override
             public void run() {
                 Toast.makeText(activity, stream.getUsername() + " stream update!",
-                        Toast.LENGTH_SHORT).show();
+                               Toast.LENGTH_SHORT).show();
                 updateConferenceMemberView(stream);
             }
         });
@@ -757,7 +775,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
             @Override
             public void run() {
                 Toast.makeText(activity, "Passive exit " + error + ", message" + message,
-                        Toast.LENGTH_SHORT).show();
+                               Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -781,10 +799,10 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                         || streamId.equals(
                         conference.getPubStreamId(EMConferenceStream.StreamType.DESKTOP))) {
                     Toast.makeText(activity, "Publish setup streamId=" + streamId,
-                            Toast.LENGTH_SHORT).show();
+                                   Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(activity, "Subscribe setup streamId=" + streamId,
-                            Toast.LENGTH_SHORT).show();
+                                   Toast.LENGTH_SHORT).show();
                 }
             }
         });
