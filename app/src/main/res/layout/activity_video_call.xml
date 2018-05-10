@@ -14,7 +14,12 @@
         android:id="@+id/layout_surface_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"></RelativeLayout>
+        android:animateLayoutChanges="true" />
+
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="@dimen/vm_dimen_128"
+        android:layout_height="@dimen/vm_dimen_128" />
 
     <!--控制按钮层布局-->
     <RelativeLayout

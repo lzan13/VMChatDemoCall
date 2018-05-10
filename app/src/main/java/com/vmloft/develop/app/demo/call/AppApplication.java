@@ -16,8 +16,10 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMStreamStatistics;
 import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
-import com.vmloft.develop.library.tools.VMApplication;
+import com.vmloft.develop.library.tools.VMApp;
+import com.vmloft.develop.library.tools.VMTools;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
 import java.util.Iterator;
@@ -28,7 +30,7 @@ import java.util.List;
  * <p>
  * 程序入口，做一些必要的初始化操作
  */
-public class AppApplication extends VMApplication {
+public class AppApplication extends VMApp {
 
     private CallReceiver callReceiver;
 
@@ -36,6 +38,7 @@ public class AppApplication extends VMApplication {
     public void onCreate() {
         super.onCreate();
 
+        VMTools.init(context);
         // 初始化环信sdk
         initHyphenate();
 
@@ -69,10 +72,9 @@ public class AppApplication extends VMApplication {
         //        options.setAppKey("hx-ps#api4vip6");
         //        options.setAppKey("cx-dev#cxstudy");
 
-        options.setUseHttps(false);
         options.setAutoLogin(true);
         // 设置小米推送 appID 和 appKey
-//        options.setMipushConfig("2882303761517573806", "5981757315806");
+        //        options.setMipushConfig("2882303761517573806", "5981757315806");
 
         // 设置消息是否按照服务器时间排序
         options.setSortMessageByServerTime(false);
@@ -84,14 +86,16 @@ public class AppApplication extends VMApplication {
         EMClient.getInstance().setDebugMode(true);
 
         // 设置通话广播监听器
-        IntentFilter callFilter = new IntentFilter(
-                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance()
+                .callManager()
+                .getIncomingCallBroadcastAction());
         if (callReceiver == null) {
             callReceiver = new CallReceiver();
         }
         //注册通话广播接收者
         context.registerReceiver(callReceiver, callFilter);
 
+        CallManager.getInstance().setExternalInputData(true);
         // 通话管理类的初始化
         CallManager.getInstance().init(context);
 
@@ -143,8 +147,9 @@ public class AppApplication extends VMApplication {
      * 设置多人会议监听
      */
     private void setConferenceListener() {
-        EMClient.getInstance().conferenceManager().addConferenceListener(
-                new EMConferenceListener() {
+        EMClient.getInstance()
+                .conferenceManager()
+                .addConferenceListener(new EMConferenceListener() {
                     @Override
                     public void onMemberJoined(String username) {
                         VMLog.i("Joined username: %s", username);
@@ -157,50 +162,44 @@ public class AppApplication extends VMApplication {
 
                     @Override
                     public void onStreamAdded(EMConferenceStream stream) {
-                        VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
-                                stream.getStreamId(), stream.getStreamName(),
-                                stream.getMemberName(), stream.getUsername(), stream.getExtension(),
-                                stream.isVideoOff(), stream.isAudioOff());
-                        VMLog.i("Conference stream subscribable: %d, subscribed: %d",
-                                EMClient.getInstance()
-                                        .conferenceManager()
-                                        .getAvailableStreamMap()
-                                        .size(), EMClient.getInstance()
-                                                         .conferenceManager()
-                                                         .getSubscribedStreamMap()
-                                                         .size());
+                        VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
+                                .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream
+                                .getUsername(), stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                        VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
+                                .conferenceManager()
+                                .getAvailableStreamMap()
+                                .size(), EMClient.getInstance()
+                                .conferenceManager()
+                                .getSubscribedStreamMap()
+                                .size());
                     }
 
                     @Override
                     public void onStreamRemoved(EMConferenceStream stream) {
-                        VMLog.i("Stream removed streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
-                                stream.getStreamId(), stream.getStreamName(),
-                                stream.getMemberName(), stream.getUsername(), stream.getExtension(),
-                                stream.isVideoOff(), stream.isAudioOff());
-                        VMLog.i("Conference stream subscribable: %d, subscribed: %d",
-                                EMClient.getInstance()
-                                        .conferenceManager()
-                                        .getAvailableStreamMap()
-                                        .size(), EMClient.getInstance()
-                                                         .conferenceManager()
-                                                         .getSubscribedStreamMap()
-                                                         .size());
+                        VMLog.i("Stream removed streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
+                                .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream
+                                .getUsername(), stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                        VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
+                                .conferenceManager()
+                                .getAvailableStreamMap()
+                                .size(), EMClient.getInstance()
+                                .conferenceManager()
+                                .getSubscribedStreamMap()
+                                .size());
                     }
 
                     @Override
                     public void onStreamUpdate(EMConferenceStream stream) {
-                        VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b",
-                                stream.getStreamId(), stream.getStreamName(),
-                                stream.getMemberName(), stream.getUsername(), stream.getExtension(),
-                                stream.isVideoOff(), stream.isAudioOff());
-                        VMLog.i("Conference stream subscribable: %d, subscribed: %d",
-                                EMClient.getInstance()
-                                        .conferenceManager()
-                                        .getAvailableStreamMap()
-                                        .size(), EMClient.getInstance()
-                                                         .conferenceManager()
-                                                         .getSubscribedStreamMap()
-                                                         .size());
+                        VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
+                                .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream
+                                .getUsername(), stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                        VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
+                                .conferenceManager()
+                                .getAvailableStreamMap()
+                                .size(), EMClient.getInstance()
+                                .conferenceManager()
+                                .getSubscribedStreamMap()
+                                .size());
                     }
 
                     @Override
@@ -211,6 +210,11 @@ public class AppApplication extends VMApplication {
                     @Override
                     public void onConferenceState(ConferenceState state) {
                         VMLog.i("State " + state);
+                    }
+
+                    @Override
+                    public void onStreamStatistics(EMStreamStatistics emStreamStatistics) {
+                        VMLog.i(emStreamStatistics.toString());
                     }
 
                     @Override
@@ -225,8 +229,7 @@ public class AppApplication extends VMApplication {
 
                     @Override
                     public void onReceiveInvite(String confId, String password, String extension) {
-                        VMLog.i("Receive conference invite confId: %s, password: %s, extension: %s",
-                                confId, password, extension);
+                        VMLog.i("Receive conference invite confId: %s, password: %s, extension: %s", confId, password, extension);
 
                         Intent conferenceIntent = new Intent(context, ConferenceActivity.class);
                         conferenceIntent.putExtra("isCreator", false);
@@ -297,8 +300,7 @@ public class AppApplication extends VMApplication {
      */
     private String getAppName(int pid) {
         String processName = null;
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(
-                Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List list = activityManager.getRunningAppProcesses();
         Iterator i = list.iterator();
         while (i.hasNext()) {

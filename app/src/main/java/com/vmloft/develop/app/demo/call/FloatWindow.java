@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.library.tools.utils.VMDimenUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -62,7 +64,8 @@ public class FloatWindow {
         if (floatView != null) {
             return;
         }
-        EventBus.getDefault().register(this);
+        EventBus.getDefault()
+                .register(this);
         layoutParams = new WindowManager.LayoutParams();
         // 位置为右侧顶部
         layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
@@ -80,12 +83,16 @@ public class FloatWindow {
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
 
         // 获取要现实的布局
-        floatView = LayoutInflater.from(context).inflate(R.layout.widget_float_window, null);
+        floatView = LayoutInflater.from(context)
+                                  .inflate(R.layout.widget_float_window, null);
         // 添加悬浮窗 View 到窗口
         windowManager.addView(floatView, layoutParams);
-        if (CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
-            floatView.findViewById(R.id.layout_call_voice).setVisibility(View.VISIBLE);
-            floatView.findViewById(R.id.layout_call_video).setVisibility(View.GONE);
+        if (CallManager.getInstance()
+                       .getCallType() == CallManager.CallType.VOICE) {
+            floatView.findViewById(R.id.layout_call_voice)
+                     .setVisibility(View.VISIBLE);
+            floatView.findViewById(R.id.layout_call_video)
+                     .setVisibility(View.GONE);
             callTimeView = (TextView) floatView.findViewById(R.id.text_call_time);
             refreshCallTime();
         } else {
@@ -94,9 +101,11 @@ public class FloatWindow {
 
         // 当点击悬浮窗时，返回到通话界面
         floatView.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent();
-                if (CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
+                if (CallManager.getInstance()
+                               .getCallType() == CallManager.CallType.VOICE) {
                     intent.setClass(context, VoiceCallActivity.class);
                 } else {
                     intent.setClass(context, VideoCallActivity.class);
@@ -115,32 +124,33 @@ public class FloatWindow {
             float startX = 0;
             float startY = 0;
 
-            @Override public boolean onTouch(View v, MotionEvent event) {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        result = false;
-                        x = event.getX();
-                        y = event.getY();
-                        startX = event.getRawX();
-                        startY = event.getRawY();
-                        VMLog.d("start x: %f, y: %f", startX, startY);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        VMLog.d("move x: %f, y: %f", event.getRawX(), event.getRawY());
-                        // 当移动距离大于特定值时，表示是多动悬浮窗，则不触发后边的点击监听
-                        if (Math.abs(event.getRawX() - startX) > 20 || Math.abs(event.getRawY() - startY) > 20) {
-                            result = true;
-                        }
-                        // getRawX 获取触摸点相对于屏幕的坐标，getX 相对于当前悬浮窗坐标
-                        // 根据当前触摸点 X 坐标计算悬浮窗 X 坐标，
-                        layoutParams.x = (int) (event.getRawX() - x);
-                        // 根据当前触摸点 Y 坐标计算悬浮窗 Y 坐标，减25为状态栏的高度
-                        layoutParams.y = (int) (event.getRawY() - y - 25);
-                        // 刷新悬浮窗
-                        windowManager.updateViewLayout(floatView, layoutParams);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        break;
+                case MotionEvent.ACTION_DOWN:
+                    result = false;
+                    x = event.getX();
+                    y = event.getY();
+                    startX = event.getRawX();
+                    startY = event.getRawY();
+                    VMLog.d("start x: %f, y: %f", startX, startY);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    VMLog.d("move x: %f, y: %f", event.getRawX(), event.getRawY());
+                    // 当移动距离大于特定值时，表示是拖动悬浮窗，则不触发后边的点击监听
+                    if (Math.abs(event.getRawX() - startX) > 20 || Math.abs(event.getRawY() - startY) > 20) {
+                        result = true;
+                    }
+                    // getRawX 获取触摸点相对于屏幕的坐标，getX 相对于当前悬浮窗坐标
+                    // 根据当前触摸点 X 坐标计算悬浮窗 X 坐标，
+                    layoutParams.x = (int) (event.getRawX() - x);
+                    // 根据当前触摸点 Y 坐标计算悬浮窗 Y 坐标，减25为状态栏的高度
+                    layoutParams.y = (int) (event.getRawY() - y - 25);
+                    // 刷新悬浮窗
+                    windowManager.updateViewLayout(floatView, layoutParams);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
                 }
                 return result;
             }
@@ -151,8 +161,10 @@ public class FloatWindow {
      * 设置本地与远程画面显示控件
      */
     private void setupSurfaceView() {
-        floatView.findViewById(R.id.layout_call_voice).setVisibility(View.GONE);
-        floatView.findViewById(R.id.layout_call_video).setVisibility(View.VISIBLE);
+        floatView.findViewById(R.id.layout_call_voice)
+                 .setVisibility(View.GONE);
+        floatView.findViewById(R.id.layout_call_video)
+                 .setVisibility(View.VISIBLE);
 
         RelativeLayout surfaceLayout = (RelativeLayout) floatView.findViewById(R.id.layout_call_video);
 
@@ -162,10 +174,10 @@ public class FloatWindow {
         localView = new EMCallSurfaceView(context);
         oppositeView = new EMCallSurfaceView(context);
 
-        int lw = VMDimenUtil.dp2px(context, 24);
-        int lh = VMDimenUtil.dp2px(context, 32);
-        int ow = VMDimenUtil.dp2px(context, 96);
-        int oh = VMDimenUtil.dp2px(context, 128);
+        int lw = VMDimenUtil.dp2px(24);
+        int lh = VMDimenUtil.dp2px(32);
+        int ow = VMDimenUtil.dp2px(96);
+        int oh = VMDimenUtil.dp2px(128);
         RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(lw, lh);
         RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(ow, oh);
         // 设置本地图像靠右
@@ -182,24 +194,29 @@ public class FloatWindow {
         localView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
-        EMClient.getInstance().callManager().setSurfaceView(localView, oppositeView);
+        EMClient.getInstance()
+                .callManager()
+                .setSurfaceView(localView, oppositeView);
     }
 
     /**
      * 停止悬浮窗
      */
     public void removeFloatWindow() {
-        EventBus.getDefault().unregister(this);
+        EventBus.getDefault()
+                .unregister(this);
         if (localView != null) {
             if (localView.getRenderer() != null) {
-                localView.getRenderer().dispose();
+                localView.getRenderer()
+                         .dispose();
             }
             localView.release();
             localView = null;
         }
         if (oppositeView != null) {
             if (oppositeView.getRenderer() != null) {
-                oppositeView.getRenderer().dispose();
+                oppositeView.getRenderer()
+                            .dispose();
             }
             oppositeView.release();
             oppositeView = null;
@@ -210,11 +227,13 @@ public class FloatWindow {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(CallEvent event) {
         if (event.isState()) {
             refreshCallView(event);
         }
-        if (event.isTime() && CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
+        if (event.isTime() && CallManager.getInstance()
+                                         .getCallType() == CallManager.CallType.VOICE) {
             refreshCallTime();
         }
     }
@@ -226,49 +245,51 @@ public class FloatWindow {
         EMCallStateChangeListener.CallError callError = event.getCallError();
         EMCallStateChangeListener.CallState callState = event.getCallState();
         switch (callState) {
-            case CONNECTING: // 正在呼叫对方，TODO 没见回调过
-                VMLog.i("正在呼叫对方" + callError);
-                break;
-            case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
-                VMLog.i("正在连接" + callError);
-                break;
-            case ACCEPTED: // 通话已接通
-                VMLog.i("通话已接通");
-                break;
-            case DISCONNECTED: // 通话已中断
-                VMLog.i("通话已结束" + callError);
-                CallManager.getInstance().removeFloatWindow();
-                break;
-            // TODO 3.3.0版本 SDK 下边几个暂时都没有回调
-            case NETWORK_UNSTABLE:
-                if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
-                    VMLog.i("没有通话数据" + callError);
-                } else {
-                    VMLog.i("网络不稳定" + callError);
-                }
-                break;
-            case NETWORK_NORMAL:
-                VMLog.i("网络正常");
-                break;
-            case VIDEO_PAUSE:
-                VMLog.i("视频传输已暂停");
-                break;
-            case VIDEO_RESUME:
-                VMLog.i("视频传输已恢复");
-                break;
-            case VOICE_PAUSE:
-                VMLog.i("语音传输已暂停");
-                break;
-            case VOICE_RESUME:
-                VMLog.i("语音传输已恢复");
-                break;
-            default:
-                break;
+        case CONNECTING: // 正在呼叫对方，TODO 没见回调过
+            VMLog.i("正在呼叫对方" + callError);
+            break;
+        case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
+            VMLog.i("正在连接" + callError);
+            break;
+        case ACCEPTED: // 通话已接通
+            VMLog.i("通话已接通");
+            break;
+        case DISCONNECTED: // 通话已中断
+            VMLog.i("通话已结束" + callError);
+            CallManager.getInstance()
+                       .removeFloatWindow();
+            break;
+        // TODO 3.3.0版本 SDK 下边几个暂时都没有回调
+        case NETWORK_UNSTABLE:
+            if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
+                VMLog.i("没有通话数据" + callError);
+            } else {
+                VMLog.i("网络不稳定" + callError);
+            }
+            break;
+        case NETWORK_NORMAL:
+            VMLog.i("网络正常");
+            break;
+        case VIDEO_PAUSE:
+            VMLog.i("视频传输已暂停");
+            break;
+        case VIDEO_RESUME:
+            VMLog.i("视频传输已恢复");
+            break;
+        case VOICE_PAUSE:
+            VMLog.i("语音传输已暂停");
+            break;
+        case VOICE_RESUME:
+            VMLog.i("语音传输已恢复");
+            break;
+        default:
+            break;
         }
     }
 
     private void refreshCallTime() {
-        int t = CallManager.getInstance().getCallTime();
+        int t = CallManager.getInstance()
+                           .getCallTime();
         int h = t / 60 / 60;
         int m = t / 60 % 60;
         int s = t % 60 % 60;

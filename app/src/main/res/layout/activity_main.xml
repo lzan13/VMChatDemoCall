@@ -3,7 +3,7 @@
     android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/vm_theme_background_light">
+    android:background="@color/vm_theme_background">
 
     <ScrollView
         android:layout_width="match_parent"

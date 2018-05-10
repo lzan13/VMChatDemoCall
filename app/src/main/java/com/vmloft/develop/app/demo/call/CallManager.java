@@ -62,6 +62,7 @@ public class CallManager {
 
     // 记录通话方向，是呼出还是呼入
     private boolean isInComingCall = true;
+    private boolean isExternalInputData = false;
     // 设备相关开关
     private boolean isOpenCamera = true;
     private boolean isOpenMic = true;
@@ -117,7 +118,7 @@ public class CallManager {
          * {@link EMCallManager#inputExternalVideoData(byte[], int, int, int)}输入视频数据
          * 视频数据的格式是摄像头采集的格式即：NV21 420sp 自己手动传入时需要将 rgb 格式的数据转为 yuv
          */
-        EMClient.getInstance().callManager().getCallOptions().setEnableExternalVideoData(false);
+        EMClient.getInstance().callManager().getCallOptions().setEnableExternalVideoData(isExternalInputData);
         // 设置视频旋转角度，启动前和视频通话中均可设置
         //EMClient.getInstance().callManager().getCallOptions().setRotation(90);
         // 设置自动调节分辨率，默认为 true
@@ -217,11 +218,13 @@ public class CallManager {
     public void makeCall() {
         try {
             if (callType == CallType.VIDEO) {
-                EMClient.getInstance().callManager().makeVideoCall(chatId,
-                        "{'ext':{'type':'video','key':'value'}}");
+                EMClient.getInstance()
+                        .callManager()
+                        .makeVideoCall(chatId, "{'ext':{'type':'video','key':'value'}}");
             } else {
-                EMClient.getInstance().callManager().makeVoiceCall(chatId,
-                        "{'ext':{'type':'voice','key':'value'}}");
+                EMClient.getInstance()
+                        .callManager()
+                        .makeVoiceCall(chatId, "{'ext':{'type':'voice','key':'value'}}");
             }
             setEndType(EndType.CANCEL);
         } catch (EMServiceNotReadyException e) {
@@ -358,8 +361,8 @@ public class CallManager {
     private void connectBluetoothAudio() {
         try {
             if (bluetoothHeadset != null) {
-                bluetoothHeadset.startVoiceRecognition(
-                        bluetoothHeadset.getConnectedDevices().get(0));
+                bluetoothHeadset.startVoiceRecognition(bluetoothHeadset.getConnectedDevices()
+                        .get(0));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -372,8 +375,8 @@ public class CallManager {
     private void disconnectBluetoothAudio() {
         try {
             if (bluetoothHeadset != null) {
-                bluetoothHeadset.stopVoiceRecognition(
-                        bluetoothHeadset.getConnectedDevices().get(0));
+                bluetoothHeadset.stopVoiceRecognition(bluetoothHeadset.getConnectedDevices()
+                        .get(0));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -388,12 +391,13 @@ public class CallManager {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attributes = new AudioAttributes.Builder()
                     // 设置音频要用在什么地方，这里选择电话通知铃音
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).setContentType(
-                            AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
             // 当系统的 SDK 版本高于21时，使用 build 的方式实例化 SoundPool
             soundPool = new SoundPool.Builder().setAudioAttributes(attributes)
-                                               .setMaxStreams(1)
-                                               .build();
+                    .setMaxStreams(1)
+                    .build();
         } else {
             // 老版本使用构造函数方式实例化 SoundPool，MODE 设置为铃音 MODE_RINGTONE
             soundPool = new SoundPool(1, AudioManager.MODE_RINGTONE, 0);
@@ -513,8 +517,7 @@ public class CallManager {
      * 发送通知栏提醒，告知用户通话继续进行中
      */
     private void addCallNotification() {
-        notificationManager = (NotificationManager) context.getSystemService(
-                Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         builder.setSmallIcon(R.mipmap.ic_launcher);
@@ -531,8 +534,7 @@ public class CallManager {
         } else {
             intent.setClass(context, VoiceCallActivity.class);
         }
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pIntent);
         builder.setOngoing(true);
 
@@ -654,6 +656,14 @@ public class CallManager {
 
     public EndType getEndType() {
         return endType;
+    }
+
+    public boolean isExternalInputData() {
+        return isExternalInputData;
+    }
+
+    public void setExternalInputData(boolean externalInputData) {
+        isExternalInputData = externalInputData;
     }
 
     public boolean isOpenCamera() {

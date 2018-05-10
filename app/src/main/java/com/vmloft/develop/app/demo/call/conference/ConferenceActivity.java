@@ -31,6 +31,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConference;
 import com.hyphenate.chat.EMConferenceStream;
 import com.hyphenate.chat.EMStreamParam;
+import com.hyphenate.chat.EMStreamStatistics;
 import com.superrtc.mediamanager.ScreenCaptureManager;
 import com.vmloft.develop.app.demo.call.R;
 import com.vmloft.develop.library.tools.VMActivity;
@@ -788,6 +789,11 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
                 Toast.makeText(activity, "State=" + state, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onStreamStatistics(EMStreamStatistics emStreamStatistics) {
+
     }
 
     @Override
