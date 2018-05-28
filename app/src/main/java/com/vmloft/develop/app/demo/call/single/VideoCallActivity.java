@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.demo.call;
+package com.vmloft.develop.app.demo.call.single;
 
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -23,9 +23,10 @@ import com.hyphenate.chat.EMVideoCallHelper;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
+import com.vmloft.develop.app.demo.call.R;
 import com.vmloft.develop.app.demo.call.camera.PreviewManager;
-import com.vmloft.develop.library.tools.utils.VMDimenUtil;
-import com.vmloft.develop.library.tools.utils.VMFileUtil;
+import com.vmloft.develop.library.tools.utils.VMDimen;
+import com.vmloft.develop.library.tools.utils.VMFile;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMViewUtil;
 
@@ -96,10 +97,10 @@ public class VideoCallActivity extends CallActivity {
         VMViewUtil.getAllChildViews(activity.getWindow()
                                             .getDecorView(), 1);
 
-        littleWidth = VMDimenUtil.dp2px(96);
-        littleHeight = VMDimenUtil.dp2px(128);
-        rightMargin = VMDimenUtil.dp2px(16);
-        topMargin = VMDimenUtil.dp2px(96);
+        littleWidth = VMDimen.dp2px(96);
+        littleHeight = VMDimen.dp2px(128);
+        rightMargin = VMDimen.dp2px(16);
+        topMargin = VMDimen.dp2px(96);
 
         super.initView();
         if (CallManager.getInstance()
@@ -394,7 +395,7 @@ public class VideoCallActivity extends CallActivity {
      * 保存通话截图
      */
     private void onScreenShot() {
-        String dirPath = VMFileUtil.getFilesFromSDCard() + "videos/";
+        String dirPath = VMFile.getFilesFromSDCard() + "videos/";
         File dir = new File(dirPath);
         if (!dir.isDirectory()) {
             dir.mkdirs();

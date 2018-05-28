@@ -59,7 +59,7 @@
                     android:shadowDy="1"
                     android:shadowRadius="2"
                     android:text="@string/app_name"
-                    android:textColor="@color/vm_white_54" />
+                    android:textColor="@color/vm_white_87" />
                 <!--通话时间-->
                 <TextView
                     android:id="@+id/text_call_time"
@@ -69,7 +69,7 @@
                     android:shadowDy="1"
                     android:shadowRadius="2"
                     android:text="@string/app_name"
-                    android:textColor="@color/vm_white_54"
+                    android:textColor="@color/vm_white_87"
                     android:visibility="gone" />
             </LinearLayout>
             <!--通话信息-->

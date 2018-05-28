@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.demo.call;
+package com.vmloft.develop.app.demo.call.single;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
+import com.vmloft.develop.app.demo.call.R;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

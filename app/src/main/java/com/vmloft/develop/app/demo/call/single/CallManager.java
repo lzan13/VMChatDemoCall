@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.demo.call;
+package com.vmloft.develop.app.demo.call.single;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -20,6 +20,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
 
+import com.vmloft.develop.app.demo.call.R;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
 import java.util.Timer;

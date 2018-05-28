@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.demo.call;
+package com.vmloft.develop.app.demo.call.single;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,8 @@ import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
-import com.vmloft.develop.library.tools.utils.VMDimenUtil;
+import com.vmloft.develop.app.demo.call.R;
+import com.vmloft.develop.library.tools.utils.VMDimen;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -174,10 +175,10 @@ public class FloatWindow {
         localView = new EMCallSurfaceView(context);
         oppositeView = new EMCallSurfaceView(context);
 
-        int lw = VMDimenUtil.dp2px(24);
-        int lh = VMDimenUtil.dp2px(32);
-        int ow = VMDimenUtil.dp2px(96);
-        int oh = VMDimenUtil.dp2px(128);
+        int lw = VMDimen.dp2px(24);
+        int lh = VMDimen.dp2px(32);
+        int ow = VMDimen.dp2px(96);
+        int oh = VMDimen.dp2px(128);
         RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(lw, lh);
         RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(ow, oh);
         // 设置本地图像靠右

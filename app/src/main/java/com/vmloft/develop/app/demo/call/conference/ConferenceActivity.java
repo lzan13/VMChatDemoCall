@@ -684,6 +684,7 @@ public class ConferenceActivity extends VMActivity implements EMConferenceListen
      */
     private void changeCamera() {
         EMClient.getInstance().conferenceManager().switchCamera();
+        EMClient.getInstance().conferenceManager().enableStatistics(true);
     }
 
     @Override

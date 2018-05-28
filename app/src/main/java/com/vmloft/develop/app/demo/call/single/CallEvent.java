@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.demo.call;
+package com.vmloft.develop.app.demo.call.single;
 
 import com.hyphenate.chat.EMCallStateChangeListener;
 

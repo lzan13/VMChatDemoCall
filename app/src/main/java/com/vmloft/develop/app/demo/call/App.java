@@ -18,6 +18,8 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMStreamStatistics;
 import com.vmloft.develop.app.demo.call.conference.ConferenceActivity;
+import com.vmloft.develop.app.demo.call.single.CallManager;
+import com.vmloft.develop.app.demo.call.single.CallReceiver;
 import com.vmloft.develop.library.tools.VMApp;
 import com.vmloft.develop.library.tools.VMTools;
 import com.vmloft.develop.library.tools.utils.VMLog;
@@ -30,7 +32,7 @@ import java.util.List;
  * <p>
  * 程序入口，做一些必要的初始化操作
  */
-public class AppApplication extends VMApp {
+public class App extends VMApp {
 
     private CallReceiver callReceiver;
 

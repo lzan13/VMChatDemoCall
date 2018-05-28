@@ -41,15 +41,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:design:27.1.1'
     // ButterKnife 库
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'org.greenrobot:eventbus:3.0.0'
 
-//    implementation 'com.hyphenate:hyphenate-sdk:3.4.0.1'
+    //    implementation 'com.hyphenate:hyphenate-sdk:3.4.0.1'
 
-    // 引用自己封装的工具类库，GitHub：https://github.com/lzan13/VMLibraryManager
-    compile project(':vmtools')
+    // 引用自己封装的工具类库，GitHub：https://github.com/lzan13/VMLibrary
+    implementation 'com.vmloft.library:vmtools:0.0.2'
 }
