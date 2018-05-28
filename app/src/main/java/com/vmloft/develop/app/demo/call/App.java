@@ -43,7 +43,6 @@ public class App extends VMApp {
         VMTools.init(context);
         // 初始化环信sdk
         initHyphenate();
-
     }
 
     /**
@@ -89,15 +88,15 @@ public class App extends VMApp {
 
         // 设置通话广播监听器
         IntentFilter callFilter = new IntentFilter(EMClient.getInstance()
-                .callManager()
-                .getIncomingCallBroadcastAction());
+            .callManager()
+            .getIncomingCallBroadcastAction());
         if (callReceiver == null) {
             callReceiver = new CallReceiver();
         }
         //注册通话广播接收者
         context.registerReceiver(callReceiver, callFilter);
 
-        CallManager.getInstance().setExternalInputData(true);
+        CallManager.getInstance().setExternalInputData(false);
         // 通话管理类的初始化
         CallManager.getInstance().init(context);
 
@@ -106,7 +105,6 @@ public class App extends VMApp {
         setConferenceListener();
 
         setMessageListener();
-
     }
 
     /**
@@ -150,97 +148,97 @@ public class App extends VMApp {
      */
     private void setConferenceListener() {
         EMClient.getInstance()
-                .conferenceManager()
-                .addConferenceListener(new EMConferenceListener() {
-                    @Override
-                    public void onMemberJoined(String username) {
-                        VMLog.i("Joined username: %s", username);
-                    }
+            .conferenceManager()
+            .addConferenceListener(new EMConferenceListener() {
+                @Override
+                public void onMemberJoined(String username) {
+                    VMLog.i("Joined username: %s", username);
+                }
 
-                    @Override
-                    public void onMemberExited(String username) {
-                        VMLog.i("Exited username: %s", username);
-                    }
+                @Override
+                public void onMemberExited(String username) {
+                    VMLog.i("Exited username: %s", username);
+                }
 
-                    @Override
-                    public void onStreamAdded(EMConferenceStream stream) {
-                        VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
-                                .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream
-                                .getUsername(), stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
-                        VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
-                                .conferenceManager()
-                                .getAvailableStreamMap()
-                                .size(), EMClient.getInstance()
-                                .conferenceManager()
-                                .getSubscribedStreamMap()
-                                .size());
-                    }
+                @Override
+                public void onStreamAdded(EMConferenceStream stream) {
+                    VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
+                        .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(), stream
+                        .getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                    VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
+                        .conferenceManager()
+                        .getAvailableStreamMap()
+                        .size(), EMClient.getInstance()
+                        .conferenceManager()
+                        .getSubscribedStreamMap()
+                        .size());
+                }
 
-                    @Override
-                    public void onStreamRemoved(EMConferenceStream stream) {
-                        VMLog.i("Stream removed streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
-                                .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream
-                                .getUsername(), stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
-                        VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
-                                .conferenceManager()
-                                .getAvailableStreamMap()
-                                .size(), EMClient.getInstance()
-                                .conferenceManager()
-                                .getSubscribedStreamMap()
-                                .size());
-                    }
+                @Override
+                public void onStreamRemoved(EMConferenceStream stream) {
+                    VMLog.i("Stream removed streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
+                        .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(), stream
+                        .getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                    VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
+                        .conferenceManager()
+                        .getAvailableStreamMap()
+                        .size(), EMClient.getInstance()
+                        .conferenceManager()
+                        .getSubscribedStreamMap()
+                        .size());
+                }
 
-                    @Override
-                    public void onStreamUpdate(EMConferenceStream stream) {
-                        VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
-                                .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream
-                                .getUsername(), stream.getExtension(), stream.isVideoOff(), stream.isAudioOff());
-                        VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
-                                .conferenceManager()
-                                .getAvailableStreamMap()
-                                .size(), EMClient.getInstance()
-                                .conferenceManager()
-                                .getSubscribedStreamMap()
-                                .size());
-                    }
+                @Override
+                public void onStreamUpdate(EMConferenceStream stream) {
+                    VMLog.i("Stream added streamId: %s, streamName: %s, memberName: %s, username: %s, extension: %s, videoOff: %b, mute: %b", stream
+                        .getStreamId(), stream.getStreamName(), stream.getMemberName(), stream.getUsername(), stream
+                        .getExtension(), stream.isVideoOff(), stream.isAudioOff());
+                    VMLog.i("Conference stream subscribable: %d, subscribed: %d", EMClient.getInstance()
+                        .conferenceManager()
+                        .getAvailableStreamMap()
+                        .size(), EMClient.getInstance()
+                        .conferenceManager()
+                        .getSubscribedStreamMap()
+                        .size());
+                }
 
-                    @Override
-                    public void onPassiveLeave(int error, String message) {
-                        VMLog.i("passive leave code: %d, message: %s", error, message);
-                    }
+                @Override
+                public void onPassiveLeave(int error, String message) {
+                    VMLog.i("passive leave code: %d, message: %s", error, message);
+                }
 
-                    @Override
-                    public void onConferenceState(ConferenceState state) {
-                        VMLog.i("State " + state);
-                    }
+                @Override
+                public void onConferenceState(ConferenceState state) {
+                    VMLog.i("State " + state);
+                }
 
-                    @Override
-                    public void onStreamStatistics(EMStreamStatistics emStreamStatistics) {
-                        VMLog.i(emStreamStatistics.toString());
-                    }
+                @Override
+                public void onStreamStatistics(EMStreamStatistics emStreamStatistics) {
+                    VMLog.i(emStreamStatistics.toString());
+                }
 
-                    @Override
-                    public void onStreamSetup(String streamId) {
-                        VMLog.i("Stream id %s", streamId);
-                    }
+                @Override
+                public void onStreamSetup(String streamId) {
+                    VMLog.i("Stream id %s", streamId);
+                }
 
-                    @Override
-                    public void onSpeakers(List<String> list) {
+                @Override
+                public void onSpeakers(List<String> list) {
 
-                    }
+                }
 
-                    @Override
-                    public void onReceiveInvite(String confId, String password, String extension) {
-                        VMLog.i("Receive conference invite confId: %s, password: %s, extension: %s", confId, password, extension);
+                @Override
+                public void onReceiveInvite(String confId, String password, String extension) {
+                    VMLog.i("Receive conference invite confId: %s, password: %s, extension: %s", confId, password, extension);
 
-                        Intent conferenceIntent = new Intent(context, ConferenceActivity.class);
-                        conferenceIntent.putExtra("isCreator", false);
-                        conferenceIntent.putExtra("confId", confId);
-                        conferenceIntent.putExtra("password", password);
-                        conferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(conferenceIntent);
-                    }
-                });
+                    Intent conferenceIntent = new Intent(context, ConferenceActivity.class);
+                    conferenceIntent.putExtra("isCreator", false);
+                    conferenceIntent.putExtra("confId", confId);
+                    conferenceIntent.putExtra("password", password);
+                    conferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(conferenceIntent);
+                }
+            });
     }
 
     private void setMessageListener() {
